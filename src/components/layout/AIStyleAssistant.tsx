@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, X, Send, ShoppingBag } from 'lucide-react';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { db } from '../../firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
@@ -14,7 +14,7 @@ interface Message {
   products?: any[];
 }
 
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY || '' });
+const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || '');
 
 const SYSTEM_PROMPT = `You are a luxury personal stylist for WEARITION, a high-end Pakistani fashion brand. You help customers find perfect outfits.
 Your personality: elegant, knowledgeable, warm but sophisticated — like a Harrods personal shopper.
@@ -70,12 +70,13 @@ export function AIStyleAssistant() {
         `${m.role === 'user' ? 'Customer' : 'Stylist'}: ${m.content}`
       ).join('\n');
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.0-flash',
-        contents: `${SYSTEM_PROMPT}\n\nConversation:\n${conversationHistory}\nCustomer: ${input}\nStylist:`,
-      });
-
-      const text = response.text || "I'd love to help you find something special. Could you tell me more about the occasion?";
+      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+      
+      const prompt = `${SYSTEM_PROMPT}\n\nConversation:\n${conversationHistory}\nCustomer: ${input}\nStylist:`;
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text() || "I'd love to help you find something special. Could you tell me more about the occasion?";
       
       // Extract search keywords
       const searchMatch = text.match(/\[SEARCH:\s*([^\]]+)\]/);
