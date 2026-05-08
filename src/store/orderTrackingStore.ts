@@ -44,15 +44,30 @@ export const useOrderTrackingStore = create<OrderTrackingState>()(
         }));
       },
       getOrder: async (orderId) => {
+        // Try searching by custom orderId (WR-XXXX)
         const q = query(
           collection(db, 'orders'), 
-          where('orderId', '==', orderId)
+          where('orderId', '==', orderId.toUpperCase())
         );
         const querySnapshot = await getDocs(q);
+        
         if (!querySnapshot.empty) {
           const doc = querySnapshot.docs[0];
           return { id: doc.id, ...doc.data() } as Order;
         }
+
+        // Fallback: Try searching by Firestore Document ID directly
+        try {
+          const docRef = doc(db, 'orders', orderId);
+          const docSnap = await getDocs(query(collection(db, 'orders'), where('__name__', '==', orderId)));
+          if (!docSnap.empty) {
+            const d = docSnap.docs[0];
+            return { id: d.id, ...d.data() } as Order;
+          }
+        } catch (e) {
+          // Ignore if docId format is invalid
+        }
+
         return undefined;
       },
       fetchAllOrders: async () => {

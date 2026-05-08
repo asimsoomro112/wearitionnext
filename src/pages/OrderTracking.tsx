@@ -97,8 +97,15 @@ export function OrderTracking() {
             </button>
           </form>
 
+          {isSearching && (
+             <p className="mt-4 text-[10px] text-accent animate-pulse uppercase tracking-widest">Verifying ID: {orderId}</p>
+          )}
+
           {hasSearched && !order && !isSearching && (
-            <p className="mt-8 text-red-500 text-xs font-sans">Order not found. Please verify your ID.</p>
+            <div className="mt-8 space-y-2">
+              <p className="text-red-500 text-xs font-sans">Order "{orderId}" not found.</p>
+              <p className="text-foreground/30 text-[10px] uppercase tracking-widest">Please verify the ID from your confirmation email.</p>
+            </div>
           )}
         </div>
       </div>
