@@ -124,14 +124,14 @@ export function ProductDetails() {
         </div>
 
         {/* Right Side: Product Information */}
-        <div className="w-full md:w-[40%] md:sticky md:top-0 h-screen overflow-y-auto hide-scrollbar pt-12 md:pt-40 px-6 md:pl-12 md:pr-24 flex flex-col pb-24">
+        <div className="w-full md:w-[40%] md:sticky md:top-0 h-auto md:h-screen overflow-y-auto hide-scrollbar pt-12 md:pt-40 px-6 md:pl-12 md:pr-24 flex flex-col pb-32">
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <p className="text-accent uppercase tracking-[0.3em] font-medium text-[10px] mb-6">The House</p>
-            <TextReveal as="h1" className="font-serif text-5xl md:text-6xl text-foreground leading-[1.1] mb-6">{product.title}</TextReveal>
+            <TextReveal as="h1" className="font-serif text-4xl md:text-6xl text-foreground leading-[1.1] mb-6">{product.title}</TextReveal>
             
             <div className="flex items-center gap-4 mb-12">
               <p className="text-xl text-foreground/80 font-sans">{formatCurrency(product.price)}</p>

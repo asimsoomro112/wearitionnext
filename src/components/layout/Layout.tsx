@@ -11,7 +11,11 @@ import { useEffect } from 'react';
 import Lenis from 'lenis';
 
 export function Layout() {
+  const isMobile = typeof window !== 'undefined' && (window.innerWidth < 1024 || 'ontouchstart' in window);
+
   useEffect(() => {
+    if (isMobile) return; // Disable Lenis on mobile for better performance
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -24,10 +28,10 @@ export function Layout() {
     }
     requestAnimationFrame(raf);
     return () => lenis.destroy();
-  }, []);
+  }, [isMobile]);
 
   return (
-    <div className="min-h-screen bg-background-secondary text-foreground font-sans selection:bg-foreground selection:text-background-secondary flex flex-col pb-16 md:pb-0 lg:cursor-none">
+    <div className={`min-h-screen bg-background-secondary text-foreground font-sans selection:bg-foreground selection:text-background-secondary flex flex-col lg:cursor-none ${isMobile ? 'pb-32' : ''}`}>
       <CustomCursor />
       <Navbar />
       <CartDrawer />

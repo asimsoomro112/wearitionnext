@@ -100,7 +100,7 @@ export function CartDrawer() {
             </div>
 
             {items.length > 0 && (
-              <div className="px-8 mt-auto pt-8 pb-12 md:pb-8 border-t border-white/10 bg-background">
+              <div className="px-8 mt-auto pt-8 pb-24 md:pb-8 border-t border-white/10 bg-background">
                 <div className="flex justify-between items-end mb-6">
                   <span className="uppercase text-xs tracking-[0.2em] text-foreground/60">Subtotal</span>
                   <span className="font-sans text-xl">{formatCurrency(subtotal)}</span>
