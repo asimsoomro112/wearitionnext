@@ -21,7 +21,7 @@ export function CartDrawer() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             onClick={closeCart}
-            className="fixed inset-0 bg-background-secondary/60 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-background-secondary/60 backdrop-blur-sm z-[150]"
           />
 
           {/* Drawer */}
@@ -30,7 +30,7 @@ export function CartDrawer() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-full md:w-[480px] bg-background border-l border-white/10 z-50 flex flex-col pt-6 pb-8 text-foreground"
+            className="fixed top-0 right-0 h-full w-full md:w-[480px] bg-background border-l border-white/10 z-[150] flex flex-col pt-6 pb-8 text-foreground"
           >
             <div className="px-8 flex justify-between items-center mb-10 mt-4">
               <h2 className="font-serif tracking-widest uppercase text-2xl text-foreground">Your Bag</h2>
@@ -100,7 +100,7 @@ export function CartDrawer() {
             </div>
 
             {items.length > 0 && (
-              <div className="px-8 mt-auto pt-8 border-t border-white/10">
+              <div className="px-8 mt-auto pt-8 pb-12 md:pb-8 border-t border-white/10 bg-background">
                 <div className="flex justify-between items-end mb-6">
                   <span className="uppercase text-xs tracking-[0.2em] text-foreground/60">Subtotal</span>
                   <span className="font-sans text-xl">{formatCurrency(subtotal)}</span>
@@ -109,7 +109,7 @@ export function CartDrawer() {
                 <button onClick={() => {
                   closeCart();
                   navigate('/checkout');
-                }} className="w-full bg-foreground text-background py-5 uppercase text-xs tracking-[0.2em] font-medium hover:bg-accent transition-colors">
+                }} className="w-full bg-foreground text-background py-5 uppercase text-xs tracking-[0.2em] font-medium hover:bg-accent transition-colors shadow-xl">
                   Checkout Securely
                 </button>
               </div>

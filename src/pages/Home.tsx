@@ -173,14 +173,9 @@ export function Home() {
         } else {
           setSections(defaultSections);
         }
-      } catch (e) {
         // Use fallbacks if firestore is offline or fails
         setSections(defaultSections);
-        try {
-          handleFirestoreError(e, OperationType.GET, 'homepage');
-        } catch (err) {
-          console.error(err);
-        }
+        console.error("Firestore Fetch Error:", e);
       } finally {
         setLoading(false);
       }

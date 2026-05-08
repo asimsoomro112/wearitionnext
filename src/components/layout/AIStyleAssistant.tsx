@@ -93,10 +93,11 @@ export function AIStyleAssistant() {
         content: cleanText,
         products: foundProducts.length > 0 ? foundProducts : undefined,
       }]);
-    } catch (e) {
+    } catch (e: any) {
+      console.error("Gemini API Error:", e);
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: "My apologies — I'm experiencing a moment of silence. Please try again shortly.",
+        content: `My apologies — I'm experiencing a moment of silence. (Error: ${e.message || 'Unknown'})`,
       }]);
     } finally {
       setIsTyping(false);
