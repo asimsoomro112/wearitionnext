@@ -35,8 +35,8 @@ const CategoryGrid = ({ items }: { items?: any[] }) => (
              }`}
            >
               <img src={cat.image} alt={cat.name} onError={handleImageError} loading="lazy" className="parallax-img absolute inset-0 w-full h-[120%] object-cover transition-transform duration-1000 group-hover:scale-[1.05]" style={{ willChange: "transform" }} />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8 z-10">
-                 <span className="text-accent text-[10px] uppercase tracking-[0.3em] mb-2 opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0">Explore Collection</span>
+               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8 z-10">
+                 <span className="text-accent text-[10px] uppercase tracking-[0.3em] mb-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-all translate-y-0 md:translate-y-4 group-hover:translate-y-0">Explore Collection</span>
                  <h3 className="text-white text-2xl md:text-4xl font-serif uppercase tracking-widest group-hover:text-accent transition-colors">{cat.name}</h3>
               </div>
            </Link>
@@ -104,7 +104,7 @@ const HorizontalScroller = ({ title, products, sectionClass, scrollClass, isSale
                  {((product.isOnSale || isSale) && product.salePrice) && (
                    <div className="absolute top-4 left-4 bg-red-600/90 text-white text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 z-10 shadow-lg">Sale</div>
                  )}
-                 <div className="absolute inset-0 bg-background-secondary/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center z-20">
+                 <div className="hidden md:flex absolute inset-0 bg-background-secondary/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 items-center justify-center z-20">
                    <button className="bg-foreground text-background px-8 py-3 text-xs uppercase tracking-widest hover:scale-105 transition-transform duration-300">Quick View</button>
                  </div>
                </div>
@@ -186,6 +186,10 @@ export function Home() {
   // Use a separate useEffect or timeout to initialize GSAP after sections render
   useEffect(() => {
     if (loading || sections.length === 0) return;
+
+    // Only run GSAP animations on Desktop/Tablet to prevent mobile jank
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) return;
 
     let ctx = gsap.context(() => {
       // Hero Parallax Elements 3D Effect
