@@ -122,6 +122,76 @@ export function AdminProducts() {
     }
   };
 
+  const handleReseed = async () => {
+    if (!confirm('This will DELETE all current products and replace them with the 2026 Luxury Collection. Are you sure?')) return;
+    
+    try {
+      // 1. Delete all
+      for (const p of products) {
+        await deleteDoc(doc(db, 'products', p.id));
+      }
+      
+      // 2. Add New
+      const LUXURY_PRODUCTS = [
+        {
+          title: "Sculpted Silk Gown",
+          brand: "WEARITION",
+          description: "Architectural precision meets fluid silk. A 2026 signature silhouette.",
+          price: 850,
+          stock: 12,
+          sizes: ["XS", "S", "M", "L"],
+          images: ["https://images.unsplash.com/photo-1539008835657-9e8e9680fe0a?q=80&w=800"],
+          category: "women",
+          isPublished: true,
+        },
+        {
+          title: "Double-Faced Cashmere Blazer",
+          brand: "WEARITION",
+          description: "The essence of quiet luxury. Hand-stitched finishing and ultra-soft feel.",
+          price: 1200,
+          stock: 8,
+          sizes: ["S", "M", "L"],
+          images: ["https://images.unsplash.com/photo-1591360236480-4ed861025a18?q=80&w=800"],
+          category: "women",
+          isPublished: true,
+        },
+        {
+          title: "Tech-Noir Utility Overcoat",
+          brand: "WEARITION",
+          description: "Water-repellent nylon with modular magnetic systems. Future-functional.",
+          price: 950,
+          stock: 10,
+          sizes: ["S", "M", "L", "XL"],
+          images: ["https://images.unsplash.com/photo-1550246140-5119ae4790b7?q=80&w=800"],
+          category: "men",
+          isPublished: true,
+        },
+        {
+          title: "Architectural Wool Suit",
+          brand: "WEARITION",
+          description: "Sharp shoulders and a streamlined cut. Virgin wool with silk lining.",
+          price: 1500,
+          stock: 5,
+          sizes: ["M", "L", "XL"],
+          images: ["https://images.unsplash.com/photo-1536766768598-e09213fdcf22?q=80&w=800"],
+          category: "men",
+          isPublished: true,
+        }
+      ];
+
+      for (const product of LUXURY_PRODUCTS) {
+        const newRef = doc(collection(db, 'products'));
+        await setDoc(newRef, {
+          ...product,
+          createdAt: serverTimestamp()
+        });
+      }
+      alert('Reseed successful!');
+    } catch (err: any) {
+      alert('Error during reseed: ' + err.message);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -158,13 +228,21 @@ export function AdminProducts() {
     <div className="max-w-full relative">
       <div className="flex items-center justify-between mb-8 pb-6 border-b border-black/10">
         <h1 className="text-2xl md:text-3xl font-serif">Products</h1>
-        <button 
-          onClick={openAddModal}
-          className="flex items-center gap-2 bg-foreground text-background px-4 py-2 text-sm uppercase tracking-wider hover:bg-accent transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          Add Product
-        </button>
+        <div className="flex gap-4">
+          <button 
+            onClick={handleReseed}
+            className="flex items-center gap-2 border border-black/10 px-4 py-2 text-xs uppercase tracking-wider hover:bg-black/5 transition-colors"
+          >
+            Reseed Luxury 2026
+          </button>
+          <button 
+            onClick={openAddModal}
+            className="flex items-center gap-2 bg-foreground text-background px-4 py-2 text-sm uppercase tracking-wider hover:bg-accent transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Add Product
+          </button>
+        </div>
       </div>
       
       <div className="bg-white border border-black/10 rounded-lg overflow-x-auto">
