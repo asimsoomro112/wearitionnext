@@ -30,20 +30,27 @@ export function OrderTracking() {
   const getOrder = useOrderTrackingStore(state => state.getOrder);
 
   useEffect(() => {
-    if (initialId) {
-      handleTrack(null);
+    const urlId = searchParams.get('id');
+    if (urlId) {
+      setOrderId(urlId);
+      handleTrack(null, urlId);
     }
-  }, []);
+  }, [searchParams]);
 
-  const handleTrack = async (e: React.FormEvent | null) => {
+  const handleTrack = async (e: React.FormEvent | null, idOverride?: string) => {
     if (e) e.preventDefault();
-    if (!orderId) return;
+    const idToSearch = (idOverride || orderId || '').trim().toUpperCase();
+    if (!idToSearch) return;
     
     setIsSearching(true);
     setHasSearched(true);
     try {
-      const foundOrder = await getOrder(orderId);
-      setOrder(foundOrder || null);
+      const foundOrder = await getOrder(idToSearch);
+      if (foundOrder) {
+        setOrder(foundOrder);
+      } else {
+        setOrder(null);
+      }
     } catch (err) {
       console.error('Order lookup failed:', err);
       setOrder(null);

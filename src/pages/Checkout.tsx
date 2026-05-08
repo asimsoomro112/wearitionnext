@@ -9,6 +9,8 @@ import { useOrderTrackingStore } from '../store/orderTrackingStore';
 import { useAuthStore } from '../store/authStore';
 import { motion } from 'framer-motion';
 import { SEO } from '../components/layout/SEO';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 
 interface ShippingAddress {
   firstName: string;
