@@ -15,6 +15,7 @@ interface Product {
   images: string[];
   category: string;
   isPublished?: boolean;
+  isFeatured?: boolean;
   createdAt?: any;
 }
 
@@ -33,6 +34,7 @@ export function AdminProducts() {
   const [category, setCategory] = useState('');
   const [images, setImages] = useState(''); // comma separated
   const [isPublished, setIsPublished] = useState(true);
+  const [isFeatured, setIsFeatured] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,6 +96,7 @@ export function AdminProducts() {
     setCategory('');
     setImages('');
     setIsPublished(true);
+    setIsFeatured(false);
     setIsModalOpen(true);
   };
 
@@ -108,6 +111,7 @@ export function AdminProducts() {
     setCategory(p.category);
     setImages(p.images ? p.images.join(', ') : '');
     setIsPublished(p.isPublished ?? true);
+    setIsFeatured(p.isFeatured ?? false);
     setIsModalOpen(true);
   };
 
@@ -205,6 +209,7 @@ export function AdminProducts() {
       sizes: sizes.split(',').map(s => s.trim()).filter(Boolean),
       images: images.split(',').map(img => img.trim()).filter(Boolean),
       isPublished,
+      isFeatured,
     };
 
     try {
@@ -417,9 +422,15 @@ export function AdminProducts() {
                 />
               </div>
 
-              <div className="flex items-center gap-3">
-                <input type="checkbox" id="isPublished" checked={isPublished} onChange={e => setIsPublished(e.target.checked)} className="w-5 h-5 accent-foreground" />
-                <label htmlFor="isPublished" className="text-sm font-medium text-[#0a0a0a]">Publish immediately</label>
+              <div className="flex flex-col sm:flex-row gap-6">
+                <div className="flex items-center gap-3">
+                  <input type="checkbox" id="isPublished" checked={isPublished} onChange={e => setIsPublished(e.target.checked)} className="w-5 h-5 accent-foreground" />
+                  <label htmlFor="isPublished" className="text-sm font-medium text-[#0a0a0a]">Publish immediately</label>
+                </div>
+                <div className="flex items-center gap-3">
+                  <input type="checkbox" id="isFeatured" checked={isFeatured} onChange={e => setIsFeatured(e.target.checked)} className="w-5 h-5 accent-accent" />
+                  <label htmlFor="isFeatured" className="text-sm font-medium text-[#0a0a0a]">Feature on Homepage</label>
+                </div>
               </div>
 
               <div className="mt-4 pt-6 border-t border-black/10 flex justify-end gap-4 sticky bottom-0 bg-white">

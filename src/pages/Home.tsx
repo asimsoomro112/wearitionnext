@@ -12,6 +12,10 @@ import { BrandStory } from "../components/layout/BrandStory";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+  e.currentTarget.src = "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop"; 
+};
+
 const CategoryGrid = ({ items }: { items?: any[] }) => (
   <section className="py-16 md:py-32 px-6 lg:px-12 w-full max-w-[1600px] mx-auto z-10 relative bg-background">
      <div className="flex flex-col mb-12">
@@ -27,7 +31,7 @@ const CategoryGrid = ({ items }: { items?: any[] }) => (
                i === 0 ? 'bento-item-large' : i === 1 ? 'bento-item-tall' : ''
              }`}
            >
-              <img src={cat.image} alt={cat.name} className="parallax-img absolute inset-0 w-full h-[120%] object-cover transition-transform duration-1000 group-hover:scale-[1.05]" style={{ willChange: "transform" }} />
+              <img src={cat.image} alt={cat.name} onError={handleImageError} className="parallax-img absolute inset-0 w-full h-[120%] object-cover transition-transform duration-1000 group-hover:scale-[1.05]" style={{ willChange: "transform" }} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8 z-10">
                  <span className="text-accent text-[10px] uppercase tracking-[0.3em] mb-2 opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0">Explore Collection</span>
                  <h3 className="text-white text-2xl md:text-4xl font-serif uppercase tracking-widest group-hover:text-accent transition-colors">{cat.name}</h3>
@@ -93,7 +97,7 @@ const HorizontalScroller = ({ title, products, sectionClass, scrollClass, isSale
           {products.map((product: any, i: number) => (
             <Link to={`/product/${product.id}`} key={i} className="product-card w-[220px] sm:w-[260px] md:w-[350px] group cursor-pointer flex-shrink-0 block">
                <div className="relative aspect-[3/4] overflow-hidden mb-4 md:mb-6 bg-background-secondary/20 shadow-xl parallax-container">
-                 <img src={product.images?.[0] || product.image || 'https://images.unsplash.com/photo-1595777457583-95e059f581ce?q=80&w=800'} alt={product.name} className="parallax-img absolute top-[-10%] left-0 w-full h-[120%] object-cover group-hover:scale-[1.02] transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]" style={{ willChange: "transform" }}/>
+                 <img src={product.images?.[0] || product.image} alt={product.name} onError={handleImageError} className="parallax-img absolute top-[-10%] left-0 w-full h-[120%] object-cover group-hover:scale-[1.02] transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]" style={{ willChange: "transform" }}/>
                  {((product.isOnSale || isSale) && product.salePrice) && (
                    <div className="absolute top-4 left-4 bg-red-600/90 text-white text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 z-10 shadow-lg">Sale</div>
                  )}
@@ -142,8 +146,8 @@ export function Home() {
             { name: 'Pants', image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=800', link: '/shop?category=pants' },
           ]
         },
-        { id: '3', type: 'products_scroll', title: 'Featured Menswear', productQueryType: 'category', categoryValue: 'men' },
-        { id: '4', type: 'products_scroll', title: 'Featured Womenswear', productQueryType: 'category', categoryValue: 'women' },
+        { id: '3', type: 'products_scroll', title: 'Featured Menswear', productQueryType: 'featured', categoryValue: 'men' },
+        { id: '4', type: 'products_scroll', title: 'Featured Womenswear', productQueryType: 'featured', categoryValue: 'women' },
         { id: '5', type: 'editorial' },
         { id: '6', type: 'artisanship' },
         { id: '7', type: 'newsletter' },
@@ -409,26 +413,12 @@ export function Home() {
           filteredProducts = filteredProducts.filter(p => p.isOnSale && p.salePrice);
         } else if (section.productQueryType === 'category' && section.categoryValue) {
           filteredProducts = filteredProducts.filter(p => p.category?.toLowerCase() === section.categoryValue?.toLowerCase());
-        } else if (section.productQueryType === 'trending') {
-           // Provide fallback trending items if store is empty
-           if (filteredProducts.length === 0) {
-              filteredProducts = [
-                { id: "1", name: "Noir Silk Dress", price: 595, image: "https://images.unsplash.com/photo-1595777457583-95e059f581ce?q=80&w=800&auto=format&fit=crop" },
-                { id: "3", name: "Tailored Wool Coat", price: 950, image: "https://images.unsplash.com/photo-1544022613-e87ca7cebb6c?q=80&w=800&auto=format&fit=crop" },
-                { id: "4", name: "Wide Leg Trousers", price: 290, image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=800&auto=format&fit=crop" },
-                { id: "6", name: "Leather Mini Skirt", price: 450, image: "https://images.unsplash.com/photo-1582142306909-195724d33ffc?q=80&w=800&auto=format&fit=crop" },
-              ];
-           }
+        } else if (section.productQueryType === 'featured' || section.productQueryType === 'trending') {
+          filteredProducts = filteredProducts.filter(p => p.isFeatured);
         }
         
-        // Final fallback if category/sale still empty for testing
-        if (filteredProducts.length === 0) {
-           filteredProducts = [
-              { id: "sale1", name: "Oversized Silk Blouse", price: 320, salePrice: 220, image: "https://images.unsplash.com/photo-1434389678232-06b2a30336fc?q=80&w=800&auto=format&fit=crop", isOnSale: true },
-              { id: "sale2", name: "Straight Leg Denim", price: 280, salePrice: 180, image: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop", isOnSale: true },
-              { id: "sale3", name: "Silk Camisole", price: 180, salePrice: 120, image: "https://images.unsplash.com/photo-1582041148888-0675ebfa4109?q=80&w=800&auto=format&fit=crop", isOnSale: true },
-           ];
-        }
+        // Don't render empty sections
+        if (filteredProducts.length === 0) return null;
 
         return (
           <HorizontalScroller 
