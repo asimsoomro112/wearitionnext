@@ -219,3 +219,9 @@ body {
     opacity: 1;
   }
 }
+
+@media (max-width: 640px) {
+  .wearition-loader-wrapper {
+    transform: scale(0.65);
+  }
+}

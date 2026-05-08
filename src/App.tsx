@@ -40,8 +40,8 @@ const AdminStorefront = lazy(() => import('./pages/AdminStorefront').then(m => (
 // Minimal route loading spinner
 function RouteLoader() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black">
-      <div className="wearition-loader-wrapper scale-75 md:scale-100">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black">
+      <div className="wearition-loader-wrapper">
         <div className="wearition-loader">
           <div className="outer-ring"></div>
           <div className="inner-ring"></div>
