@@ -7,14 +7,16 @@ import { motion } from 'framer-motion';
 
 export function MobileBottomBar() {
   const location = useLocation();
-  const { openCart } = useUIStore();
+  const { openCart, closeCart, closeSearch, toggleSearch } = useUIStore();
   const { items } = useCartStore();
   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   const isActive = (path: string) => location.pathname === path;
 
-  const handleAction = (callback?: () => void) => {
+  const handleAction = (callback?: () => void, isSearchToggle = false) => {
     triggerHaptic('light');
+    if (!isSearchToggle) closeSearch(); 
+    closeCart();   
     if (callback) callback();
   };
 
@@ -36,7 +38,7 @@ export function MobileBottomBar() {
         </Link>
         
         <button 
-          onClick={() => handleAction(() => useUIStore.getState().toggleSearch())} 
+          onClick={() => handleAction(() => toggleSearch(), true)} 
           className="flex flex-col items-center justify-center py-2 px-3 text-foreground/40 active:text-accent"
         >
           <Search className="w-5 h-5" />
