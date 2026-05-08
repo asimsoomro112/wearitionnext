@@ -80,16 +80,21 @@ export function Checkout() {
       date: new Date().toISOString(),
       total,
       items: items.map(i => ({
-        id: i.id, title: i.title, price: i.price,
-        quantity: i.quantity, size: i.size, color: i.color, image: i.image
+        id: i.id, 
+        title: i.title, 
+        price: i.price,
+        quantity: i.quantity, 
+        size: i.size || null, 
+        color: i.color || null, 
+        image: i.image || ""
       })),
       paymentMethod,
       shippingAddress: {
         name: `${shipping.firstName} ${shipping.lastName}`,
         address: shipping.address,
         city: shipping.city,
-        zip: shipping.zip,
-        phone: shipping.phone,
+        zip: shipping.zip || "",
+        phone: shipping.phone || "",
       },
       shippingDetails: { shippingAmount: shippingCost }
     };
