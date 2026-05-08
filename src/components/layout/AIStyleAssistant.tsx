@@ -66,21 +66,30 @@ export function AIStyleAssistant() {
     setIsTyping(true);
 
     try {
-      const model = genAI.getGenerativeModel({ 
-        model: 'gemini-1.5-flash',
-        systemInstruction: SYSTEM_PROMPT 
-      });
-      
-      const chat = model.startChat({
-        history: messages.slice(1).map(m => ({
-          role: m.role === 'user' ? 'user' : 'model',
-          parts: [{ text: m.content }],
-        })),
-      });
+      const history = messages.slice(1).map(m => ({
+        role: m.role === 'user' ? 'user' : 'model',
+        parts: [{ text: m.content }],
+      }));
 
-      const result = await chat.sendMessage(input);
-      const response = await result.response;
-      const text = response.text() || "I'd love to help you find something special. Could you tell me more about the occasion?";
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [...history, { role: 'user', parts: [{ text: input }] }],
+            systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] }
+          })
+        }
+      );
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error?.message || 'API request failed');
+      }
+
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'd love to help you find something special.";
       
       // Extract search keywords
       const searchMatch = text.match(/\[SEARCH:\s*([^\]]+)\]/);
@@ -101,7 +110,7 @@ export function AIStyleAssistant() {
       console.error("Gemini API Full Error:", e);
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: `My apologies — I'm experiencing a connectivity issue. (Detail: ${e.message || 'Unknown Error'})`,
+        content: `Stylist Note: I encountered an issue. (Detail: ${e.message})`,
       }]);
     } finally {
       setIsTyping(false);
