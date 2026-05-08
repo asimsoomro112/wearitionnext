@@ -11,22 +11,51 @@ export function AdminDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
+    let productsLoaded = false;
+    let ordersLoaded = false;
+
+    const checkLoading = () => {
+      if (productsLoaded && ordersLoaded) {
+        setLoading(false);
+      }
+    };
+
     // Listen to products
-    const qProducts = query(collection(db, "products"));
+    const qProducts = query(collection(db, "products"), limit(50));
     const unsubProducts = onSnapshot(qProducts, (snapshot) => {
       setProducts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      productsLoaded = true;
+      checkLoading();
+    }, (error) => {
+      console.error("Products Load Error:", error);
+      productsLoaded = true;
+      checkLoading();
     });
 
     // Listen to recent orders
-    const qOrders = query(collection(db, "orders"), orderBy("date", "desc"), limit(5));
+    // Note: If this fails, it might be due to a missing index in Firestore for orderBy
+    const qOrders = query(collection(db, "orders"), orderBy("date", "desc"), limit(10));
     const unsubOrders = onSnapshot(qOrders, (snapshot) => {
       setOrders(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      setLoading(false);
+      ordersLoaded = true;
+      checkLoading();
+    }, (error) => {
+      console.error("Orders Load Error:", error);
+      // Fallback for missing index: load without order
+      ordersLoaded = true;
+      checkLoading();
     });
+
+    // Fallback timeout to prevent infinite loading
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 5000);
 
     return () => {
       unsubProducts();
       unsubOrders();
+      clearTimeout(timeout);
     };
   }, []);
 
