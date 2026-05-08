@@ -8,6 +8,7 @@ import { formatCurrency } from "../utils/currency";
 import { db, handleFirestoreError, OperationType } from "../firebase";
 import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import heroImg from "@/1.png";
+import { BrandStory } from "../components/layout/BrandStory";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -523,6 +524,7 @@ export function Home() {
     <div className="w-full relative" ref={containerRef}>
       <div ref={bgRef} className="fixed inset-0 z-[-3] bg-background" />
       {sections.map((section, index) => renderSection(section, index))}
+      <BrandStory />
     </div>
   );
 }

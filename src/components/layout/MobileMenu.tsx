@@ -25,7 +25,7 @@ export function MobileMenu() {
           </button>
           
           <div className="mb-12">
-            <img src={logo} alt="Wearition" className="h-10 w-auto object-contain brightness-110" />
+            <img src={logo} alt="Wearition" className="h-24 w-auto object-contain brightness-110" />
           </div>
           
           <nav className="flex flex-col gap-8 text-3xl font-serif mb-auto">
