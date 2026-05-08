@@ -14,6 +14,7 @@ import { TextReveal } from '../components/layout/TextReveal';
 import { MagneticButton } from '../components/layout/MagneticButton';
 import { WhatsAppButton } from '../components/layout/WhatsAppButton';
 import { MessageSquare } from 'lucide-react';
+import { WearitionSpinner } from '../components/layout/WearitionSpinner';
 
 export function ProductDetails() {
   const { id } = useParams();
@@ -46,7 +47,7 @@ export function ProductDetails() {
   }, [id]);
 
   if (loading) {
-     return <div className="min-h-screen flex items-center justify-center pt-24"><div className="w-8 h-8 border-t border-white rounded-full animate-spin"></div></div>;
+     return <WearitionSpinner />;
   }
 
   if (!product) {

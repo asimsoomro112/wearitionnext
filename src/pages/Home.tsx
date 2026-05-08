@@ -12,6 +12,7 @@ import { BrandStory } from "../components/layout/BrandStory";
 import { SEO } from "../components/layout/SEO";
 import { TextReveal } from "../components/layout/TextReveal";
 import { MagneticButton } from "../components/layout/MagneticButton";
+import { WearitionSpinner } from "../components/layout/WearitionSpinner";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -320,7 +321,7 @@ export function Home() {
     return () => ctx.revert();
   }, [loading, sections, products]);
 
-  if (loading) return null;
+  if (loading) return <WearitionSpinner />;
 
   const renderSection = (section: any, index: number) => {
     switch(section.type) {

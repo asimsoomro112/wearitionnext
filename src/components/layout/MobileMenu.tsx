@@ -51,6 +51,10 @@ export function MobileMenu() {
               <span>Concierge</span>
               <span className="text-xl opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all">→</span>
             </Link>
+
+            <Link to="/track-order" onClick={handleClose} className="mt-6 border border-white/20 text-white/90 py-5 rounded-[2rem] text-center font-sans text-xs tracking-[0.2em] uppercase flex items-center justify-center gap-3 hover:bg-white hover:text-black transition-all">
+              Track Order
+            </Link>
           </nav>
 
           <div className="flex flex-col gap-8 text-[10px] uppercase tracking-[0.3em] mt-12 pt-12 border-t border-white/10">
