@@ -19,24 +19,10 @@ export function Wishlist() {
       }
       try {
         const fetchedProducts = [];
-        const dummyProducts = [
-              { id: '1', title: 'Noir Silk Dress', price: 595, category: 'ready-to-wear', images: ['https://images.unsplash.com/photo-1595777457583-95e059f581ce?q=80&w=800&auto=format&fit=crop'] },
-              { id: '2', title: 'Cashmere Turtleneck', price: 350, category: 'ready-to-wear', images: ['https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?q=80&w=800&auto=format&fit=crop'] },
-              { id: '3', title: 'Tailored Wool Coat', price: 950, category: 'ready-to-wear', images: ['https://images.unsplash.com/photo-1544022613-e87ca7cebb6c?q=80&w=800&auto=format&fit=crop'] },
-              { id: '4', title: 'Wide Leg Trousers', price: 290, category: 'ready-to-wear', images: ['https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=800&auto=format&fit=crop'] },
-              { id: '5', title: 'Oversized Silk Blouse', price: 320, category: 'ready-to-wear', images: ['https://images.unsplash.com/photo-1434389678232-06b2a30336fc?q=80&w=800&auto=format&fit=crop'] },
-              { id: '6', title: 'Leather Mini Skirt', price: 450, category: 'ready-to-wear', images: ['https://images.unsplash.com/photo-1582142306909-195724d33ffc?q=80&w=800&auto=format&fit=crop'] },
-              { id: '7', title: 'Structured Blazer', price: 680, category: 'ready-to-wear', images: ['https://images.unsplash.com/photo-1591369822096-ffd140ec948f?q=80&w=800&auto=format&fit=crop'] },
-              { id: '8', title: 'Minimalist Chelsea Boot', price: 590, category: 'shoes', images: ['https://images.unsplash.com/photo-1531310197839-ccf54634509e?q=80&w=800&auto=format&fit=crop'] },
-        ];
-        
         for (const id of wishlistIds) {
           const docSnap = await getDoc(doc(db, "products", id));
           if (docSnap.exists()) {
             fetchedProducts.push({ id: docSnap.id, ...docSnap.data() });
-          } else {
-            const dummy = dummyProducts.find(p => p.id === id);
-            if (dummy) fetchedProducts.push(dummy);
           }
         }
         setProducts(fetchedProducts);

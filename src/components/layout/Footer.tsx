@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.png';
+import { MagneticButton } from './MagneticButton';
 
 export function Footer() {
   return (
@@ -10,7 +11,7 @@ export function Footer() {
             <img src={logo} alt="Wearition" className="h-32 md:h-48 w-auto object-contain brightness-110" />
           </div>
           <p className="text-sm text-foreground/50 max-w-sm font-sans leading-relaxed">
-            Elegance redefined. Discover the latest in luxury women's fashion, crafted for the modern visionary.
+            Elegance redefined. Discover the latest in luxury fashion, crafted for the modern visionary.
           </p>
         </div>
         <div>
@@ -33,11 +34,17 @@ export function Footer() {
         </div>
       </div>
       <div className="max-w-[1440px] mx-auto mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between text-[10px] uppercase font-medium tracking-[0.2em] text-foreground/40">
-        <p>&copy; 2026. All rights reserved.</p>
+        <p>&copy; 2026 Wearition. All rights reserved.</p>
         <div className="flex gap-8 mt-6 md:mt-0">
-          <a href="#" className="hover:text-foreground transition-colors uppercase">Instagram</a>
-          <a href="#" className="hover:text-foreground transition-colors uppercase">TikTok</a>
-          <a href="#" className="hover:text-foreground transition-colors uppercase">Pinterest</a>
+          <MagneticButton strength={0.3} as="div">
+            <a href="https://instagram.com/wearition" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors uppercase">Instagram</a>
+          </MagneticButton>
+          <MagneticButton strength={0.3} as="div">
+            <a href="https://tiktok.com/@wearition" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors uppercase">TikTok</a>
+          </MagneticButton>
+          <MagneticButton strength={0.3} as="div">
+            <a href="https://pinterest.com/wearition" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors uppercase">Pinterest</a>
+          </MagneticButton>
         </div>
       </div>
     </footer>

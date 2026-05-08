@@ -9,7 +9,6 @@ import { formatCurrency } from '../../utils/currency';
 interface ProductCardProps {
   product: any;
   index?: number;
-  key?: React.Key;
 }
 
 export function ProductCard({ product, index = 0 }: ProductCardProps) {

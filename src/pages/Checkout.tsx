@@ -4,9 +4,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { formatCurrency } from '../utils/currency';
-import { sendEmailNotification } from '../utils/emailService';
+import { sendOrderConfirmationEmail } from '../utils/emailService';
 import { useOrderTrackingStore } from '../store/orderTrackingStore';
+import { useAuthStore } from '../store/authStore';
 import { motion } from 'framer-motion';
+import { SEO } from '../components/layout/SEO';
 
 interface ShippingAddress {
   firstName: string;
@@ -27,8 +29,9 @@ export function Checkout() {
     firstName: '', lastName: '', address: '', city: '', zip: '', phone: ''
   });
   const addOrder = useOrderTrackingStore(state => state.addOrder);
+  const { user } = useAuthStore();
 
-  const shippingCost = 20;
+  const shippingCost = 200;
   const total = subtotal + shippingCost;
 
   const handleShippingChange = (field: keyof ShippingAddress) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,46 +44,67 @@ export function Checkout() {
     if (!shipping.firstName || !shipping.address || !shipping.city) {
       toast.error('Please fill in your shipping address'); return;
     }
+    if (!user) {
+      toast.error('Please sign in to place an order');
+      navigate('/account');
+      return;
+    }
 
     setIsProcessing(true);
 
-    setTimeout(async () => {
-      const orderId = 'WR-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    const orderId = 'WR-' + Math.random().toString(36).substring(2, 8).toUpperCase();
 
-      const orderData = {
-        orderId,
+    const orderData = {
+      orderId,
+      email: email.toLowerCase(),
+      userId: user.uid,
+      status: 'pending' as const,
+      date: new Date().toISOString(),
+      total,
+      items: items.map(i => ({
+        id: i.id, title: i.title, price: i.price,
+        quantity: i.quantity, size: i.size, color: i.color, image: i.image
+      })),
+      paymentMethod,
+      shippingAddress: {
+        name: `${shipping.firstName} ${shipping.lastName}`,
+        address: shipping.address,
+        city: shipping.city,
+        zip: shipping.zip,
+        phone: shipping.phone,
+      },
+      shippingDetails: { shippingAmount: shippingCost }
+    };
+
+    try {
+      await addOrder(orderData);
+      // Send rich branded confirmation email
+      sendOrderConfirmationEmail({
         email: email.toLowerCase(),
-        status: 'pending' as const,
-        date: new Date().toISOString(),
-        total,
+        name: shipping.firstName,
+        orderId,
         items: items.map(i => ({
-          id: i.id, title: i.title, price: i.price,
-          quantity: i.quantity, size: i.size, color: i.color, image: i.image
+          title: i.title, quantity: i.quantity, price: i.price,
+          size: i.size, color: i.color, image: i.image
         })),
-        paymentMethod,
+        subtotal,
+        shipping: shippingCost,
+        total,
         shippingAddress: {
           name: `${shipping.firstName} ${shipping.lastName}`,
           address: shipping.address,
           city: shipping.city,
-          zip: shipping.zip,
-          phone: shipping.phone,
         },
-        shippingDetails: { shippingAmount: shippingCost }
-      };
-
-      try {
-        await addOrder(orderData);
-        await sendEmailNotification(email, 'confirmation', { orderId });
-        toast.success(`Order ${orderId} placed successfully!`);
-        setIsProcessing(false);
-        clearCart();
-        navigate(`/track-order?id=${orderId}`);
-      } catch (error) {
-        console.error('Order placement failed:', error);
-        toast.error('Failed to place order. Please try again.');
-        setIsProcessing(false);
-      }
-    }, 2000);
+      }).catch(() => {});
+      toast.success(`Order ${orderId} placed successfully!`);
+      clearCart();
+      navigate(`/track-order?id=${orderId}`);
+    } catch (error) {
+      console.error('Order placement failed:', error);
+      toast.error('Failed to place order. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   if (items.length === 0) {
@@ -103,6 +127,7 @@ export function Checkout() {
     <div className="w-full pt-40 px-6 md:px-12 pb-32 bg-background">
       <div className="max-w-[1200px] mx-auto">
         <motion.header initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
+          <SEO title="Checkout" description="Complete your WEARITION order securely." />
           <h1 className="font-serif text-4xl md:text-5xl text-foreground">Checkout</h1>
           <p className="text-foreground/40 text-sm font-sans mt-2">Secure & confidential</p>
         </motion.header>

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { db, handleFirestoreError, OperationType } from '../firebase';
+import { db } from '../firebase';
 import { collection, query, onSnapshot, doc, deleteDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { Plus, Edit2, Trash2, X } from 'lucide-react';
 import { formatCurrency } from '../utils/currency';
+import { toast } from 'sonner';
 
 interface Product {
   id: string;
@@ -119,10 +120,11 @@ export function AdminProducts() {
     try {
       if (confirm('Are you sure you want to delete this product?')) {
         await deleteDoc(doc(db, 'products', id));
+        toast.success('Product deleted');
       }
     } catch (err: any) {
-      handleFirestoreError(err, OperationType.DELETE, `products/${id}`);
-      alert('Error deleting product');
+      console.error('Delete failed:', err);
+      toast.error('Error deleting product');
     }
   };
 
@@ -223,9 +225,10 @@ export function AdminProducts() {
         });
       }
       setIsModalOpen(false);
+      toast.success(editingId ? 'Product updated' : 'Product created');
     } catch (err: any) {
-      handleFirestoreError(err, OperationType.WRITE, `products`);
-      alert('Error saving product');
+      console.error('Save failed:', err);
+      toast.error('Error saving product');
     }
   };
 

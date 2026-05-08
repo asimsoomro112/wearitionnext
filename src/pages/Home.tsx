@@ -10,6 +10,8 @@ import { collection, doc, getDoc, getDocs, query, where } from "firebase/firesto
 import heroImg from "@/1.png";
 import { BrandStory } from "../components/layout/BrandStory";
 import { SEO } from "../components/layout/SEO";
+import { TextReveal } from "../components/layout/TextReveal";
+import { MagneticButton } from "../components/layout/MagneticButton";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,7 +22,7 @@ const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
 const CategoryGrid = ({ items }: { items?: any[] }) => (
   <section className="py-16 md:py-32 px-6 lg:px-12 w-full max-w-[1600px] mx-auto z-10 relative bg-background">
      <div className="flex flex-col mb-12">
-        <h2 className="font-serif text-3xl md:text-5xl uppercase tracking-[0.2em] mb-4">Curated Selections</h2>
+        <TextReveal as="h2" className="font-serif text-3xl md:text-5xl uppercase tracking-[0.2em] mb-4">Curated Selections</TextReveal>
         <div className="h-[1px] w-32 bg-accent"></div>
      </div>
      <div className="bento-grid">
@@ -84,9 +86,9 @@ const HorizontalScroller = ({ title, products, sectionClass, scrollClass, isSale
     <section ref={scrollRef} className={`${sectionClass} relative w-full lg:h-screen flex flex-col justify-center overflow-hidden bg-background py-16 lg:py-0`}>
       <div className="w-full max-w-[1440px] mx-auto px-6 relative z-10 mb-8 lg:mb-[8vh]">
         <div className="flex justify-between items-end border-b border-foreground/30 pb-4 mix-blend-difference">
-          <h2 className="font-serif text-3xl md:text-5xl lg:text-7xl uppercase tracking-widest text-foreground">
+          <TextReveal as="h2" className="font-serif text-3xl md:text-5xl lg:text-7xl uppercase tracking-widest text-foreground">
             {title}
-          </h2>
+          </TextReveal>
           <Link to="/shop" className="text-xs uppercase tracking-widest hover:text-accent transition-colors text-foreground whitespace-nowrap ml-4">
             View All
           </Link>
@@ -373,10 +375,12 @@ export function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.5 }}
               >
-                <Link to="/shop" className="group relative inline-flex items-center gap-[14px] px-[42px] py-[22px] bg-foreground text-background overflow-hidden rounded-full font-bold tracking-[0.2em] text-[0.9rem] md:text-[1rem] transition-all duration-500 hover:text-accent">
-                  <span className="relative z-10">DISCOVER THE COLLECTION</span>
-                  <div className="absolute inset-0 bg-accent translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                </Link>
+                <MagneticButton strength={0.2} as="div" className="inline-block">
+                  <Link to="/shop" className="group relative inline-flex items-center gap-[14px] px-[42px] py-[22px] bg-foreground text-background overflow-hidden rounded-full font-bold tracking-[0.2em] text-[0.9rem] md:text-[1rem] transition-all duration-500 hover:text-accent">
+                    <span className="relative z-10">DISCOVER THE COLLECTION</span>
+                    <div className="absolute inset-0 bg-accent translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                  </Link>
+                </MagneticButton>
               </motion.div>
             </div>
 
@@ -446,9 +450,9 @@ export function Home() {
             <div className="absolute inset-0 bg-black/30 pointer-events-none z-[1]"></div>
 
             <div className="relative z-[2] w-full max-w-2xl p-8 lg:p-16 bg-black/40 backdrop-blur-md border border-white/20 text-white shadow-2xl rounded-sm">
-              <h2 className="font-serif text-4xl sm:text-5xl lg:text-7xl mb-6 leading-tight text-white drop-shadow-lg">
+              <TextReveal as="h2" className="font-serif text-4xl sm:text-5xl lg:text-7xl mb-6 leading-tight text-white drop-shadow-lg">
                 The Autumn Edit
-              </h2>
+              </TextReveal>
               <p className="font-sans leading-relaxed mb-8 text-sm lg:text-base text-white/90 drop-shadow-md">
                 Embrace the changing seasons with our latest editorial. Structured
                 tailoring meets fluid silks, creating a wardrobe that transitions
@@ -486,9 +490,9 @@ export function Home() {
                 </div>
               </div>
               <div className="w-full lg:w-1/2 artisanship-text">
-                <h2 className="font-serif text-3xl md:text-4xl lg:text-6xl uppercase tracking-widest text-foreground mb-8 lg:mb-12 leading-tight">
+                <TextReveal as="h2" className="font-serif text-3xl md:text-4xl lg:text-6xl uppercase tracking-widest text-foreground mb-8 lg:mb-12 leading-tight">
                   Uncompromising Artisanship
-                </h2>
+                </TextReveal>
                 <p className="text-foreground/70 font-sans leading-relaxed mb-6 text-sm lg:text-base">
                   Every garment is meticulously crafted in our European ateliers,
                   where generations of expertise meet modern innovation. We believe

@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useOrderTrackingStore } from '../store/orderTrackingStore';
 import { formatCurrency } from '../utils/currency';
-import { MapPin, Package, Truck, CheckCircle } from 'lucide-react';
+import { Package, Truck, CheckCircle, ClipboardCheck } from 'lucide-react';
+import { SEO } from '../components/layout/SEO';
 
 export function OrderTracking() {
   const [searchParams] = useSearchParams();
@@ -12,24 +13,28 @@ export function OrderTracking() {
   const [email, setEmail] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
   const [order, setOrder] = useState<any>(null);
+  const [isSearching, setIsSearching] = useState(false);
   
   const getOrder = useOrderTrackingStore(state => state.getOrder);
 
-  useEffect(() => {
-    // If we have an ID from params, we might still need the email to retrieve it securely,
-    // but in a mockup without auth, we might just look it up if we don't strictly require email.
-    // For realism, let's require both but pre-fill ID.
-  }, [initialId]);
-
-  const handleTrack = (e: React.FormEvent) => {
+  const handleTrack = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSearching(true);
     setHasSearched(true);
-    const foundOrder = getOrder(orderId, email);
-    setOrder(foundOrder || null);
+    try {
+      const foundOrder = await getOrder(orderId, email);
+      setOrder(foundOrder || null);
+    } catch (err) {
+      console.error('Order lookup failed:', err);
+      setOrder(null);
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   return (
     <div className="w-full pt-40 px-6 md:px-12 pb-32 bg-background min-h-screen">
+      <SEO title="Track Your Order" description="Track your WEARITION order status in real-time." />
       <div className="max-w-[800px] mx-auto">
         <header className="mb-12 text-center">
           <h1 className="font-serif text-4xl sm:text-5xl tracking-tight text-foreground mb-6 uppercase">Track Your Order</h1>
@@ -62,7 +67,12 @@ export function OrderTracking() {
 
         {hasSearched && (
           <div className="bg-background-secondary/20 border border-white/5 p-8 md:p-12">
-            {!order ? (
+            {isSearching ? (
+              <div className="text-center py-8">
+                <div className="w-8 h-8 border-t border-accent rounded-full animate-spin mx-auto mb-4" />
+                <p className="text-foreground/40 text-xs uppercase tracking-widest">Looking up your order...</p>
+              </div>
+            ) : !order ? (
               <div className="text-center text-red-500 font-sans">
                 Order not found. Please verify your order ID and email.
               </div>
@@ -70,7 +80,7 @@ export function OrderTracking() {
               <div>
                 <div className="flex justify-between items-end mb-12 border-b border-foreground/10 pb-6">
                   <div>
-                    <h2 className="text-xl font-serif text-foreground">Order: {order.id}</h2>
+                    <h2 className="text-xl font-serif text-foreground">Order: {order.orderId}</h2>
                     <p className="text-sm font-sans text-foreground/50 mt-2">Placed on {new Date(order.date).toLocaleDateString()}</p>
                   </div>
                   <div className="text-right">
@@ -83,14 +93,15 @@ export function OrderTracking() {
                   <div className="absolute top-1/2 left-0 w-full h-px bg-white/10 -z-10" />
                   <div className="flex justify-between items-center relative z-10 w-full max-w-2xl mx-auto">
                     {[
+                      { status: 'pending', label: 'Confirmed', icon: ClipboardCheck },
                       { status: 'processing', label: 'Processing', icon: Package },
                       { status: 'shipped', label: 'Shipped', icon: Truck },
                       { status: 'delivered', label: 'Delivered', icon: CheckCircle }
                     ].map((step, idx) => {
-                      const isActive = 
-                        order.status === step.status || 
-                        (order.status === 'delivered') || 
-                        (order.status === 'shipped' && idx === 0);
+                      const statusOrder = ['pending', 'processing', 'shipped', 'delivered'];
+                      const currentIdx = statusOrder.indexOf(order.status);
+                      const stepIdx = statusOrder.indexOf(step.status);
+                      const isActive = stepIdx <= currentIdx;
                         
                       const Icon = step.icon;
                       return (

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { db } from '../firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
@@ -64,11 +64,6 @@ export function Shop() {
           fetched = fetched.filter(p => p.category?.toLowerCase() === categoryFilter);
         }
 
-        // Sorting
-        if (sortBy === 'price_asc') fetched.sort((a, b) => a.price - b.price);
-        else if (sortBy === 'price_desc') fetched.sort((a, b) => b.price - a.price);
-        else if (sortBy === 'newest') fetched.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-
         setProducts(fetched);
       } catch (e) {
         console.error("Error fetching products", e);
@@ -77,7 +72,16 @@ export function Shop() {
       }
     }
     fetchProducts();
-  }, [searchString, categoryFilter, sortBy]);
+  }, [searchString, categoryFilter]);
+
+  // Client-side sorting — no re-fetch needed
+  const sortedProducts = useMemo(() => {
+    const sorted = [...products];
+    if (sortBy === 'price_asc') sorted.sort((a, b) => a.price - b.price);
+    else if (sortBy === 'price_desc') sorted.sort((a, b) => b.price - a.price);
+    else if (sortBy === 'newest') sorted.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+    return sorted;
+  }, [products, sortBy]);
 
   const setCategory = (value: string) => {
     const params = new URLSearchParams(searchParams);
@@ -126,7 +130,7 @@ export function Shop() {
 
         {/* Sort Bar */}
         <div className="flex justify-between items-center border-y border-foreground/10 py-5 mb-14 text-xs uppercase tracking-widest text-foreground/60">
-          <span>{loading ? '...' : `${products.length} Results`}</span>
+          <span>{loading ? '...' : `${sortedProducts.length} Results`}</span>
           <div className="flex items-center gap-3">
             <span className="hidden md:block">Sort:</span>
             <select
@@ -164,7 +168,7 @@ export function Shop() {
             layout
             className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12"
           >
-            {products.map((product, i) => (
+            {sortedProducts.map((product, i) => (
               <ProductCard key={product.id} product={product} index={i} />
             ))}
           </motion.div>

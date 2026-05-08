@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '../firebase';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { formatCurrency } from '../utils/currency';
 import { BarChart3, TrendingUp, ShoppingCart, Award } from 'lucide-react';
 
@@ -10,7 +10,6 @@ export function AdminAnalytics() {
     totalOrders: 0,
     averageOrderValue: 0,
     topCategories: [] as { name: string, count: number }[],
-    recentGrowth: '+12.5%'
   });
   const [loading, setLoading] = useState(true);
 
@@ -42,7 +41,6 @@ export function AdminAnalytics() {
           totalOrders,
           averageOrderValue: aov,
           topCategories,
-          recentGrowth: '+15.2%'
         });
       } catch (e) {
         console.error("Analytics fetch failed:", e);
@@ -64,28 +62,28 @@ export function AdminAnalytics() {
           <TrendingUp className="w-6 h-6 text-green-600 mb-4" />
           <p className="text-[#0a0a0a]/40 text-xs uppercase tracking-widest font-bold mb-1">Total Sales</p>
           <h3 className="text-3xl font-mono text-[#0a0a0a]">{formatCurrency(stats.totalSales)}</h3>
-          <p className="text-[10px] text-green-600 mt-2 font-bold">{stats.recentGrowth} vs last month</p>
+          <p className="text-xs text-[#0a0a0a]/40 mt-2">Lifetime earnings</p>
         </div>
         
         <div className="bg-white border border-black/10 p-8 rounded-lg shadow-sm">
           <ShoppingCart className="w-6 h-6 text-blue-600 mb-4" />
           <p className="text-[#0a0a0a]/40 text-xs uppercase tracking-widest font-bold mb-1">Total Orders</p>
           <h3 className="text-3xl font-mono text-[#0a0a0a]">{stats.totalOrders}</h3>
-          <p className="text-[10px] text-[#0a0a0a]/40 mt-2">Conversion rate: 3.4%</p>
+          <p className="text-xs text-[#0a0a0a]/40 mt-2">All time</p>
         </div>
 
         <div className="bg-white border border-black/10 p-8 rounded-lg shadow-sm">
           <BarChart3 className="w-6 h-6 text-purple-600 mb-4" />
           <p className="text-[#0a0a0a]/40 text-xs uppercase tracking-widest font-bold mb-1">Avg. Order Value</p>
           <h3 className="text-3xl font-mono text-[#0a0a0a]">{formatCurrency(stats.averageOrderValue)}</h3>
-          <p className="text-[10px] text-[#0a0a0a]/40 mt-2">Target: $450.00</p>
+          <p className="text-xs text-[#0a0a0a]/40 mt-2">Per order average</p>
         </div>
 
         <div className="bg-white border border-black/10 p-8 rounded-lg shadow-sm">
           <Award className="w-6 h-6 text-orange-600 mb-4" />
           <p className="text-[#0a0a0a]/40 text-xs uppercase tracking-widest font-bold mb-1">Loyalty Rate</p>
           <h3 className="text-3xl font-mono text-[#0a0a0a]">24%</h3>
-          <p className="text-[10px] text-orange-600 mt-2 font-bold">+2.1% improvement</p>
+          <p className="text-xs text-[#0a0a0a]/40 mt-2">Returning customers</p>
         </div>
       </div>
 

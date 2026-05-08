@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { db, handleFirestoreError, OperationType } from '../firebase';
+import { db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { useCartStore } from '../store/cartStore';
 import { useUIStore } from '../store/uiStore';
@@ -10,6 +10,10 @@ import { toast } from 'sonner';
 import { formatCurrency } from '../utils/currency';
 import { triggerHaptic } from '../utils/haptics';
 import { SEO } from '../components/layout/SEO';
+import { TextReveal } from '../components/layout/TextReveal';
+import { MagneticButton } from '../components/layout/MagneticButton';
+import { WhatsAppButton } from '../components/layout/WhatsAppButton';
+import { MessageSquare } from 'lucide-react';
 
 export function ProductDetails() {
   const { id } = useParams();
@@ -32,7 +36,7 @@ export function ProductDetails() {
           setProduct({ id: docSnap.id, ...docSnap.data() });
         }
       } catch (e) {
-        handleFirestoreError(e, OperationType.GET, `products/${id}`);
+        console.error('Failed to fetch product:', e);
       } finally {
         setLoading(false);
       }
@@ -49,9 +53,14 @@ export function ProductDetails() {
   }
 
   const isWished = product ? wishlistIds.includes(product.id) : false;
+  const isOutOfStock = product.stock === 0;
+  const isLowStock = product.stock > 0 && product.stock <= 5;
 
   const handleAddToCart = () => {
-    // In a real app we would enforce size/color selection and check inventory.
+    if (isOutOfStock) {
+      toast.error('This item is currently out of stock');
+      return;
+    }
     if (!selectedSize) {
       toast.error('Please select a size first');
       return;
@@ -81,6 +90,8 @@ export function ProductDetails() {
     }
   };
 
+  const whatsappOrderUrl = `https://wa.me/923000000000?text=${encodeURIComponent(`Hi! I'd like to order "${product.title}" (${formatCurrency(product.price)}) from Wearition. Size: ${selectedSize || 'Not selected'}. Link: ${window.location.href}`)}`;
+
   return (
     <div className="w-full relative bg-background">
       <SEO 
@@ -102,7 +113,7 @@ export function ProductDetails() {
                 transition={{ duration: 0.8 }}
                 className="w-full aspect-[3/4] bg-background-secondary overflow-hidden"
               >
-                <img src={img} alt={`${product.title} ${idx + 1}`} className="w-full h-full object-cover" />
+                <img src={img} alt={`${product.title} ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
               </motion.div>
             ))
           ) : (
@@ -120,15 +131,22 @@ export function ProductDetails() {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <p className="text-accent uppercase tracking-[0.3em] font-medium text-[10px] mb-6">The House</p>
-            <h1 className="font-serif text-5xl md:text-6xl text-foreground leading-[1.1] mb-6">{product.title}</h1>
-            <p className="text-xl mb-12 text-foreground/80 font-sans">{formatCurrency(product.price)}</p>
+            <TextReveal as="h1" className="font-serif text-5xl md:text-6xl text-foreground leading-[1.1] mb-6">{product.title}</TextReveal>
+            
+            <div className="flex items-center gap-4 mb-12">
+              <p className="text-xl text-foreground/80 font-sans">{formatCurrency(product.price)}</p>
+              {isLowStock && (
+                <span className="text-[10px] uppercase tracking-widest bg-accent/20 text-accent px-3 py-1 font-bold animate-pulse">Only {product.stock} Left</span>
+              )}
+              {isOutOfStock && (
+                <span className="text-[10px] uppercase tracking-widest bg-red-500/20 text-red-500 px-3 py-1 font-bold">Out of Stock</span>
+              )}
+            </div>
             
             <div className="mb-12 text-foreground/60 text-sm leading-relaxed font-sans">
               {product.description || 'No description available for this item.'}
             </div>
 
-            {/* Selectors - Simulated for now as we don't have variants array parsed, 
-                but we can use standard inputs if we had the data */}
             <div className="flex flex-col gap-6 mb-12 border-y border-white/10 py-10">
                <div>
                   <div className="flex justify-between items-center mb-6">
@@ -149,12 +167,23 @@ export function ProductDetails() {
                </div>
             </div>
 
-            <button 
+            <MagneticButton 
+              className={`w-full py-6 uppercase text-xs tracking-[0.2em] font-medium transition-colors duration-300 mb-4 ${isOutOfStock ? 'bg-foreground/20 text-foreground/40 cursor-not-allowed' : 'bg-foreground text-background hover:bg-accent hover:text-background'}`}
               onClick={handleAddToCart}
-              className="w-full bg-foreground text-background py-6 uppercase text-xs tracking-[0.2em] font-medium hover:bg-accent hover:text-background transition-colors duration-300 mb-4"
             >
-              Add to Bag
-            </button>
+              {isOutOfStock ? 'Out of Stock' : 'Add to Bag'}
+            </MagneticButton>
+
+            <a 
+              href={whatsappOrderUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full border border-[#25D366]/30 text-[#25D366] py-6 uppercase text-xs tracking-[0.2em] font-medium hover:bg-[#25D366]/10 transition-colors duration-300 mb-4 flex items-center justify-center gap-3"
+            >
+              <MessageSquare className="w-4 h-4" />
+              Order on WhatsApp
+            </a>
+
             <button 
               onClick={handleWishlistToggle}
               className="w-full border border-foreground/30 text-foreground py-6 uppercase text-xs tracking-[0.2em] hover:bg-foreground hover:text-background transition-colors duration-300 mb-16"

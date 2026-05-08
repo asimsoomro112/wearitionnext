@@ -1,15 +1,20 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
 import { useAuthStore } from '../store/authStore';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
-  signOut
+  signOut,
+  sendPasswordResetEmail,
+  updateProfile
 } from 'firebase/auth';
+import { toast } from 'sonner';
+import { sendWelcomeEmail } from '../utils/emailService';
 
 export function Account() {
   const [isLogin, setIsLogin] = useState(true);
@@ -31,8 +36,19 @@ export function Account() {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
       } else {
-        // You could save firstName/lastName to Firestore here
-        await createUserWithEmailAndPassword(auth, email, password);
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        // Save display name to Firebase Auth profile
+        await updateProfile(cred.user, { displayName: `${firstName} ${lastName}` });
+        // Save user details to Firestore
+        await setDoc(doc(db, 'users', cred.user.uid), {
+          email: cred.user.email,
+          displayName: `${firstName} ${lastName}`,
+          role: 'user',
+          createdAt: serverTimestamp(),
+        }, { merge: true });
+        // Send branded welcome email
+        sendWelcomeEmail({ name: firstName, email }).catch(() => {});
+        toast.success('Welcome to WEARITION! Check your email.');
       }
     } catch (err: any) {
       setError(err.message || 'Authentication error');
@@ -208,7 +224,19 @@ export function Account() {
               <div className="flex justify-between items-center">
                 <label className="uppercase text-[10px] tracking-widest text-foreground/60">Password</label>
                 {isLogin && (
-                  <button type="button" className="uppercase text-[9px] tracking-widest text-accent hover:text-foreground transition-colors">
+                  <button 
+                    type="button" 
+                    onClick={async () => {
+                      if (!email) { toast.error('Enter your email first'); return; }
+                      try {
+                        await sendPasswordResetEmail(auth, email);
+                        toast.success('Password reset email sent! Check your inbox.');
+                      } catch (err: any) {
+                        toast.error(err.message || 'Failed to send reset email');
+                      }
+                    }}
+                    className="uppercase text-[9px] tracking-widest text-accent hover:text-foreground transition-colors"
+                  >
                     Forgot?
                   </button>
                 )}

@@ -2,6 +2,9 @@ import { motion } from 'framer-motion';
 import { useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { SEO } from '../components/layout/SEO';
+import { TextReveal } from '../components/layout/TextReveal';
+import { MagneticButton } from '../components/layout/MagneticButton';
 
 export function Editorial() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -15,6 +18,10 @@ export function Editorial() {
 
   return (
     <div ref={containerRef} className="w-full bg-background min-h-screen">
+      <SEO 
+        title="The Autumn Edit" 
+        description="Explore Wearition's Autumn Editorial. A celebration of texture, silhouette, and the transition of light."
+      />
       {/* Hero Section */}
       <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
         <motion.div 
@@ -35,9 +42,9 @@ export function Editorial() {
           className="relative z-10 text-center px-6"
         >
           <span className="text-white uppercase tracking-[0.4em] text-[10px] mb-6 block">Editorial Vol. 04</span>
-          <h1 className="font-serif text-6xl md:text-8xl lg:text-[10rem] text-white uppercase tracking-tighter leading-none mb-8">
-            Autumn<br />Edit
-          </h1>
+          <TextReveal as="h1" className="font-serif text-6xl md:text-8xl lg:text-[10rem] text-white uppercase tracking-tighter leading-none mb-8 text-center">
+            Autumn Edit
+          </TextReveal>
           <p className="text-white/80 font-sans max-w-xl mx-auto text-sm md:text-base leading-relaxed uppercase tracking-widest">
             A celebration of texture, silhouette, and the transition of light.
           </p>
@@ -58,9 +65,9 @@ export function Editorial() {
             viewport={{ once: true }}
             transition={{ duration: 1 }}
           >
-            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-foreground mb-10 leading-tight">
-              Structured<br />Serenity
-            </h2>
+            <TextReveal as="h2" className="font-serif text-4xl md:text-5xl lg:text-6xl text-foreground mb-10 leading-tight">
+              Structured Serenity
+            </TextReveal>
             <p className="text-foreground/70 font-sans leading-relaxed mb-8">
               This season, we explore the intersection of rigid architecture and fluid motion. Each piece is designed to hold its form while allowing the wearer to move with effortless grace. 
             </p>
@@ -119,9 +126,9 @@ export function Editorial() {
             transition={{ duration: 1 }}
             className="order-1 md:order-2"
           >
-            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-foreground mb-10 leading-tight">
-              Tactile<br />Poetry
-            </h2>
+            <TextReveal as="h2" className="font-serif text-4xl md:text-5xl lg:text-6xl text-foreground mb-10 leading-tight">
+              Tactile Poetry
+            </TextReveal>
             <p className="text-foreground/70 font-sans leading-relaxed mb-8">
               Wool, silk, and cashmere—the holy trinity of autumn. We've sourced the finest natural fibers to create a collection that feels as good as it looks. The color palette is drawn from the fading light of October evenings.
             </p>
@@ -136,12 +143,14 @@ export function Editorial() {
 
       {/* Closing Hero */}
       <section className="py-24 md:py-40 px-6 text-center border-t border-foreground/10">
-        <h3 className="font-serif text-4xl md:text-6xl text-foreground mb-12 uppercase tracking-tight">
+        <TextReveal as="h3" className="font-serif text-4xl md:text-6xl text-foreground mb-12 uppercase tracking-tight text-center">
           Redefine Your Silhouette
-        </h3>
-        <Link to="/shop" className="inline-block bg-foreground text-background px-16 py-6 uppercase text-xs tracking-[0.3em] font-bold hover:bg-accent hover:text-white transition-all duration-300 shadow-xl" data-cursor="SHOP">
-          Shop The Edit
-        </Link>
+        </TextReveal>
+        <MagneticButton strength={0.2} as="div" className="inline-block">
+          <Link to="/shop" className="inline-block bg-foreground text-background px-16 py-6 uppercase text-xs tracking-[0.3em] font-bold hover:bg-accent hover:text-white transition-all duration-300 shadow-xl" data-cursor="SHOP">
+            Shop The Edit
+          </Link>
+        </MagneticButton>
       </section>
     </div>
   );

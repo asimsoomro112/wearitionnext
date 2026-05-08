@@ -16,7 +16,12 @@ export function AdminUsers() {
       setLoading(false);
     }, (error) => {
       console.error("Users Page Load Error:", error);
-      setLoading(false);
+      // Fallback: try without sorting if index is missing
+      const qFallback = query(collection(db, 'users'));
+      onSnapshot(qFallback, (snapshot) => {
+        setUsers(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        setLoading(false);
+      }, () => setLoading(false));
     });
     return () => unsubscribe();
   }, []);

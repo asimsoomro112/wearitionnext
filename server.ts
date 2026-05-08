@@ -4,6 +4,7 @@ import path from 'path';
 import axios from 'axios';
 import * as admin from 'firebase-admin';
 import * as dotenv from 'dotenv';
+import nodemailer from 'nodemailer';
 
 dotenv.config();
 
@@ -16,11 +17,62 @@ try {
   console.log("Firebase Admin not configured yet.");
 }
 
+// ────────────── Gmail SMTP Transporter ──────────────
+// Uses your Gmail directly — FREE and UNLIMITED (500/day)
+// Requires: GMAIL_USER and GMAIL_APP_PASSWORD in .env
+const createMailTransporter = () => {
+  const user = process.env.GMAIL_USER;
+  const pass = process.env.GMAIL_APP_PASSWORD;
+  
+  if (!user || !pass) {
+    console.warn('[Email] GMAIL_USER or GMAIL_APP_PASSWORD not set. Email sending disabled.');
+    return null;
+  }
+
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: { user, pass },
+  });
+};
+
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  app.use(express.json());
+  app.use(express.json({ limit: '2mb' })); // Allow large HTML emails
+
+  // ────────────── EMAIL API ENDPOINT ──────────────
+  // POST /api/send-email
+  // Body: { to, subject, html }
+  // Sends email through YOUR Gmail — free, unlimited, professional
+  app.post('/api/send-email', async (req, res) => {
+    const { to, subject, html } = req.body;
+
+    if (!to || !subject || !html) {
+      return res.status(400).json({ error: 'Missing required fields: to, subject, html' });
+    }
+
+    const transporter = createMailTransporter();
+    if (!transporter) {
+      console.log(`[Email Mock] To: ${to} | Subject: ${subject}`);
+      return res.json({ ok: true, mock: true, message: 'Gmail not configured, email logged to console' });
+    }
+
+    try {
+      const info = await transporter.sendMail({
+        from: `"WEARITION" <${process.env.GMAIL_USER}>`,
+        to,
+        subject,
+        html,
+      });
+
+      console.log(`[Email] ✓ Sent to ${to} — MessageId: ${info.messageId}`);
+      res.json({ ok: true, messageId: info.messageId });
+    } catch (error: any) {
+      console.error('[Email] ✗ Failed:', error.message);
+      res.status(500).json({ error: 'Failed to send email', details: error.message });
+    }
+  });
 
   // Telegram Bot Webhook Endpoint
   app.post('/api/telegram-webhook', async (req, res) => {

@@ -32,7 +32,7 @@ export function Navbar() {
       >
         <div className="flex items-center gap-6">
           <Link to="/shop" className="hidden md:block uppercase text-xs tracking-widest md:hover:opacity-70 transition-opacity">Shop</Link>
-          <button className="hidden md:block uppercase text-xs tracking-widest md:hover:opacity-70 transition-opacity">Collections</button>
+          <Link to="/shop" className="hidden md:block uppercase text-xs tracking-widest md:hover:opacity-70 transition-opacity">Collections</Link>
           
           <button className="md:hidden active:opacity-70" onClick={handleToggleMenu}>
             <Menu className="w-6 h-6" />

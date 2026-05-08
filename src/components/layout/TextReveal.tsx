@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion';
-import { useRef } from 'react';
 
 interface TextRevealProps {
-  children: string;
+  children: React.ReactNode;
   className?: string;
   as?: 'h1' | 'h2' | 'h3' | 'p' | 'span';
   delay?: number;
@@ -16,30 +15,43 @@ export function TextReveal({
   delay = 0,
   once = true
 }: TextRevealProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const words = children.split(' ');
+  // Extract text content for word splitting
+  const text = typeof children === 'string' ? children : null;
+
+  // If children is not a simple string, just animate the whole block
+  if (!text) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once, margin: '-30px' }}
+        transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <Tag className={className}>{children}</Tag>
+      </motion.div>
+    );
+  }
+
+  const words = text.split(' ');
 
   return (
     <Tag className={className}>
-      <span ref={ref} className="inline">
-        {words.map((word, i) => (
-          <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
-            <motion.span
-              className="inline-block"
-              initial={{ y: '110%', rotateX: -80 }}
-              whileInView={{ y: '0%', rotateX: 0 }}
-              viewport={{ once, margin: '-50px' }}
-              transition={{
-                duration: 0.7,
-                delay: delay + i * 0.04,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-            >
-              {word}
-            </motion.span>
-          </span>
-        ))}
-      </span>
+      {words.map((word, i) => (
+        <motion.span
+          key={i}
+          className="inline-block mr-[0.25em]"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once, margin: '-20px' }}
+          transition={{
+            duration: 0.6,
+            delay: delay + i * 0.04,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+        >
+          {word}
+        </motion.span>
+      ))}
     </Tag>
   );
 }

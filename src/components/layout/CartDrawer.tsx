@@ -2,12 +2,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Minus, Plus, ShoppingBag } from 'lucide-react';
 import { useCartStore } from '../../store/cartStore';
 import { useUIStore } from '../../store/uiStore';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { formatCurrency } from '../../utils/currency';
 
 export function CartDrawer() {
   const { isCartOpen, closeCart } = useUIStore();
   const { items, removeItem, updateQuantity, subtotal } = useCartStore();
+  const navigate = useNavigate();
 
   return (
     <AnimatePresence>
@@ -107,7 +108,7 @@ export function CartDrawer() {
                 <p className="text-xs text-foreground/40 mb-8 text-center font-sans tracking-wide">Shipping, taxes, and discounts calculated at checkout.</p>
                 <button onClick={() => {
                   closeCart();
-                  window.location.href = '/checkout';
+                  navigate('/checkout');
                 }} className="w-full bg-foreground text-background py-5 uppercase text-xs tracking-[0.2em] font-medium hover:bg-accent transition-colors">
                   Checkout Securely
                 </button>

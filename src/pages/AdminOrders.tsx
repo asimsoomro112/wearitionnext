@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { db, handleFirestoreError, OperationType } from '../firebase';
+import { db } from '../firebase';
 import { collection, query, onSnapshot, orderBy, doc, updateDoc } from 'firebase/firestore';
 import { formatCurrency } from '../utils/currency';
-import { sendEmailNotification } from '../utils/emailService';
+import { sendOrderStatusEmail } from '../utils/emailService';
 import { toast } from 'sonner';
+import { Truck, X } from 'lucide-react';
 
 export function AdminOrders() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Shipping modal state
+  const [shippingModal, setShippingModal] = useState<{ orderId: string; docId: string; email: string; } | null>(null);
+  const [trackingNumber, setTrackingNumber] = useState('');
+  const [courierName, setCourierName] = useState('');
+  const [estimatedDelivery, setEstimatedDelivery] = useState('');
 
   useEffect(() => {
     setLoading(true);
@@ -32,14 +39,63 @@ export function AdminOrders() {
     return () => unsubscribe();
   }, []);
 
-  const handleStatusChange = async (id: string, email: string, orderId: string, newStatus: any) => {
+  const handleStatusChange = async (docId: string, email: string, orderId: string, newStatus: string) => {
+    // If changing to "shipped", open the tracking modal
+    if (newStatus === 'shipped') {
+      setShippingModal({ orderId, docId, email });
+      setTrackingNumber('');
+      setCourierName('');
+      setEstimatedDelivery('');
+      return;
+    }
+
     try {
-      await updateDoc(doc(db, 'orders', id), { status: newStatus });
+      await updateDoc(doc(db, 'orders', docId), { status: newStatus });
       toast.success(`Order ${orderId} status updated to ${newStatus}`);
-      await sendEmailNotification(email, newStatus, { orderId });
+      
+      // Send branded status email (skip for pending — no change)
+      if (newStatus !== 'pending') {
+        sendOrderStatusEmail({
+          email,
+          name: 'Valued Customer',
+          orderId,
+          status: newStatus as 'processing' | 'shipped' | 'delivered',
+        }).catch(() => {});
+      }
     } catch (e) {
-      handleFirestoreError(e, OperationType.UPDATE, `orders/${id}`);
+      console.error('Failed to update order status:', e);
       toast.error('Failed to update status');
+    }
+  };
+
+  const handleShipOrder = async () => {
+    if (!shippingModal) return;
+    const { docId, email, orderId } = shippingModal;
+
+    try {
+      await updateDoc(doc(db, 'orders', docId), { 
+        status: 'shipped',
+        trackingNumber: trackingNumber || undefined,
+        courierName: courierName || undefined,
+        estimatedDelivery: estimatedDelivery || undefined,
+      });
+      toast.success(`Order ${orderId} marked as shipped!`);
+
+      // Send shipped email with tracking details
+      sendOrderStatusEmail({
+        email,
+        name: 'Valued Customer',
+        orderId,
+        status: 'shipped',
+        trackingNumber: trackingNumber || undefined,
+        courierName: courierName || undefined,
+        estimatedDelivery: estimatedDelivery || undefined,
+      }).catch(() => {});
+
+      setShippingModal(null);
+    } catch (e) {
+      console.error('Failed to ship order:', e);
+      toast.error('Failed to update order');
     }
   };
 
@@ -59,6 +115,7 @@ export function AdminOrders() {
               <th className="font-medium p-4">Items</th>
               <th className="font-medium p-4">Total</th>
               <th className="font-medium p-4">Status</th>
+              <th className="font-medium p-4">Tracking</th>
               <th className="font-medium p-4">Actions</th>
             </tr>
           </thead>
@@ -90,6 +147,16 @@ export function AdminOrders() {
                   </span>
                 </td>
                 <td className="p-4">
+                  {order.trackingNumber ? (
+                    <div>
+                      <div className="text-xs font-mono font-bold text-[#0a0a0a]">{order.trackingNumber}</div>
+                      {order.courierName && <div className="text-[10px] text-[#0a0a0a]/40">{order.courierName}</div>}
+                    </div>
+                  ) : (
+                    <span className="text-[10px] text-[#0a0a0a]/30">—</span>
+                  )}
+                </td>
+                <td className="p-4">
                   <select 
                     value={order.status}
                     onChange={(e) => handleStatusChange(order.id, order.email, order.orderId, e.target.value)}
@@ -104,11 +171,94 @@ export function AdminOrders() {
               </tr>
             ))}
             {orders.length === 0 && (
-              <tr><td colSpan={7} className="p-12 text-center text-[#0a0a0a]/40">No orders found in the system.</td></tr>
+              <tr><td colSpan={8} className="p-12 text-center text-[#0a0a0a]/40">No orders found in the system.</td></tr>
             )}
           </tbody>
         </table>
       </div>
+
+      {/* SHIPPING MODAL — Enter Tracking Number */}
+      {shippingModal && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md relative">
+            <div className="flex items-center justify-between border-b border-black/10 px-6 py-4">
+              <div className="flex items-center gap-3">
+                <Truck className="w-5 h-5 text-purple-600" />
+                <h2 className="text-lg font-serif text-[#0a0a0a]">Ship Order</h2>
+              </div>
+              <button onClick={() => setShippingModal(null)} className="text-[#0a0a0a]/40 hover:text-[#0a0a0a]">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="p-6 flex flex-col gap-5">
+              <p className="text-sm text-[#0a0a0a]/60">
+                Enter shipping details for order <strong className="text-[#0a0a0a]">{shippingModal.orderId}</strong>. 
+                The customer will receive a branded email with tracking info.
+              </p>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-xs uppercase tracking-widest text-[#0a0a0a]/60 font-medium">Tracking Number *</label>
+                <input 
+                  type="text" 
+                  required
+                  value={trackingNumber} 
+                  onChange={e => setTrackingNumber(e.target.value)}
+                  placeholder="e.g. TCS-123456789"
+                  className="border border-black/10 rounded-md p-3 focus:outline-none focus:border-[#0a0a0a] text-[#0a0a0a]" 
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-xs uppercase tracking-widest text-[#0a0a0a]/60 font-medium">Courier Name</label>
+                <select 
+                  value={courierName} 
+                  onChange={e => setCourierName(e.target.value)}
+                  className="border border-black/10 rounded-md p-3 focus:outline-none focus:border-[#0a0a0a] text-[#0a0a0a] bg-white"
+                >
+                  <option value="">Select Courier</option>
+                  <option value="TCS">TCS</option>
+                  <option value="Leopards Courier">Leopards Courier</option>
+                  <option value="M&P">M&P (Muller & Phipps)</option>
+                  <option value="PostEx">PostEx</option>
+                  <option value="Rider">Rider</option>
+                  <option value="Call Courier">Call Courier</option>
+                  <option value="BlueEx">BlueEx</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-xs uppercase tracking-widest text-[#0a0a0a]/60 font-medium">Estimated Delivery</label>
+                <input 
+                  type="text" 
+                  value={estimatedDelivery} 
+                  onChange={e => setEstimatedDelivery(e.target.value)}
+                  placeholder="e.g. 3-5 business days"
+                  className="border border-black/10 rounded-md p-3 focus:outline-none focus:border-[#0a0a0a] text-[#0a0a0a]" 
+                />
+              </div>
+
+              <div className="flex justify-end gap-4 mt-2 pt-4 border-t border-black/10">
+                <button 
+                  onClick={() => setShippingModal(null)} 
+                  className="px-5 py-2 text-[#0a0a0a]/40 hover:text-[#0a0a0a] transition-colors text-sm"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleShipOrder}
+                  disabled={!trackingNumber.trim()}
+                  className="bg-purple-600 text-white px-8 py-2.5 rounded text-xs uppercase tracking-widest font-bold hover:bg-purple-700 transition-colors disabled:opacity-40 flex items-center gap-2"
+                >
+                  <Truck className="w-4 h-4" />
+                  Ship Order
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

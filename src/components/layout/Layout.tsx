@@ -28,7 +28,7 @@ export function Layout() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background-secondary text-foreground font-sans selection:bg-foreground selection:text-background-secondary flex flex-col pb-16 md:pb-0 cursor-none lg:cursor-none">
+    <div className="min-h-screen bg-background-secondary text-foreground font-sans selection:bg-foreground selection:text-background-secondary flex flex-col pb-16 md:pb-0 lg:cursor-none">
       <CustomCursor />
       <Navbar />
       <CartDrawer />

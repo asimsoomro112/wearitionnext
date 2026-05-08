@@ -72,10 +72,10 @@ export default function App() {
       }
       setLoading(false);
       
-      // Artificial delay to show premium loader and ensure hydration
+      // Brief delay to show premium loader and ensure hydration
       setTimeout(() => {
         setAppLoading(false);
-      }, 2500);
+      }, 1500);
     });
 
     return () => unsubscribe();

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { db, handleFirestoreError, OperationType } from '../firebase';
+import { db } from '../firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { toast } from 'sonner';
 import { Plus, Trash2, ArrowUp, ArrowDown, Save } from 'lucide-react';
@@ -9,7 +9,7 @@ export interface StoreSection {
   id: string;
   type: 'products_scroll' | 'categories' | 'hero' | 'editorial' | 'artisanship' | 'newsletter';
   title?: string;
-  productQueryType?: 'trending' | 'sale' | 'category' | 'all';
+  productQueryType?: 'trending' | 'sale' | 'category' | 'all' | 'featured';
   categoryValue?: string;
   items?: any[]; // for Categories
 }
@@ -75,7 +75,7 @@ export function AdminStorefront() {
       await setDoc(doc(db, 'settings', 'homepage'), { sections });
       toast.success('Storefront layout saved successfully');
     } catch (e) {
-      handleFirestoreError(e, OperationType.WRITE, 'settings/homepage');
+      console.error('Failed to save storefront layout:', e);
       toast.error('Failed to save layout');
     } finally {
       setSaving(false);
