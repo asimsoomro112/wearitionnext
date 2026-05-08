@@ -39,22 +39,35 @@ export function AdminStorefront() {
 
   useEffect(() => {
     async function fetchSettings() {
+      setLoading(true);
       try {
         const docRef = doc(db, 'settings', 'homepage');
         const snap = await getDoc(docRef);
         if (snap.exists() && snap.data().sections) {
           setSections(snap.data().sections);
         } else {
-          setSections(DEFAULT_SECTIONS);
+          setSections([...DEFAULT_SECTIONS]);
         }
       } catch (e) {
-        handleFirestoreError(e, OperationType.GET, 'settings/homepage');
+        console.error("Storefront Load Error:", e);
+        setSections([...DEFAULT_SECTIONS]);
       } finally {
         setLoading(false);
       }
     }
+    
+    // Safety timeout
+    const timeout = setTimeout(() => setLoading(false), 5000);
+    
     fetchSettings();
+    return () => clearTimeout(timeout);
   }, []);
+
+  const resetToDefaults = () => {
+    if (confirm('Reset layout to original defaults? All current changes will be lost.')) {
+      setSections([...DEFAULT_SECTIONS]);
+    }
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -115,14 +128,22 @@ export function AdminStorefront() {
     <div className="max-w-4xl mx-auto pb-24">
       <div className="flex justify-between items-center mb-10">
         <h1 className="text-3xl font-serif text-[#0a0a0a]">Storefront Layout</h1>
-        <button 
-          onClick={handleSave}
-          disabled={saving}
-          className="bg-[#0a0a0a] text-[#F5F0EB] px-6 py-2 rounded flex items-center gap-2 hover:bg-[#0a0a0a]/90 transition-colors disabled:opacity-50"
-        >
-          <Save className="w-4 h-4" />
-          {saving ? 'Saving...' : 'Save Layout'}
-        </button>
+        <div className="flex gap-4">
+          <button 
+            onClick={resetToDefaults}
+            className="text-xs uppercase tracking-widest text-black/40 hover:text-black transition-colors"
+          >
+            Reset to Defaults
+          </button>
+          <button 
+            onClick={handleSave}
+            disabled={saving}
+            className="bg-[#0a0a0a] text-[#F5F0EB] px-6 py-2 rounded flex items-center gap-2 hover:bg-[#0a0a0a]/90 transition-colors disabled:opacity-50"
+          >
+            <Save className="w-4 h-4" />
+            {saving ? 'Saving...' : 'Save Layout'}
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-lg border border-black/10 p-6 mb-8 shadow-sm">
