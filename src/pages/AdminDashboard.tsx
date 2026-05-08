@@ -8,15 +8,17 @@ import { Link } from 'react-router-dom';
 export function AdminDashboard() {
   const [products, setProducts] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
+  const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
     let productsLoaded = false;
     let ordersLoaded = false;
+    let usersLoaded = false;
 
     const checkLoading = () => {
-      if (productsLoaded && ordersLoaded) {
+      if (productsLoaded && ordersLoaded && usersLoaded) {
         setLoading(false);
       }
     };
@@ -30,6 +32,18 @@ export function AdminDashboard() {
     }, (error) => {
       console.error("Products Load Error:", error);
       productsLoaded = true;
+      checkLoading();
+    });
+
+    // Listen to users
+    const qUsers = query(collection(db, "users"), limit(50));
+    const unsubUsers = onSnapshot(qUsers, (snapshot) => {
+      setUsers(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      usersLoaded = true;
+      checkLoading();
+    }, (error) => {
+      console.error("Users Load Error:", error);
+      usersLoaded = true;
       checkLoading();
     });
 
@@ -55,6 +69,7 @@ export function AdminDashboard() {
     return () => {
       unsubProducts();
       unsubOrders();
+      unsubUsers();
       clearTimeout(timeout);
     };
   }, []);
@@ -108,7 +123,7 @@ export function AdminDashboard() {
             <div className="p-2 bg-orange-50 text-orange-600 rounded-md"><Users className="w-5 h-5" /></div>
             <p className="text-[#0a0a0a]/60 text-xs uppercase tracking-widest font-bold">Customers</p>
           </div>
-          <p className="text-2xl font-mono text-[#0a0a0a]">3</p>
+          <p className="text-2xl font-mono text-[#0a0a0a]">{users.length}</p>
         </div>
       </div>
 

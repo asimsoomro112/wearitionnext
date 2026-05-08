@@ -10,14 +10,23 @@ export function AdminOrders() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     const q = query(collection(db, 'orders'), orderBy('date', 'desc'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const fetched = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setOrders(fetched);
       setLoading(false);
     }, (error) => {
-      handleFirestoreError(error, OperationType.LIST, 'orders');
-      setLoading(false);
+      console.error("Orders Page Load Error:", error);
+      // Fallback: try without sorting if index is missing
+      const qFallback = query(collection(db, 'orders'));
+      onSnapshot(qFallback, (snapshot) => {
+         setOrders(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+         setLoading(false);
+      }, (err2) => {
+         console.error("Orders Fallback Error:", err2);
+         setLoading(false);
+      });
     });
 
     return () => unsubscribe();

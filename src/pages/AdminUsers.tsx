@@ -5,15 +5,23 @@ import { isAdminEmail } from '../config/admin';
 
 export function AdminUsers() {
   const [users, setUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const fetched = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setUsers(fetched);
+      setLoading(false);
+    }, (error) => {
+      console.error("Users Page Load Error:", error);
+      setLoading(false);
     });
     return () => unsubscribe();
   }, []);
+
+  if (loading) return <div className="p-12 text-center text-[#0a0a0a]/60">Loading users...</div>;
 
   return (
     <div className="max-w-full">
