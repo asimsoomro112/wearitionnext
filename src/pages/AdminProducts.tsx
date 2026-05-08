@@ -271,7 +271,11 @@ export function AdminProducts() {
                   <label className="text-xs uppercase tracking-widest text-[#0a0a0a]/60 font-medium">Category *</label>
                   <select required value={category} onChange={e => setCategory(e.target.value)} className="border border-black/10 rounded-md p-3 focus:outline-none focus:border-foreground bg-transparent text-[#0a0a0a]">
                     <option value="" disabled>Select category</option>
-                    <option value="clothing">Clothing</option>
+                    <option value="women">Women</option>
+                    <option value="men">Men</option>
+                    <option value="shirts">Shirts</option>
+                    <option value="pants">Pants</option>
+                    <option value="tech-noir">Tech-Noir</option>
                     <option value="accessories">Accessories</option>
                     <option value="shoes">Shoes</option>
                     <option value="jewelry">Jewelry</option>

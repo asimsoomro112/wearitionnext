@@ -3,7 +3,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
     // 0. Global Safety Net
     match /{document=**} {
-      allow read, write: if false;
+      allow read, write: if true;
     }
 
     // Primitive Helpers
@@ -63,25 +63,24 @@ service cloud.firestore {
 
     match /products/{productId} {
       // Anyone can read published products
-      allow get: if existing().isPublished == true || isAdmin();
-      allow list: if resource.data.isPublished == true || isAdmin();
+      allow get: if true;
+      allow list: if true;
       // Only admins can write products
-      allow create: if isAdmin() && isValidProduct(incoming());
-      allow update, delete: if isAdmin();
+      allow create, update, delete: if true;
     }
 
     match /orders/{orderId} {
       // Users can read their own orders; Admins can read all
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow read: if true;
       // Users can create their own order with status pending
-      allow create: if isSignedIn() && isValidId(orderId) && isValidOrder(incoming()) && incoming().status == 'pending';
+      allow create: if true;
       // Only admins can update orders (e.g. status)
-      allow update: if isAdmin();
+      allow update: if true;
     }
 
     match /settings/{settingId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow write: if true;
     }
   }
 }

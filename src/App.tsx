@@ -26,6 +26,7 @@ import { OrderTracking } from './pages/OrderTracking';
 import { About } from './pages/About';
 import { Contact } from './pages/Contact';
 import { NotFound } from './pages/NotFound';
+import Seeder from './pages/Seeder';
 import { ScrollToTop } from './components/layout/ScrollToTop';
 import { LoadingScreen } from './components/layout/LoadingScreen';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -93,6 +94,7 @@ export default function App() {
                 <Route path="checkout" element={<Checkout />} />
                 <Route path="about" element={<About />} />
                 <Route path="contact" element={<Contact />} />
+                <Route path="seeder" element={<Seeder />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
               <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>

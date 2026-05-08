@@ -134,17 +134,17 @@ export function Home() {
       const defaultSections = [
         { id: '1', type: 'hero' },
         { 
-          id: '2', type: 'categories', title: 'Categories',
+          id: '2', type: 'categories', title: 'The 2026 Collections',
           items: [
-            { name: 'Womens', image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=800&auto=format&fit=crop', link: '/shop?category=womens' },
-            { name: 'Mens', image: 'https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=800&auto=format&fit=crop', link: '/shop?category=mens' },
-            { name: 'Accessories', image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=800&auto=format&fit=crop', link: '/shop?category=accessories' },
-            { name: 'Collections', image: 'https://images.unsplash.com/photo-1495385794356-15371f348c31?q=80&w=800&auto=format&fit=crop', link: '/shop?category=collections' },
+            { name: 'Women', image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=800', link: '/shop?category=women' },
+            { name: 'Men', image: 'https://images.unsplash.com/photo-1550246140-5119ae4790b7?q=80&w=800', link: '/shop?category=men' },
+            { name: 'Shirts', image: 'https://images.unsplash.com/photo-1598033129183-c4f50c7176c8?q=80&w=800', link: '/shop?category=shirts' },
+            { name: 'Pants', image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=800', link: '/shop?category=pants' },
           ]
         },
-        { id: '3', type: 'products_scroll', title: 'Trending Now', productQueryType: 'trending' },
+        { id: '3', type: 'products_scroll', title: 'Featured Menswear', productQueryType: 'category', categoryValue: 'men' },
         { id: '4', type: 'editorial' },
-        { id: '5', type: 'products_scroll', title: 'End of Season Sale', productQueryType: 'sale' },
+        { id: '5', type: 'products_scroll', title: 'Featured Womenswear', productQueryType: 'category', categoryValue: 'women' },
         { id: '6', type: 'artisanship' },
         { id: '7', type: 'newsletter' },
       ];
