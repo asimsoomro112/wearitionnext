@@ -17,6 +17,7 @@ interface Product {
   category: string;
   isPublished?: boolean;
   isFeatured?: boolean;
+  isUnstitched?: boolean;
   createdAt?: any;
 }
 
@@ -36,6 +37,7 @@ export function AdminProducts() {
   const [images, setImages] = useState(''); // comma separated
   const [isPublished, setIsPublished] = useState(true);
   const [isFeatured, setIsFeatured] = useState(false);
+  const [isUnstitched, setIsUnstitched] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,6 +100,7 @@ export function AdminProducts() {
     setImages('');
     setIsPublished(true);
     setIsFeatured(false);
+    setIsUnstitched(false);
     setIsModalOpen(true);
   };
 
@@ -113,6 +116,7 @@ export function AdminProducts() {
     setImages(p.images ? p.images.join(', ') : '');
     setIsPublished(p.isPublished ?? true);
     setIsFeatured(p.isFeatured ?? false);
+    setIsUnstitched(p.isUnstitched ?? false);
     setIsModalOpen(true);
   };
 
@@ -208,10 +212,11 @@ export function AdminProducts() {
       price: parseFloat(price) || 0,
       stock: parseInt(stock, 10) || 0,
       category,
-      sizes: sizes.split(',').map(s => s.trim()).filter(Boolean),
+      sizes: isUnstitched ? [] : sizes.split(',').map(s => s.trim()).filter(Boolean),
       images: images.split(',').map(img => img.trim()).filter(Boolean),
       isPublished,
       isFeatured,
+      isUnstitched
     };
 
     try {
@@ -370,8 +375,22 @@ export function AdminProducts() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-xs uppercase tracking-widest text-[#0a0a0a]/60 font-medium">Sizes (comma separated)</label>
-                <input type="text" value={sizes} onChange={e => setSizes(e.target.value)} placeholder="S, M, L, XL" className="border border-black/10 rounded-md p-3 focus:outline-none focus:border-foreground text-[#0a0a0a]" />
+                <div className="flex items-center gap-3 mb-1">
+                  <input 
+                    type="checkbox" 
+                    id="isUnstitched" 
+                    checked={isUnstitched} 
+                    onChange={e => setIsUnstitched(e.target.checked)} 
+                    className="w-5 h-5 accent-foreground" 
+                  />
+                  <label htmlFor="isUnstitched" className="text-xs uppercase tracking-widest text-[#0a0a0a]/60 font-bold">Unstitched Fabric (No Sizes)</label>
+                </div>
+                {!isUnstitched && (
+                  <>
+                    <label className="text-xs uppercase tracking-widest text-[#0a0a0a]/60 font-medium">Sizes (comma separated)</label>
+                    <input type="text" value={sizes} onChange={e => setSizes(e.target.value)} placeholder="S, M, L, XL" className="border border-black/10 rounded-md p-3 focus:outline-none focus:border-foreground text-[#0a0a0a]" />
+                  </>
+                )}
               </div>
 
               <div className="flex flex-col gap-2">
@@ -395,10 +414,12 @@ export function AdminProducts() {
                   </div>
                 </div>
                 
-                <div className="flex flex-wrap gap-3 mb-2">
+                <div className="flex flex-wrap gap-4 mb-4">
                   {images.split(',').map(img => img.trim()).filter(Boolean).map((url, i) => (
-                    <div key={i} className="relative w-20 h-20 group">
-                      <img src={url} alt="" className="w-full h-full object-cover rounded border border-black/10" />
+                    <div key={i} className="relative w-28 h-32 group border border-black/10 rounded-lg overflow-visible bg-black/[0.02]">
+                      <img src={url} alt="" className="w-full h-full object-contain rounded p-1" />
+                      
+                      {/* Remove Button */}
                       <button 
                         type="button"
                         onClick={() => {
@@ -406,10 +427,41 @@ export function AdminProducts() {
                           const updated = current.filter((_, idx) => idx !== i);
                           setImages(updated.join(', '));
                         }}
-                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-lg hover:scale-110 transition-transform z-20"
+                        title="Remove Image"
                       >
                         <X className="w-3 h-3" />
                       </button>
+
+                      {/* Reorder Buttons */}
+                      <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                        {i > 0 && (
+                          <button 
+                            type="button"
+                            onClick={() => {
+                              const current = images.split(',').map(img => img.trim()).filter(Boolean);
+                              [current[i-1], current[i]] = [current[i], current[i-1]];
+                              setImages(current.join(', '));
+                            }}
+                            className="bg-black text-white text-[8px] px-2 py-1 rounded"
+                          >
+                            ←
+                          </button>
+                        )}
+                        {i < images.split(',').map(img => img.trim()).filter(Boolean).length - 1 && (
+                          <button 
+                            type="button"
+                            onClick={() => {
+                              const current = images.split(',').map(img => img.trim()).filter(Boolean);
+                              [current[i], current[i+1]] = [current[i+1], current[i]];
+                              setImages(current.join(', '));
+                            }}
+                            className="bg-black text-white text-[8px] px-2 py-1 rounded"
+                          >
+                            →
+                          </button>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -421,7 +473,7 @@ export function AdminProducts() {
                   value={images} 
                   onChange={e => setImages(e.target.value)} 
                   placeholder="https://..., https://..." 
-                  className="border border-black/10 rounded-md p-3 focus:outline-none focus:border-foreground resize-none text-[#0a0a0a] w-full" 
+                  className="border border-black/10 rounded-md p-3 focus:outline-none focus:border-foreground resize-none text-[#0a0a0a] w-full text-xs font-mono" 
                 />
               </div>
 

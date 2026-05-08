@@ -61,7 +61,7 @@ export function ProductDetails() {
       toast.error('This item is currently out of stock');
       return;
     }
-    if (!selectedSize) {
+    if (!selectedSize && !product.isUnstitched) {
       toast.error('Please select a size first');
       return;
     }
@@ -90,7 +90,7 @@ export function ProductDetails() {
     }
   };
 
-  const whatsappOrderUrl = `https://wa.me/923000000000?text=${encodeURIComponent(`Hi! I'd like to order "${product.title}" (${formatCurrency(product.price)}) from Wearition. Size: ${selectedSize || 'Not selected'}. Link: ${window.location.href}`)}`;
+  const whatsappOrderUrl = `https://wa.me/923000000000?text=${encodeURIComponent(`Hi! I'd like to order "${product.title}" (${formatCurrency(product.price)}) from Wearition. ${product.isUnstitched ? 'Type: Unstitched' : `Size: ${selectedSize || 'Not selected'}`}. Link: ${window.location.href}`)}`;
 
   return (
     <div className="w-full relative bg-background">
@@ -113,7 +113,7 @@ export function ProductDetails() {
                 transition={{ duration: 0.8 }}
                 className="w-full aspect-[3/4] bg-background-secondary overflow-hidden"
               >
-                <img src={img} alt={`${product.title} ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
+                <img src={img} alt={`${product.title} ${idx + 1}`} className="w-full h-full object-contain p-4" loading="lazy" />
               </motion.div>
             ))
           ) : (
@@ -147,25 +147,27 @@ export function ProductDetails() {
               {product.description || 'No description available for this item.'}
             </div>
 
-            <div className="flex flex-col gap-6 mb-12 border-y border-white/10 py-10">
-               <div>
-                  <div className="flex justify-between items-center mb-6">
-                     <span className="uppercase text-xs tracking-[0.2em] text-foreground">Select Size</span>
-                     <button className="text-[10px] uppercase tracking-widest text-foreground/50 hover:text-foreground transition-colors border-b border-transparent hover:border-foreground">Size Guide</button>
-                  </div>
-                  <div className="flex gap-4 flex-wrap">
-                     {(product.sizes && product.sizes.length > 0 ? product.sizes : ['XS', 'S', 'M', 'L', 'XL']).map((size: string) => (
-                        <button 
-                           key={size}
-                           onClick={() => setSelectedSize(size)}
-                           className={`w-14 h-14 border ${selectedSize === size ? 'border-foreground bg-foreground text-background' : 'border-foreground/20 text-foreground hover:border-foreground/50'} flex items-center justify-center font-sans text-sm transition-colors`}
-                        >
-                           {size}
-                        </button>
-                     ))}
-                  </div>
-               </div>
-            </div>
+            {!product.isUnstitched && (
+              <div className="flex flex-col gap-6 mb-12 border-y border-white/10 py-10">
+                 <div>
+                    <div className="flex justify-between items-center mb-6">
+                       <span className="uppercase text-xs tracking-[0.2em] text-foreground">Select Size</span>
+                       <button className="text-[10px] uppercase tracking-widest text-foreground/50 hover:text-foreground transition-colors border-b border-transparent hover:border-foreground">Size Guide</button>
+                    </div>
+                    <div className="flex gap-4 flex-wrap">
+                       {(product.sizes && product.sizes.length > 0 ? product.sizes : ['XS', 'S', 'M', 'L', 'XL']).map((size: string) => (
+                          <button 
+                             key={size}
+                             onClick={() => setSelectedSize(size)}
+                             className={`w-14 h-14 border ${selectedSize === size ? 'border-foreground bg-foreground text-background' : 'border-foreground/20 text-foreground hover:border-foreground/50'} flex items-center justify-center font-sans text-sm transition-colors`}
+                          >
+                             {size}
+                          </button>
+                       ))}
+                    </div>
+                 </div>
+              </div>
+            )}
 
             <MagneticButton 
               className={`w-full py-6 uppercase text-xs tracking-[0.2em] font-medium transition-colors duration-300 mb-4 ${isOutOfStock ? 'bg-foreground/20 text-foreground/40 cursor-not-allowed' : 'bg-foreground text-background hover:bg-accent hover:text-background'}`}
