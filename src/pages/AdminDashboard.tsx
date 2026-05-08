@@ -56,30 +56,30 @@ export function AdminDashboard() {
         <div className="bg-white border border-black/10 p-6 rounded-lg shadow-sm">
           <div className="flex items-center gap-4 mb-4">
             <div className="p-2 bg-green-50 text-green-600 rounded-md"><DollarSign className="w-5 h-5" /></div>
-            <p className="text-background/50 text-xs uppercase tracking-widest font-bold">Revenue</p>
+            <p className="text-[#0a0a0a]/60 text-xs uppercase tracking-widest font-bold">Revenue</p>
           </div>
-          <p className="text-2xl font-mono">{formatCurrency(totalRevenue)}</p>
+          <p className="text-2xl font-mono text-[#0a0a0a]">{formatCurrency(totalRevenue)}</p>
         </div>
         <div className="bg-white border border-black/10 p-6 rounded-lg shadow-sm">
           <div className="flex items-center gap-4 mb-4">
             <div className="p-2 bg-blue-50 text-blue-600 rounded-md"><ShoppingBag className="w-5 h-5" /></div>
-            <p className="text-background/50 text-xs uppercase tracking-widest font-bold">Total Orders</p>
+            <p className="text-[#0a0a0a]/60 text-xs uppercase tracking-widest font-bold">Total Orders</p>
           </div>
-          <p className="text-2xl font-mono">{orders.length}</p>
+          <p className="text-2xl font-mono text-[#0a0a0a]">{orders.length}</p>
         </div>
         <div className="bg-white border border-black/10 p-6 rounded-lg shadow-sm">
           <div className="flex items-center gap-4 mb-4">
             <div className="p-2 bg-purple-50 text-purple-600 rounded-md"><Package className="w-5 h-5" /></div>
-            <p className="text-background/50 text-xs uppercase tracking-widest font-bold">Inventory</p>
+            <p className="text-[#0a0a0a]/60 text-xs uppercase tracking-widest font-bold">Inventory</p>
           </div>
-          <p className="text-2xl font-mono">{products.length}</p>
+          <p className="text-2xl font-mono text-[#0a0a0a]">{products.length}</p>
         </div>
         <div className="bg-white border border-black/10 p-6 rounded-lg shadow-sm">
           <div className="flex items-center gap-4 mb-4">
             <div className="p-2 bg-orange-50 text-orange-600 rounded-md"><Users className="w-5 h-5" /></div>
-            <p className="text-background/50 text-xs uppercase tracking-widest font-bold">Customers</p>
+            <p className="text-[#0a0a0a]/60 text-xs uppercase tracking-widest font-bold">Customers</p>
           </div>
-          <p className="text-2xl font-mono">3</p>
+          <p className="text-2xl font-mono text-[#0a0a0a]">3</p>
         </div>
       </div>
 
@@ -87,17 +87,17 @@ export function AdminDashboard() {
         {/* Recent Orders */}
         <div className="bg-white border border-black/10 rounded-lg overflow-hidden shadow-sm">
           <div className="p-4 border-b border-black/10 flex justify-between items-center">
-            <h3 className="font-serif text-lg">Recent Orders</h3>
-            <Link to="/admin/orders" className="text-[10px] uppercase tracking-widest text-background/40 hover:text-background transition-colors">View All</Link>
+            <h3 className="font-serif text-lg text-[#0a0a0a]">Recent Orders</h3>
+            <Link to="/admin/orders" className="text-[10px] uppercase tracking-widest text-[#0a0a0a]/40 hover:text-[#0a0a0a] transition-colors">View All</Link>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <tbody className="divide-y divide-black/5">
                 {orders.map(order => (
                   <tr key={order.id} className="hover:bg-black/[0.01]">
-                    <td className="p-4 text-xs font-mono">{order.orderId}</td>
-                    <td className="p-4 text-xs">{order.email}</td>
-                    <td className="p-4 text-xs font-mono">{formatCurrency(order.total)}</td>
+                    <td className="p-4 text-xs font-mono text-[#0a0a0a]">{order.orderId}</td>
+                    <td className="p-4 text-xs text-[#0a0a0a]/70">{order.email}</td>
+                    <td className="p-4 text-xs font-mono text-[#0a0a0a]">{formatCurrency(order.total)}</td>
                     <td className="p-4">
                       <span className={`px-2 py-0.5 rounded-[4px] text-[9px] uppercase font-bold ${order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}`}>
                         {order.status}
@@ -113,8 +113,8 @@ export function AdminDashboard() {
         {/* Inventory Quick Status */}
         <div className="bg-white border border-black/10 rounded-lg overflow-hidden shadow-sm">
           <div className="p-4 border-b border-black/10 flex justify-between items-center">
-            <h3 className="font-serif text-lg">Inventory Status</h3>
-            <Link to="/admin/products" className="text-[10px] uppercase tracking-widest text-background/40 hover:text-background transition-colors">Manage</Link>
+            <h3 className="font-serif text-lg text-[#0a0a0a]">Inventory Status</h3>
+            <Link to="/admin/products" className="text-[10px] uppercase tracking-widest text-[#0a0a0a]/40 hover:text-[#0a0a0a] transition-colors">Manage</Link>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left">
@@ -125,12 +125,12 @@ export function AdminDashboard() {
                       <div className="w-8 h-8 bg-black/5 rounded overflow-hidden">
                         {product.images?.[0] && <img src={product.images[0]} alt="" className="w-full h-full object-cover" />}
                       </div>
-                      <span className="text-xs font-medium truncate max-w-[120px]">{product.title}</span>
+                      <span className="text-xs font-medium text-[#0a0a0a] truncate max-w-[120px]">{product.title}</span>
                     </td>
-                    <td className="p-4 text-xs font-mono">{formatCurrency(product.price)}</td>
-                    <td className="p-4 text-xs">{product.stock} in stock</td>
+                    <td className="p-4 text-xs font-mono text-[#0a0a0a]">{formatCurrency(product.price)}</td>
+                    <td className="p-4 text-xs text-[#0a0a0a]/70">{product.stock} in stock</td>
                     <td className="p-4 text-right">
-                      <button onClick={() => togglePublish(product.id, product.isPublished)} className="text-[10px] uppercase tracking-widest font-bold text-background/40 hover:text-background">
+                      <button onClick={() => togglePublish(product.id, product.isPublished)} className="text-[10px] uppercase tracking-widest font-bold text-[#0a0a0a]/40 hover:text-[#0a0a0a]">
                         {product.isPublished ? 'Draft' : 'Publish'}
                       </button>
                     </td>

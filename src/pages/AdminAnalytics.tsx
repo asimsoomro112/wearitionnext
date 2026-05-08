@@ -53,51 +53,51 @@ export function AdminAnalytics() {
     fetchAnalytics();
   }, []);
 
-  if (loading) return <div className="p-12 text-center">Loading Analytics...</div>;
+  if (loading) return <div className="p-12 text-center text-[#0a0a0a]/60">Loading Analytics...</div>;
 
   return (
     <div className="max-w-full">
-      <h1 className="text-2xl md:text-3xl font-serif mb-8 pb-6 border-b border-black/10">Analytics & Reports</h1>
+      <h1 className="text-2xl md:text-3xl font-serif mb-8 pb-6 border-b border-black/10 text-[#0a0a0a]">Analytics & Reports</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-        <div className="bg-white border border-black/10 p-8 rounded-lg">
+        <div className="bg-white border border-black/10 p-8 rounded-lg shadow-sm">
           <TrendingUp className="w-6 h-6 text-green-600 mb-4" />
-          <p className="text-background/40 text-xs uppercase tracking-widest font-bold mb-1">Total Sales</p>
-          <h3 className="text-3xl font-mono">{formatCurrency(stats.totalSales)}</h3>
+          <p className="text-[#0a0a0a]/40 text-xs uppercase tracking-widest font-bold mb-1">Total Sales</p>
+          <h3 className="text-3xl font-mono text-[#0a0a0a]">{formatCurrency(stats.totalSales)}</h3>
           <p className="text-[10px] text-green-600 mt-2 font-bold">{stats.recentGrowth} vs last month</p>
         </div>
         
-        <div className="bg-white border border-black/10 p-8 rounded-lg">
+        <div className="bg-white border border-black/10 p-8 rounded-lg shadow-sm">
           <ShoppingCart className="w-6 h-6 text-blue-600 mb-4" />
-          <p className="text-background/40 text-xs uppercase tracking-widest font-bold mb-1">Total Orders</p>
-          <h3 className="text-3xl font-mono">{stats.totalOrders}</h3>
-          <p className="text-[10px] text-background/40 mt-2">Conversion rate: 3.4%</p>
+          <p className="text-[#0a0a0a]/40 text-xs uppercase tracking-widest font-bold mb-1">Total Orders</p>
+          <h3 className="text-3xl font-mono text-[#0a0a0a]">{stats.totalOrders}</h3>
+          <p className="text-[10px] text-[#0a0a0a]/40 mt-2">Conversion rate: 3.4%</p>
         </div>
 
-        <div className="bg-white border border-black/10 p-8 rounded-lg">
+        <div className="bg-white border border-black/10 p-8 rounded-lg shadow-sm">
           <BarChart3 className="w-6 h-6 text-purple-600 mb-4" />
-          <p className="text-background/40 text-xs uppercase tracking-widest font-bold mb-1">Avg. Order Value</p>
-          <h3 className="text-3xl font-mono">{formatCurrency(stats.averageOrderValue)}</h3>
-          <p className="text-[10px] text-background/40 mt-2">Target: $450.00</p>
+          <p className="text-[#0a0a0a]/40 text-xs uppercase tracking-widest font-bold mb-1">Avg. Order Value</p>
+          <h3 className="text-3xl font-mono text-[#0a0a0a]">{formatCurrency(stats.averageOrderValue)}</h3>
+          <p className="text-[10px] text-[#0a0a0a]/40 mt-2">Target: $450.00</p>
         </div>
 
-        <div className="bg-white border border-black/10 p-8 rounded-lg">
+        <div className="bg-white border border-black/10 p-8 rounded-lg shadow-sm">
           <Award className="w-6 h-6 text-orange-600 mb-4" />
-          <p className="text-background/40 text-xs uppercase tracking-widest font-bold mb-1">Loyalty Rate</p>
-          <h3 className="text-3xl font-mono">24%</h3>
+          <p className="text-[#0a0a0a]/40 text-xs uppercase tracking-widest font-bold mb-1">Loyalty Rate</p>
+          <h3 className="text-3xl font-mono text-[#0a0a0a]">24%</h3>
           <p className="text-[10px] text-orange-600 mt-2 font-bold">+2.1% improvement</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 bg-white border border-black/10 rounded-lg p-8">
-          <h3 className="font-serif text-xl mb-8">Category Performance</h3>
+        <div className="lg:col-span-2 bg-white border border-black/10 rounded-lg p-8 shadow-sm">
+          <h3 className="font-serif text-xl mb-8 text-[#0a0a0a]">Category Performance</h3>
           <div className="space-y-6">
             {stats.topCategories.map((cat, i) => (
               <div key={cat.name}>
-                <div className="flex justify-between text-sm mb-2 uppercase tracking-widest">
+                <div className="flex justify-between text-sm mb-2 uppercase tracking-widest text-[#0a0a0a]/80">
                   <span className="font-medium">{cat.name}</span>
-                  <span className="text-background/40">{cat.count} Items Sold</span>
+                  <span className="text-[#0a0a0a]/40">{cat.count} Items Sold</span>
                 </div>
                 <div className="w-full h-2 bg-black/5 rounded-full overflow-hidden">
                   <div 
@@ -108,12 +108,12 @@ export function AdminAnalytics() {
               </div>
             ))}
             {stats.topCategories.length === 0 && (
-              <p className="text-center py-12 text-background/40">No sales data available yet.</p>
+              <p className="text-center py-12 text-[#0a0a0a]/40">No sales data available yet.</p>
             )}
           </div>
         </div>
 
-        <div className="bg-background text-white rounded-lg p-8">
+        <div className="bg-[#0a0a0a] text-[#F5F0EB] rounded-lg p-8 shadow-sm">
           <h3 className="font-serif text-xl mb-6">Sales Insights</h3>
           <div className="space-y-4">
             <div className="border-l-2 border-accent pl-4 py-2">

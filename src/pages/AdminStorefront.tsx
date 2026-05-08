@@ -109,16 +109,16 @@ export function AdminStorefront() {
     setSections(newSections);
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="p-12 text-center text-[#0a0a0a]/60">Loading...</div>;
 
   return (
     <div className="max-w-4xl mx-auto pb-24">
       <div className="flex justify-between items-center mb-10">
-        <h1 className="text-3xl font-serif text-background">Storefront Layout</h1>
+        <h1 className="text-3xl font-serif text-[#0a0a0a]">Storefront Layout</h1>
         <button 
           onClick={handleSave}
           disabled={saving}
-          className="bg-background text-foreground px-6 py-2 rounded flex items-center gap-2 hover:bg-background/90 transition-colors disabled:opacity-50"
+          className="bg-[#0a0a0a] text-[#F5F0EB] px-6 py-2 rounded flex items-center gap-2 hover:bg-[#0a0a0a]/90 transition-colors disabled:opacity-50"
         >
           <Save className="w-4 h-4" />
           {saving ? 'Saving...' : 'Save Layout'}
@@ -126,7 +126,7 @@ export function AdminStorefront() {
       </div>
 
       <div className="bg-white rounded-lg border border-black/10 p-6 mb-8 shadow-sm">
-        <p className="text-sm text-background/60 mb-6">
+        <p className="text-sm text-[#0a0a0a]/60 mb-6">
           Drag or move sections up and down to change their order on the homepage.
         </p>
 
@@ -138,13 +138,13 @@ export function AdminStorefront() {
               className="border border-black/10 rounded-md p-4 bg-gray-50 flex items-center gap-4"
             >
               <div className="flex flex-col gap-1">
-                <button onClick={() => moveUp(idx)} disabled={idx === 0} className="p-1 hover:bg-black/5 rounded disabled:opacity-30"><ArrowUp className="w-4 h-4" /></button>
-                <button onClick={() => moveDown(idx)} disabled={idx === sections.length - 1} className="p-1 hover:bg-black/5 rounded disabled:opacity-30"><ArrowDown className="w-4 h-4" /></button>
+                <button onClick={() => moveUp(idx)} disabled={idx === 0} className="p-1 hover:bg-black/5 rounded disabled:opacity-30 text-[#0a0a0a]/60"><ArrowUp className="w-4 h-4" /></button>
+                <button onClick={() => moveDown(idx)} disabled={idx === sections.length - 1} className="p-1 hover:bg-black/5 rounded disabled:opacity-30 text-[#0a0a0a]/60"><ArrowDown className="w-4 h-4" /></button>
               </div>
 
               <div className="flex-grow flex flex-col gap-3">
                 <div className="flex justify-between items-center">
-                  <span className="uppercase text-xs font-bold tracking-widest text-background/60 bg-black/5 px-2 py-1 rounded">
+                  <span className="uppercase text-[10px] font-bold tracking-widest text-[#0a0a0a]/60 bg-black/5 px-2 py-1 rounded">
                     {section.type.replace('_', ' ')}
                   </span>
                   {!['hero', 'editorial', 'artisanship', 'newsletter', 'categories'].includes(section.type) && (
@@ -157,20 +157,20 @@ export function AdminStorefront() {
                 {section.type === 'products_scroll' && (
                   <div className="grid grid-cols-2 gap-4 mt-2">
                     <div>
-                      <label className="text-xs font-medium text-background/70 mb-1 block">Section Title</label>
+                      <label className="text-xs font-medium text-[#0a0a0a]/70 mb-1 block">Section Title</label>
                       <input 
                         type="text" 
                         value={section.title || ''} 
                         onChange={(e) => updateSection(idx, { title: e.target.value })}
-                        className="w-full text-sm border border-black/10 rounded p-2 focus:outline-none focus:border-background text-background"
+                        className="w-full text-sm border border-black/10 rounded p-2 focus:outline-none focus:border-black text-[#0a0a0a]"
                       />
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-background/70 mb-1 block">Show Products By</label>
+                      <label className="text-xs font-medium text-[#0a0a0a]/70 mb-1 block">Show Products By</label>
                       <select 
                         value={section.productQueryType || 'all'}
                         onChange={(e) => updateSection(idx, { productQueryType: e.target.value as any, categoryValue: '' })}
-                        className="w-full text-sm border border-black/10 rounded p-2 focus:outline-none focus:border-background text-background"
+                        className="w-full text-sm border border-black/10 rounded p-2 focus:outline-none focus:border-black text-[#0a0a0a] bg-white"
                       >
                         <option value="all">All Products</option>
                         <option value="trending">Trending (Random/Popular)</option>
@@ -180,19 +180,19 @@ export function AdminStorefront() {
                     </div>
                     {section.productQueryType === 'category' && (
                       <div className="col-span-2">
-                       <label className="text-xs font-medium text-background/70 mb-1 block">Category Slug (e.g., womens, outerwear)</label>
+                       <label className="text-xs font-medium text-[#0a0a0a]/70 mb-1 block">Category Slug (e.g., womens, outerwear)</label>
                        <input 
                          type="text" 
                          value={section.categoryValue || ''} 
                          onChange={(e) => updateSection(idx, { categoryValue: e.target.value.toLowerCase() })}
-                         className="w-full text-sm border border-black/10 rounded p-2 focus:outline-none focus:border-background text-background"
+                         className="w-full text-sm border border-black/10 rounded p-2 focus:outline-none focus:border-black text-[#0a0a0a]"
                        />
                      </div>
                     )}
                   </div>
                 )}
                 {['hero', 'editorial', 'artisanship', 'newsletter', 'categories'].includes(section.type) && (
-                   <p className="text-sm text-background/70 font-medium">Fixed Section (Layout specific)</p>
+                   <p className="text-sm text-[#0a0a0a]/70 font-medium">Fixed Section (Layout specific)</p>
                 )}
               </div>
             </motion.div>
@@ -200,10 +200,10 @@ export function AdminStorefront() {
         </div>
 
         <div className="mt-8 pt-8 border-t border-black/10">
-          <h3 className="text-lg font-serif mb-4 text-background">Add New Section</h3>
+          <h3 className="text-lg font-serif mb-4 text-[#0a0a0a]">Add New Section</h3>
           <button 
             onClick={addProductScrollSection}
-            className="flex items-center gap-2 border border-dashed border-black/30 text-background/70 hover:text-background hover:border-background hover:bg-black/5 px-6 py-4 rounded-md transition-all font-medium text-sm w-full justify-center"
+            className="flex items-center gap-2 border border-dashed border-black/30 text-[#0a0a0a]/70 hover:text-[#0a0a0a] hover:border-black hover:bg-black/5 px-6 py-4 rounded-md transition-all font-medium text-sm w-full justify-center"
           >
             <Plus className="w-5 h-5" />
             Add Product Scroll Section

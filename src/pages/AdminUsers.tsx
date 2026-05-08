@@ -17,51 +17,37 @@ export function AdminUsers() {
 
   return (
     <div className="max-w-full">
-      <div className="flex items-center justify-between mb-8 pb-6 border-b border-black/10">
-        <h1 className="text-2xl md:text-3xl font-serif">Users</h1>
-      </div>
+      <h1 className="text-2xl md:text-3xl font-serif mb-8 pb-6 border-b border-black/10 text-[#0a0a0a]">User Management</h1>
       
       <div className="bg-white border border-black/10 rounded-lg overflow-x-auto">
         <table className="w-full text-left min-w-[800px]">
-          <thead className="bg-[#fcfcfc] border-b border-black/10 text-sm text-background/60">
+          <thead className="bg-[#fcfcfc] border-b border-black/10 text-sm text-[#0a0a0a]/60">
             <tr>
-              <th className="font-medium p-4">User Details</th>
+              <th className="font-medium p-4">Name</th>
+              <th className="font-medium p-4">Email</th>
               <th className="font-medium p-4">Role</th>
-              <th className="font-medium p-4">Joined Date</th>
-              <th className="font-medium p-4">Actions</th>
+              <th className="font-medium p-4 text-right">Joined Date</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-black/5">
             {users.map((user) => (
               <tr key={user.id} className="hover:bg-black/[0.02] border-b border-black/5 last:border-0">
+                <td className="p-4 text-sm font-medium text-[#0a0a0a]">{user.displayName || 'User'}</td>
+                <td className="p-4 text-sm text-[#0a0a0a]/70">{user.email}</td>
                 <td className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-black/10 flex items-center justify-center font-serif text-lg text-black/60 uppercase">
-                      {(user.displayName || user.email || 'U').charAt(0)}
-                    </div>
-                    <div>
-                      <div className="font-medium">{user.displayName || 'Unknown User'}</div>
-                      <div className="text-xs text-black/50 font-mono">{user.email || 'No email provided'}</div>
-                    </div>
-                  </div>
-                </td>
-                <td className="p-4">
-                  <span className={`px-2 py-1 rounded text-xs whitespace-nowrap ${user.role === 'admin' || isAdminEmail(user.email) ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'}`}>
-                    {user.role === 'admin' || isAdminEmail(user.email) ? 'Admin' : 'Customer'}
+                  <span className={`px-2 py-1 rounded text-[10px] uppercase font-bold tracking-wider ${
+                    isAdminEmail(user.email) ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+                  }`}>
+                    {isAdminEmail(user.email) ? 'Admin' : 'Customer'}
                   </span>
                 </td>
-                <td className="p-4 text-sm text-black/60">
+                <td className="p-4 text-sm text-[#0a0a0a]/60 text-right">
                   {user.createdAt?.toDate ? user.createdAt.toDate().toLocaleDateString() : 'N/A'}
-                </td>
-                <td className="p-4">
-                  <button className="text-sm border border-black/20 px-3 py-1 rounded hover:bg-black/5 transition-colors">
-                    Manage
-                  </button>
                 </td>
               </tr>
             ))}
             {users.length === 0 && (
-              <tr><td colSpan={5} className="p-8 text-center text-background/40">No actual users found.</td></tr>
+              <tr><td colSpan={4} className="p-12 text-center text-[#0a0a0a]/40">No actual users found in the system.</td></tr>
             )}
           </tbody>
         </table>

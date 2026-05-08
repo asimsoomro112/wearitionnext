@@ -26,7 +26,7 @@ export function AdminLayout() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-[#FDFDFD] text-background font-sans selection:bg-background selection:text-[#FDFDFD]">
+    <div className="flex min-h-screen bg-[#FDFDFD] text-[#0a0a0a] font-sans selection:bg-[#0a0a0a] selection:text-[#FDFDFD]">
       {/* Mobile Top Bar */}
       <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-black/10 flex items-center justify-between px-6 z-40">
         <Link to="/" className="flex items-center">
@@ -58,7 +58,7 @@ export function AdminLayout() {
               <div className="h-16 border-b border-black/10 flex items-center justify-between px-6">
                 <span className="font-serif text-lg tracking-widest font-bold uppercase text-foreground">Wearition</span>
                 <button onClick={() => setIsMobileMenuOpen(false)}>
-                  <X className="w-5 h-5 text-background/60" />
+                  <X className="w-5 h-5 text-[#0a0a0a]/60" />
                 </button>
               </div>
               <nav className="flex flex-col gap-2 w-full px-4 py-6 mb-auto">
@@ -68,7 +68,7 @@ export function AdminLayout() {
                     to={item.path}
                     end={item.end}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={({ isActive }) => `px-4 py-3 text-sm tracking-wide rounded-md transition-colors ${isActive ? 'bg-background-secondary/10 font-medium text-background' : 'text-background/60 hover:text-background hover:bg-background-secondary/5'}`}
+                    className={({ isActive }) => `px-4 py-3 text-sm tracking-wide rounded-md transition-colors ${isActive ? 'bg-black/5 font-medium text-[#0a0a0a]' : 'text-[#0a0a0a]/60 hover:text-[#0a0a0a] hover:bg-black/5'}`}
                   >
                     {item.name}
                   </NavLink>
@@ -76,7 +76,7 @@ export function AdminLayout() {
               </nav>
               <div className="w-full px-4 mt-auto pb-6">
                 <div className="border-t border-black/10 pt-6">
-                  <p className="px-4 text-xs font-medium text-background mb-4 truncate">{user?.email}</p>
+                  <p className="px-4 text-xs font-medium text-[#0a0a0a] mb-4 truncate">{user?.email}</p>
                   <button 
                     onClick={handleSignOut}
                     className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition-colors"
@@ -101,7 +101,7 @@ export function AdminLayout() {
                key={item.name} 
                to={item.path} 
                end={item.end}
-               className={({ isActive }) => `px-4 py-3 text-sm tracking-wide rounded-md hover:bg-background-secondary/5 ${isActive ? 'bg-background-secondary/10 font-medium text-background' : 'text-background/60 hover:text-background'}`}
+               className={({ isActive }) => `px-4 py-3 text-sm tracking-wide rounded-md hover:bg-black/5 ${isActive ? 'bg-black/5 font-medium text-[#0a0a0a]' : 'text-[#0a0a0a]/60 hover:text-[#0a0a0a]'}`}
              >
                {item.name}
              </NavLink>
@@ -110,7 +110,7 @@ export function AdminLayout() {
 
         <div className="w-full px-4 mt-auto">
           <div className="border-t border-black/10 pt-6">
-            <p className="px-4 text-xs font-medium text-background mb-4 truncate">{user?.email}</p>
+            <p className="px-4 text-xs font-medium text-[#0a0a0a] mb-4 truncate">{user?.email}</p>
             <button 
               onClick={handleSignOut}
               className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition-colors"

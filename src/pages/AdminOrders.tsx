@@ -34,15 +34,15 @@ export function AdminOrders() {
     }
   };
 
-  if (loading) return <div className="p-12 text-center text-background/60">Loading orders...</div>;
+  if (loading) return <div className="p-12 text-center text-[#0a0a0a]/60">Loading orders...</div>;
 
   return (
     <div className="max-w-full">
-      <h1 className="text-2xl md:text-3xl font-serif mb-8 pb-6 border-b border-black/10">Order Management</h1>
+      <h1 className="text-2xl md:text-3xl font-serif mb-8 pb-6 border-b border-black/10 text-[#0a0a0a]">Order Management</h1>
       
       <div className="bg-white border border-black/10 rounded-lg overflow-x-auto">
         <table className="w-full text-left min-w-[1000px]">
-          <thead className="bg-[#fcfcfc] border-b border-black/10 text-sm text-background/60">
+          <thead className="bg-[#fcfcfc] border-b border-black/10 text-sm text-[#0a0a0a]/60">
             <tr>
               <th className="font-medium p-4">Order ID</th>
               <th className="font-medium p-4">Date</th>
@@ -56,20 +56,20 @@ export function AdminOrders() {
           <tbody className="divide-y divide-black/5">
             {orders.map((order) => (
               <tr key={order.id} className="hover:bg-black/[0.02] border-b border-black/5 last:border-0">
-                <td className="p-4 text-xs font-mono font-bold text-background">{order.orderId}</td>
-                <td className="p-4 text-sm text-background/60">
+                <td className="p-4 text-xs font-mono font-bold text-[#0a0a0a]">{order.orderId}</td>
+                <td className="p-4 text-sm text-[#0a0a0a]/60">
                   {new Date(order.date).toLocaleDateString()}
                 </td>
                 <td className="p-4">
-                   <div className="text-sm font-medium">{order.email}</div>
-                   <div className="text-[10px] uppercase text-background/40">{order.paymentMethod}</div>
+                   <div className="text-sm font-medium text-[#0a0a0a]">{order.email}</div>
+                   <div className="text-[10px] uppercase text-[#0a0a0a]/40">{order.paymentMethod}</div>
                 </td>
-                <td className="p-4 text-sm">
+                <td className="p-4 text-sm text-[#0a0a0a]/80">
                   <div className="max-w-[200px] truncate">
                     {order.items?.map((item: any) => `${item.quantity}x ${item.title}`).join(', ')}
                   </div>
                 </td>
-                <td className="p-4 text-sm font-mono font-bold">{formatCurrency(order.total)}</td>
+                <td className="p-4 text-sm font-mono font-bold text-[#0a0a0a]">{formatCurrency(order.total)}</td>
                 <td className="p-4">
                   <span className={`px-2 py-1 rounded text-[10px] uppercase font-bold tracking-wider ${
                     order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
@@ -84,7 +84,7 @@ export function AdminOrders() {
                   <select 
                     value={order.status}
                     onChange={(e) => handleStatusChange(order.id, order.email, order.orderId, e.target.value)}
-                    className="text-xs bg-white border border-black/10 rounded px-2 py-2 focus:outline-none focus:border-background"
+                    className="text-xs bg-white border border-black/10 rounded px-2 py-2 focus:outline-none focus:border-black text-[#0a0a0a]"
                   >
                     <option value="pending">Pending</option>
                     <option value="processing">Processing</option>
@@ -95,7 +95,7 @@ export function AdminOrders() {
               </tr>
             ))}
             {orders.length === 0 && (
-              <tr><td colSpan={7} className="p-12 text-center text-background/40">No orders found in the system.</td></tr>
+              <tr><td colSpan={7} className="p-12 text-center text-[#0a0a0a]/40">No orders found in the system.</td></tr>
             )}
           </tbody>
         </table>
