@@ -12,6 +12,7 @@ import { Layout } from './components/layout/Layout';
 import { AdminLayout } from './components/layout/AdminLayout';
 import { Home } from './pages/Home';
 import { LoadingScreen } from './components/layout/LoadingScreen';
+import { WearitionSpinner } from './components/layout/WearitionSpinner';
 import { ErrorBoundary } from './components/layout/ErrorBoundary';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Toaster } from 'sonner';
@@ -39,22 +40,7 @@ const AdminStorefront = lazy(() => import('./pages/AdminStorefront').then(m => (
 
 // Minimal route loading spinner
 function RouteLoader() {
-  return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black">
-      <div className="wearition-loader-wrapper">
-        <div className="wearition-loader">
-          <div className="outer-ring"></div>
-          <div className="inner-ring"></div>
-          <div className="logo-center">
-            <span>W</span>
-          </div>
-          <div className="glow"></div>
-        </div>
-        <h1 className="brand-name">WEARITION</h1>
-        <p className="brand-tagline">WEAR YOUR IDENTITY</p>
-      </div>
-    </div>
-  );
+  return <WearitionSpinner />;
 }
 
 // Protected Route Component for Admin
