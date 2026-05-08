@@ -29,9 +29,9 @@ export function AdminLayout() {
   return (
     <div className="flex min-h-screen bg-[#FDFDFD] text-[#0a0a0a] font-sans selection:bg-[#0a0a0a] selection:text-[#FDFDFD]">
       {/* Mobile Top Bar */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-black/10 flex items-center justify-between px-6 z-40">
+      <div className="lg:hidden fixed top-0 left-0 right-0 h-20 bg-white border-b border-black/10 flex items-center justify-between px-6 z-40">
         <Link to="/" className="flex items-center">
-          <img src={logo} alt="Wearition" className="h-8 w-auto object-contain brightness-110" />
+          <img src={logo} alt="Wearition" className="h-14 w-auto object-contain brightness-110" />
         </Link>
         <button onClick={() => setIsMobileMenuOpen(true)}>
           <Menu className="w-6 h-6" />
@@ -56,8 +56,8 @@ export function AdminLayout() {
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
               className="fixed inset-y-0 left-0 w-64 bg-white border-r border-black/10 flex flex-col z-50 lg:hidden"
             >
-              <div className="h-16 border-b border-black/10 flex items-center justify-between px-6">
-                <img src={logo} alt="Wearition" className="h-8 w-auto object-contain brightness-110" />
+              <div className="h-20 border-b border-black/10 flex items-center justify-between px-6">
+                <img src={logo} alt="Wearition" className="h-14 w-auto object-contain brightness-110" />
                 <button onClick={() => setIsMobileMenuOpen(false)}>
                   <X className="w-5 h-5 text-[#0a0a0a]/60" />
                 </button>
@@ -93,8 +93,8 @@ export function AdminLayout() {
 
       {/* Desktop Sidebar */}
       <aside className="w-64 border-r border-black/10 hidden lg:flex flex-col items-center py-10 fixed h-screen bg-white z-30">
-        <Link to="/" className="w-full px-6 mb-16 flex items-center justify-start">
-          <img src={logo} alt="Wearition" className="h-10 w-auto object-contain brightness-110" />
+        <Link to="/" className="w-full px-6 mb-16 flex items-center justify-center">
+          <img src={logo} alt="Wearition" className="h-24 w-auto object-contain brightness-110" />
         </Link>
         <nav className="flex flex-col gap-2 w-full px-4 mb-auto">
            {menuItems.map((item) => (

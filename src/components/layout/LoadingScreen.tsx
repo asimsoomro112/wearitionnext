@@ -21,12 +21,12 @@ export function LoadingScreen() {
             duration: 1.5, 
             ease: "easeOut",
           }}
-          className="w-48 md:w-64 mb-8"
+          className="w-64 md:w-[500px] mb-12"
         >
           <img 
             src={logo} 
             alt="Wearition Logo" 
-            className="w-full h-auto object-contain brightness-110" 
+            className="w-full h-auto object-contain brightness-125" 
           />
         </motion.div>
 

@@ -7,7 +7,7 @@ export function Footer() {
       <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 md:gap-8">
         <div className="col-span-1 md:col-span-2">
           <div className="mb-8 opacity-90 transition-all inline-block">
-            <img src={logo} alt="Wearition" className="h-10 md:h-12 w-auto object-contain brightness-110" />
+            <img src={logo} alt="Wearition" className="h-20 md:h-28 w-auto object-contain brightness-110" />
           </div>
           <p className="text-sm text-foreground/50 max-w-sm font-sans leading-relaxed">
             Elegance redefined. Discover the latest in luxury women's fashion, crafted for the modern visionary.
