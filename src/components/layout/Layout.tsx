@@ -28,7 +28,7 @@ export function Layout() {
       <Navbar />
       <CartDrawer />
       <SearchOverlay />
-      <main className="flex-grow">
+      <main className="flex-grow min-h-screen">
         <Outlet />
       </main>
       <Footer />

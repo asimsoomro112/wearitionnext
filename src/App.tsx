@@ -70,32 +70,42 @@ export default function App() {
       <AnimatePresence mode="wait">
         {appLoading && <LoadingScreen key="loader" />}
       </AnimatePresence>
+      
       <Toaster position="bottom-right" toastOptions={{ className: 'font-sans' }} />
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="shop" element={<Shop />} />
-            <Route path="product/:id" element={<ProductDetails />} />
-            <Route path="wishlist" element={<Wishlist />} />
-            <Route path="account" element={<Account />} />
-            <Route path="track-order" element={<OrderTracking />} />
-            <Route path="checkout" element={<Checkout />} />
-            <Route path="about" element={<About />} />
-            <Route path="contact" element={<Contact />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
-          <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="products" element={<AdminProducts />} />
-            <Route path="orders" element={<AdminOrders />} />
-            <Route path="users" element={<AdminUsers />} />
-            <Route path="analytics" element={<AdminAnalytics />} />
-            <Route path="storefront" element={<AdminStorefront />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      
+      {!appLoading && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          <BrowserRouter>
+            <ScrollToTop />
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Home />} />
+                <Route path="shop" element={<Shop />} />
+                <Route path="product/:id" element={<ProductDetails />} />
+                <Route path="wishlist" element={<Wishlist />} />
+                <Route path="account" element={<Account />} />
+                <Route path="track-order" element={<OrderTracking />} />
+                <Route path="checkout" element={<Checkout />} />
+                <Route path="about" element={<About />} />
+                <Route path="contact" element={<Contact />} />
+                <Route path="*" element={<NotFound />} />
+              </Route>
+              <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="products" element={<AdminProducts />} />
+                <Route path="orders" element={<AdminOrders />} />
+                <Route path="users" element={<AdminUsers />} />
+                <Route path="analytics" element={<AdminAnalytics />} />
+                <Route path="storefront" element={<AdminStorefront />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </motion.div>
+      )}
     </>
   );
 }
