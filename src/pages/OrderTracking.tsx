@@ -214,7 +214,7 @@ export function OrderTracking() {
               <div className="space-y-4 font-sans text-sm">
                 <div className="flex justify-between text-foreground/60">
                   <span>Subtotal</span>
-                  <span>{formatCurrency(order.subtotal || (order.total - (order.shippingDetails?.shippingAmount || 0)))}</span>
+                  <span>{formatCurrency(order.subtotal || order.items.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0))}</span>
                 </div>
                 <div className="flex justify-between text-foreground/60">
                   <span>Shipping</span>

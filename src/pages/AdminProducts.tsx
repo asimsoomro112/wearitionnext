@@ -18,6 +18,7 @@ interface Product {
   isPublished?: boolean;
   isFeatured?: boolean;
   isUnstitched?: boolean;
+  colors?: string[];
   createdAt?: any;
 }
 
@@ -38,6 +39,7 @@ export function AdminProducts() {
   const [isPublished, setIsPublished] = useState(true);
   const [isFeatured, setIsFeatured] = useState(false);
   const [isUnstitched, setIsUnstitched] = useState(false);
+  const [colors, setColors] = useState('');
   const [isUploading, setIsUploading] = useState(false);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,6 +103,7 @@ export function AdminProducts() {
     setIsPublished(true);
     setIsFeatured(false);
     setIsUnstitched(false);
+    setColors('');
     setIsModalOpen(true);
   };
 
@@ -117,6 +120,7 @@ export function AdminProducts() {
     setIsPublished(p.isPublished ?? true);
     setIsFeatured(p.isFeatured ?? false);
     setIsUnstitched(p.isUnstitched ?? false);
+    setColors(p.colors ? p.colors.join(', ') : '');
     setIsModalOpen(true);
   };
 
@@ -216,7 +220,8 @@ export function AdminProducts() {
       images: images.split(',').map(img => img.trim()).filter(Boolean),
       isPublished,
       isFeatured,
-      isUnstitched
+      isUnstitched,
+      colors: colors.split(',').map(c => c.trim()).filter(Boolean)
     };
 
     try {
@@ -391,6 +396,11 @@ export function AdminProducts() {
                     <input type="text" value={sizes} onChange={e => setSizes(e.target.value)} placeholder="S, M, L, XL" className="border border-black/10 rounded-md p-3 focus:outline-none focus:border-foreground text-[#0a0a0a]" />
                   </>
                 )}
+              </div>
+              
+              <div className="flex flex-col gap-2">
+                <label className="text-xs uppercase tracking-widest text-[#0a0a0a]/60 font-medium">Colors (comma separated)</label>
+                <input type="text" value={colors} onChange={e => setColors(e.target.value)} placeholder="Black, Navy, Emerald" className="border border-black/10 rounded-md p-3 focus:outline-none focus:border-foreground text-[#0a0a0a]" />
               </div>
 
               <div className="flex flex-col gap-2">

@@ -22,6 +22,7 @@ export function ProductDetails() {
   
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [selectedColor, setSelectedColor] = useState<string>('');
+  const [activeImageIdx, setActiveImageIdx] = useState(0);
   const addItem = useCartStore(state => state.addItem);
   const openCart = useUIStore(state => state.openCart);
   const { wishlistIds, toggleWishlist } = useWishlistStore();
@@ -101,26 +102,43 @@ export function ProductDetails() {
         type="product"
       />
       <div className="flex flex-col md:flex-row w-full max-w-[1600px] mx-auto">
-        {/* Left Side: Sticky/Scroll Image Gallery */}
-        <div className="w-full md:w-[60%] flex flex-col pt-24 md:pt-32 pb-12 px-6 md:px-12 gap-4">
-          {product.images && product.images.length > 0 ? (
-            product.images.map((img: string, idx: number) => (
-              <motion.div 
-                key={idx}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8 }}
-                className="w-full aspect-[3/4] bg-background-secondary overflow-hidden"
-              >
-                <img src={img} alt={`${product.title} ${idx + 1}`} className="w-full h-full object-contain p-4" loading="lazy" />
-              </motion.div>
-            ))
-          ) : (
-            <div className="w-full aspect-[3/4] bg-background-secondary flex items-center justify-center p-2">
-               <div className="w-full h-full bg-background flex items-center justify-center text-foreground/20 uppercase tracking-widest text-sm">Image Placeholder</div>
+        {/* Left Side: Professional Image Gallery */}
+        <div className="w-full md:w-[60%] flex flex-col pt-24 md:pt-32 pb-12 px-6 md:px-12 gap-8">
+          <div className="sticky top-32 space-y-6">
+            {/* Main Big Box */}
+            <motion.div 
+              key={activeImageIdx}
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="w-full aspect-[3/4] bg-background-secondary overflow-hidden rounded-2xl shadow-2xl border border-white/5"
+            >
+              {product.images && product.images.length > 0 ? (
+                <img 
+                  src={product.images[activeImageIdx]} 
+                  alt={product.title} 
+                  className="w-full h-full object-contain p-6 md:p-12 hover:scale-105 transition-transform duration-1000" 
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-foreground/20 uppercase tracking-widest text-xs">No Image</div>
+              )}
+            </motion.div>
+
+            {/* Thumbnails Row */}
+            <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
+              {product.images?.map((img: string, idx: number) => (
+                <button
+                  key={idx}
+                  onClick={() => { setActiveImageIdx(idx); triggerHaptic('light'); }}
+                  className={`relative flex-shrink-0 w-24 h-32 rounded-lg overflow-hidden border-2 transition-all ${
+                    activeImageIdx === idx ? 'border-accent shadow-lg scale-105' : 'border-white/5 opacity-50 grayscale hover:opacity-100 hover:grayscale-0'
+                  }`}
+                >
+                  <img src={img} alt="" className="w-full h-full object-cover" />
+                </button>
+              ))}
             </div>
-          )}
+          </div>
         </div>
 
         {/* Right Side: Product Information */}
@@ -147,8 +165,28 @@ export function ProductDetails() {
               {product.description || 'No description available for this item.'}
             </div>
 
-            {!product.isUnstitched && (
-              <div className="flex flex-col gap-6 mb-12 border-y border-white/10 py-10">
+            <div className="flex flex-col gap-8 mb-12 border-y border-white/10 py-10">
+               {/* Color Selection */}
+               {product.colors && product.colors.length > 0 && (
+                 <div>
+                   <div className="flex justify-between items-center mb-6">
+                     <span className="uppercase text-xs tracking-[0.2em] text-foreground">Select Color</span>
+                   </div>
+                   <div className="flex gap-4 flex-wrap">
+                     {product.colors.map((color: string) => (
+                       <button 
+                         key={color}
+                         onClick={() => { setSelectedColor(color); triggerHaptic('light'); }}
+                         className={`px-6 py-3 border transition-all ${selectedColor === color ? 'border-accent bg-accent/10 text-accent font-bold' : 'border-white/10 text-foreground/50 hover:border-white/30'}`}
+                       >
+                         <span className="uppercase text-[10px] tracking-widest">{color}</span>
+                       </button>
+                     ))}
+                   </div>
+                 </div>
+               )}
+
+               {!product.isUnstitched && (
                  <div>
                     <div className="flex justify-between items-center mb-6">
                        <span className="uppercase text-xs tracking-[0.2em] text-foreground">Select Size</span>
@@ -158,16 +196,16 @@ export function ProductDetails() {
                        {(product.sizes && product.sizes.length > 0 ? product.sizes : ['XS', 'S', 'M', 'L', 'XL']).map((size: string) => (
                           <button 
                              key={size}
-                             onClick={() => setSelectedSize(size)}
-                             className={`w-14 h-14 border ${selectedSize === size ? 'border-foreground bg-foreground text-background' : 'border-foreground/20 text-foreground hover:border-foreground/50'} flex items-center justify-center font-sans text-sm transition-colors`}
+                             onClick={() => { setSelectedSize(size); triggerHaptic('light'); }}
+                             className={`w-14 h-14 border ${selectedSize === size ? 'border-foreground bg-foreground text-background font-bold' : 'border-foreground/20 text-foreground hover:border-foreground/50'} flex items-center justify-center font-sans text-sm transition-colors`}
                           >
                              {size}
                           </button>
                        ))}
                     </div>
                  </div>
-              </div>
-            )}
+               )}
+            </div>
 
             <MagneticButton 
               className={`w-full py-6 uppercase text-xs tracking-[0.2em] font-medium transition-colors duration-300 mb-4 ${isOutOfStock ? 'bg-foreground/20 text-foreground/40 cursor-not-allowed' : 'bg-foreground text-background hover:bg-accent hover:text-background'}`}
