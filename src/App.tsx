@@ -29,6 +29,7 @@ import { Editorial } from './pages/Editorial';
 import { NotFound } from './pages/NotFound';
 import { ScrollToTop } from './components/layout/ScrollToTop';
 import { LoadingScreen } from './components/layout/LoadingScreen';
+import { ErrorBoundary } from './components/layout/ErrorBoundary';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Toaster } from 'sonner';
 import { isAdminEmail } from './config/admin';
@@ -81,32 +82,34 @@ export default function App() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          <BrowserRouter>
-            <ScrollToTop />
-            <Routes>
-              <Route path="/" element={<Layout />}>
-                <Route index element={<Home />} />
-                <Route path="shop" element={<Shop />} />
-                <Route path="product/:id" element={<ProductDetails />} />
-                <Route path="wishlist" element={<Wishlist />} />
-                <Route path="account" element={<Account />} />
-                <Route path="track-order" element={<OrderTracking />} />
-                <Route path="checkout" element={<Checkout />} />
-                <Route path="about" element={<About />} />
-                <Route path="contact" element={<Contact />} />
-                <Route path="editorial" element={<Editorial />} />
-                <Route path="*" element={<NotFound />} />
-              </Route>
-              <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
-                <Route index element={<AdminDashboard />} />
-                <Route path="products" element={<AdminProducts />} />
-                <Route path="orders" element={<AdminOrders />} />
-                <Route path="users" element={<AdminUsers />} />
-                <Route path="analytics" element={<AdminAnalytics />} />
-                <Route path="storefront" element={<AdminStorefront />} />
-              </Route>
-            </Routes>
-          </BrowserRouter>
+          <ErrorBoundary>
+            <BrowserRouter>
+              <ScrollToTop />
+              <Routes>
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<Home />} />
+                  <Route path="shop" element={<Shop />} />
+                  <Route path="product/:id" element={<ProductDetails />} />
+                  <Route path="wishlist" element={<Wishlist />} />
+                  <Route path="account" element={<Account />} />
+                  <Route path="track-order" element={<OrderTracking />} />
+                  <Route path="checkout" element={<Checkout />} />
+                  <Route path="about" element={<About />} />
+                  <Route path="contact" element={<Contact />} />
+                  <Route path="editorial" element={<Editorial />} />
+                  <Route path="*" element={<NotFound />} />
+                </Route>
+                <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
+                  <Route index element={<AdminDashboard />} />
+                  <Route path="products" element={<AdminProducts />} />
+                  <Route path="orders" element={<AdminOrders />} />
+                  <Route path="users" element={<AdminUsers />} />
+                  <Route path="analytics" element={<AdminAnalytics />} />
+                  <Route path="storefront" element={<AdminStorefront />} />
+                </Route>
+              </Routes>
+            </BrowserRouter>
+          </ErrorBoundary>
         </motion.div>
       )}
     </>

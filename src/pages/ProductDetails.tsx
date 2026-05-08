@@ -8,6 +8,7 @@ import { useUIStore } from '../store/uiStore';
 import { useWishlistStore } from '../store/wishlistStore';
 import { toast } from 'sonner';
 import { formatCurrency } from '../utils/currency';
+import { triggerHaptic } from '../utils/haptics';
 
 export function ProductDetails() {
   const { id } = useParams();
@@ -128,7 +129,7 @@ export function ProductDetails() {
                      <button className="text-[10px] uppercase tracking-widest text-foreground/50 hover:text-foreground transition-colors border-b border-transparent hover:border-foreground">Size Guide</button>
                   </div>
                   <div className="flex gap-4 flex-wrap">
-                     {['XS', 'S', 'M', 'L', 'XL'].map(size => (
+                     {(product.sizes && product.sizes.length > 0 ? product.sizes : ['XS', 'S', 'M', 'L', 'XL']).map((size: string) => (
                         <button 
                            key={size}
                            onClick={() => setSelectedSize(size)}

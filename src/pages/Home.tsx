@@ -414,7 +414,9 @@ export function Home() {
         } else if (section.productQueryType === 'category' && section.categoryValue) {
           filteredProducts = filteredProducts.filter(p => p.category?.toLowerCase() === section.categoryValue?.toLowerCase());
         } else if (section.productQueryType === 'featured' || section.productQueryType === 'trending') {
-          filteredProducts = filteredProducts.filter(p => p.isFeatured);
+          filteredProducts = filteredProducts.filter(p => 
+            p.isFeatured && (!section.categoryValue || p.category?.toLowerCase() === section.categoryValue?.toLowerCase())
+          );
         }
         
         // Don't render empty sections

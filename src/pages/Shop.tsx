@@ -5,15 +5,45 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ProductCard } from '../components/shop/ProductCard';
 
+const CATEGORIES = [
+  { name: 'All', value: '' },
+  { name: 'Women', value: 'women' },
+  { name: 'Men', value: 'men' },
+  { name: 'Shirts', value: 'shirts' },
+  { name: 'Pants', value: 'pants' },
+  { name: 'Tech-Noir', value: 'tech-noir' },
+  { name: 'Accessories', value: 'accessories' },
+  { name: 'Shoes', value: 'shoes' },
+];
+
+const SORT_OPTIONS = [
+  { label: 'Recommended', value: 'recommended' },
+  { label: 'Price: Low to High', value: 'price_asc' },
+  { label: 'Price: High to Low', value: 'price_desc' },
+  { label: 'Newest', value: 'newest' },
+];
+
+function ProductSkeleton() {
+  return (
+    <div className="animate-pulse">
+      <div className="aspect-[3/4] bg-foreground/5 mb-4 rounded-sm" />
+      <div className="h-3 bg-foreground/5 rounded mb-2 w-3/4" />
+      <div className="h-3 bg-foreground/5 rounded w-1/2" />
+    </div>
+  );
+}
+
 export function Shop() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchParams] = useSearchParams();
+  const [sortBy, setSortBy] = useState('recommended');
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchString = searchParams.get('search')?.toLowerCase() || '';
   const categoryFilter = searchParams.get('category')?.toLowerCase() || '';
 
   useEffect(() => {
     async function fetchProducts() {
+      setLoading(true);
       try {
         const q = query(
           collection(db, "products"),
@@ -21,30 +51,22 @@ export function Shop() {
         );
         const querySnapshot = await getDocs(q);
         let fetched = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as any }));
-        
-        if (fetched.length > 0) {
-           // We have real data
-        } else {
-           // Default placeholder data if DB is empty
-           fetched = [
-              { id: '1', title: 'Noir Silk Dress', price: 595, category: 'ready-to-wear', images: ['https://images.unsplash.com/photo-1595777457583-95e059f581ce?q=80&w=800&auto=format&fit=crop'] },
-              { id: '2', title: 'Cashmere Turtleneck', price: 350, category: 'ready-to-wear', images: ['https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?q=80&w=800&auto=format&fit=crop'] },
-              { id: '3', title: 'Tailored Wool Coat', price: 950, category: 'ready-to-wear', images: ['https://images.unsplash.com/photo-1544022613-e87ca7cebb6c?q=80&w=800&auto=format&fit=crop'] },
-              { id: '4', title: 'Wide Leg Trousers', price: 290, category: 'ready-to-wear', images: ['https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=800&auto=format&fit=crop'] },
-              { id: '5', title: 'Oversized Silk Blouse', price: 320, category: 'ready-to-wear', images: ['https://images.unsplash.com/photo-1434389678232-06b2a30336fc?q=80&w=800&auto=format&fit=crop'] },
-              { id: '6', title: 'Leather Mini Skirt', price: 450, category: 'ready-to-wear', images: ['https://images.unsplash.com/photo-1582142306909-195724d33ffc?q=80&w=800&auto=format&fit=crop'] },
-              { id: '7', title: 'Structured Blazer', price: 680, category: 'ready-to-wear', images: ['https://images.unsplash.com/photo-1591369822096-ffd140ec948f?q=80&w=800&auto=format&fit=crop'] },
-              { id: '8', title: 'Minimalist Chelsea Boot', price: 590, category: 'shoes', images: ['https://images.unsplash.com/photo-1531310197839-ccf54634509e?q=80&w=800&auto=format&fit=crop'] },
-           ];
-        }
 
         if (searchString) {
-          fetched = fetched.filter(p => p.title.toLowerCase().includes(searchString) || (p.description && p.description.toLowerCase().includes(searchString)));
+          fetched = fetched.filter(p =>
+            p.title?.toLowerCase().includes(searchString) ||
+            (p.description && p.description.toLowerCase().includes(searchString))
+          );
         }
 
         if (categoryFilter) {
           fetched = fetched.filter(p => p.category?.toLowerCase() === categoryFilter);
         }
+
+        // Sorting
+        if (sortBy === 'price_asc') fetched.sort((a, b) => a.price - b.price);
+        else if (sortBy === 'price_desc') fetched.sort((a, b) => b.price - a.price);
+        else if (sortBy === 'newest') fetched.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 
         setProducts(fetched);
       } catch (e) {
@@ -54,63 +76,93 @@ export function Shop() {
       }
     }
     fetchProducts();
-  }, [searchString]);
+  }, [searchString, categoryFilter, sortBy]);
+
+  const setCategory = (value: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (value) params.set('category', value);
+    else params.delete('category');
+    setSearchParams(params);
+  };
 
   return (
     <div className="w-full pt-40 px-6 md:px-12 pb-32 bg-background">
       <div className="max-w-[1440px] mx-auto">
         <header className="mb-12 text-center">
-          <h1 className="font-serif text-4xl sm:text-5xl md:text-[4rem] leading-tight md:leading-none tracking-tight text-foreground mb-6">Explore the Collection</h1>
-          <p className="text-foreground/60 text-sm max-w-xl mx-auto font-sans">
-            Discover the complete collection of ready-to-wear, accessories, and elevated essentials.
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="font-serif text-4xl sm:text-5xl md:text-[4rem] leading-tight tracking-tight text-foreground mb-4"
+          >
+            {categoryFilter ? categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1) : 'The Collection'}
+          </motion.h1>
+          <p className="text-foreground/50 text-sm max-w-xl mx-auto font-sans">
+            {loading ? 'Curating your collection...' : `${products.length} piece${products.length !== 1 ? 's' : ''} available`}
           </p>
         </header>
 
-        {/* Categories Glassmorphism Buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mb-16">
-          {[
-            { name: 'All', value: '' },
-            { name: 'Ready-to-Wear', value: 'ready-to-wear' },
-            { name: 'Accessories', value: 'accessories' },
-            { name: 'Shoes', value: 'shoes' },
-            { name: 'Jewelry', value: 'jewelry' },
-            { name: 'Bags', value: 'bags' },
-            { name: 'Outerwear', value: 'outerwear' },
-          ].map((cat) => (
-            <Link
+        {/* Category Pills */}
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
+          {CATEGORIES.map((cat) => (
+            <button
               key={cat.name}
-              to={cat.value ? `/shop?category=${cat.value}` : '/shop'}
-              className={`px-6 py-3 rounded-full backdrop-blur-md border shadow-[0_4px_16px_0_rgba(31,38,135,0.15)] transition-all duration-300 text-xs tracking-widest uppercase font-medium ${
+              onClick={() => setCategory(cat.value)}
+              className={`px-5 py-2.5 rounded-full border text-xs tracking-widest uppercase font-medium transition-all duration-300 ${
                 categoryFilter === cat.value
-                  ? 'bg-foreground/10 border-foreground/30 text-foreground scale-105'
-                  : 'bg-background/20 border-foreground/10 text-foreground/70 md:hover:bg-foreground/5 md:hover:border-foreground/20'
+                  ? 'bg-foreground text-background border-foreground scale-105'
+                  : 'bg-transparent border-foreground/20 text-foreground/60 hover:border-foreground/50 hover:text-foreground'
               }`}
             >
               {cat.name}
-            </Link>
+            </button>
           ))}
         </div>
 
-        {/* Filters bar */}
-        <div className="flex justify-between items-center border-y border-white/10 py-6 mb-16 text-xs uppercase tracking-[0.2em] text-foreground">
-          <div className="flex gap-12">
-            <button className="hover:text-accent transition-colors flex items-center gap-2">Category <span className="text-[10px]">▼</span></button>
-            <button className="hover:text-accent transition-colors hidden md:flex items-center gap-2">Size <span className="text-[10px]">▼</span></button>
-            <button className="hover:text-accent transition-colors hidden md:flex items-center gap-2">Color <span className="text-[10px]">▼</span></button>
+        {/* Sort Bar */}
+        <div className="flex justify-between items-center border-y border-foreground/10 py-5 mb-14 text-xs uppercase tracking-widest text-foreground/60">
+          <span>{loading ? '...' : `${products.length} Results`}</span>
+          <div className="flex items-center gap-3">
+            <span className="hidden md:block">Sort:</span>
+            <select
+              value={sortBy}
+              onChange={e => setSortBy(e.target.value)}
+              className="bg-transparent border-none outline-none text-foreground/80 cursor-pointer uppercase text-xs tracking-widest"
+            >
+              {SORT_OPTIONS.map(o => <option key={o.value} value={o.value} className="bg-[#0a0a0a]">{o.label}</option>)}
+            </select>
           </div>
-          <button className="hover:text-accent transition-colors flex items-center gap-2">Sort By: Recommended <span className="text-[10px]">▼</span></button>
         </div>
 
+        {/* Product Grid */}
         {loading ? (
-          <div className="w-full h-64 flex items-center justify-center">
-            <div className="w-8 h-8 border-t border-white rounded-full animate-spin"></div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
+            {Array.from({ length: 8 }).map((_, i) => <ProductSkeleton key={i} />)}
           </div>
+        ) : products.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-32"
+          >
+            <p className="font-serif text-5xl text-foreground/10 mb-6">◇</p>
+            <p className="font-serif text-3xl text-foreground/30 mb-4">Coming Soon</p>
+            <p className="text-foreground/40 text-sm font-sans mb-10">
+              This collection is being carefully curated. Please check back soon.
+            </p>
+            <button onClick={() => setCategory('')} className="text-xs uppercase tracking-widest border-b border-foreground/30 pb-1 hover:text-accent hover:border-accent transition-colors">
+              View All Pieces
+            </button>
+          </motion.div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
+          <motion.div
+            layout
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12"
+          >
             {products.map((product, i) => (
               <ProductCard key={product.id} product={product} index={i} />
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
     </div>

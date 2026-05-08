@@ -4,6 +4,7 @@ import { Footer } from './Footer';
 import { CartDrawer } from './CartDrawer';
 import { MobileBottomBar } from './MobileBottomBar';
 import { SearchOverlay } from './SearchOverlay';
+import { AIStyleAssistant } from './AIStyleAssistant';
 import { useEffect } from 'react';
 import Lenis from 'lenis';
 
@@ -28,6 +29,7 @@ export function Layout() {
       <Navbar />
       <CartDrawer />
       <SearchOverlay />
+      <AIStyleAssistant />
       <main className="flex-grow min-h-screen">
         <Outlet />
       </main>

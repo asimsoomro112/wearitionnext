@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface CartItem {
   id: string;
@@ -19,37 +20,42 @@ interface CartState {
   get subtotal(): number;
 }
 
-export const useCartStore = create<CartState>((set, get) => ({
-  items: [],
-  addItem: (newItem) => set((state) => {
-    const existingItem = state.items.find(
-      (item) => item.id === newItem.id && item.size === newItem.size && item.color === newItem.color
-    );
-    if (existingItem) {
-      return {
+export const useCartStore = create<CartState>()(
+  persist(
+    (set, get) => ({
+      items: [],
+      addItem: (newItem) => set((state) => {
+        const existingItem = state.items.find(
+          (item) => item.id === newItem.id && item.size === newItem.size && item.color === newItem.color
+        );
+        if (existingItem) {
+          return {
+            items: state.items.map((item) =>
+              item.id === newItem.id && item.size === newItem.size && item.color === newItem.color
+                ? { ...item, quantity: item.quantity + newItem.quantity }
+                : item
+            ),
+          };
+        }
+        return { items: [...state.items, newItem] };
+      }),
+      removeItem: (id, size, color) => set((state) => ({
+        items: state.items.filter(
+          (item) => !(item.id === id && item.size === size && item.color === color)
+        )
+      })),
+      updateQuantity: (id, quantity, size, color) => set((state) => ({
         items: state.items.map((item) =>
-          item.id === newItem.id && item.size === newItem.size && item.color === newItem.color
-            ? { ...item, quantity: item.quantity + newItem.quantity }
+          item.id === id && item.size === size && item.color === color
+            ? { ...item, quantity: Math.max(1, quantity) }
             : item
-        ),
-      };
-    }
-    return { items: [...state.items, newItem] };
-  }),
-  removeItem: (id, size, color) => set((state) => ({
-    items: state.items.filter(
-      (item) => !(item.id === id && item.size === size && item.color === color)
-    )
-  })),
-  updateQuantity: (id, quantity, size, color) => set((state) => ({
-    items: state.items.map((item) =>
-      item.id === id && item.size === size && item.color === color
-        ? { ...item, quantity: Math.max(1, quantity) }
-        : item
-    )
-  })),
-  clearCart: () => set({ items: [] }),
-  get subtotal() {
-    return get().items.reduce((total, item) => total + (item.price * item.quantity), 0);
-  }
-}));
+        )
+      })),
+      clearCart: () => set({ items: [] }),
+      get subtotal() {
+        return get().items.reduce((total, item) => total + (item.price * item.quantity), 0);
+      }
+    }),
+    { name: 'wearition-cart' }
+  )
+);
