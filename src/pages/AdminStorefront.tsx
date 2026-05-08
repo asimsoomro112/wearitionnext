@@ -17,17 +17,17 @@ export interface StoreSection {
 const DEFAULT_SECTIONS: StoreSection[] = [
   { id: '1', type: 'hero' },
   { 
-    id: '2', type: 'categories', title: 'Categories',
+    id: '2', type: 'categories', title: 'The 2026 Collections',
     items: [
-      { name: 'Womens', image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=800&auto=format&fit=crop', link: '/shop?category=womens' },
-      { name: 'Mens', image: 'https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=800&auto=format&fit=crop', link: '/shop?category=mens' },
-      { name: 'Accessories', image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=800&auto=format&fit=crop', link: '/shop?category=accessories' },
-      { name: 'Collections', image: 'https://images.unsplash.com/photo-1495385794356-15371f348c31?q=80&w=800&auto=format&fit=crop', link: '/shop?category=collections' },
+      { name: 'Women', image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=800', link: '/shop?category=women' },
+      { name: 'Men', image: 'https://images.unsplash.com/photo-1550246140-5119ae4790b7?q=80&w=800', link: '/shop?category=men' },
+      { name: 'Shirts', image: 'https://images.unsplash.com/photo-1598033129183-c4f50c7176c8?q=80&w=800', link: '/shop?category=shirts' },
+      { name: 'Pants', image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=800', link: '/shop?category=pants' },
     ]
   },
-  { id: '3', type: 'products_scroll', title: 'Trending Now', productQueryType: 'trending' },
-  { id: '4', type: 'editorial' },
-  { id: '5', type: 'products_scroll', title: 'End of Season Sale', productQueryType: 'sale' },
+  { id: '3', type: 'products_scroll', title: 'Featured Menswear', productQueryType: 'featured', categoryValue: 'men' },
+  { id: '4', type: 'products_scroll', title: 'Featured Womenswear', productQueryType: 'featured', categoryValue: 'women' },
+  { id: '5', type: 'editorial' },
   { id: '6', type: 'artisanship' },
   { id: '7', type: 'newsletter' },
 ];
@@ -191,7 +191,57 @@ export function AdminStorefront() {
                     )}
                   </div>
                 )}
-                {['hero', 'editorial', 'artisanship', 'newsletter', 'categories'].includes(section.type) && (
+                {section.type === 'categories' && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
+                    {(section.items || []).map((item, itemIdx) => (
+                      <div key={itemIdx} className="bg-white p-4 rounded border border-black/5 shadow-sm">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-accent mb-3">Item {itemIdx + 1}</p>
+                        <div className="flex flex-col gap-3">
+                          <div>
+                            <label className="text-[10px] uppercase font-bold text-black/40 block mb-1">Display Name</label>
+                            <input 
+                              type="text" 
+                              value={item.name} 
+                              onChange={(e) => {
+                                const newItems = [...(section.items || [])];
+                                newItems[itemIdx] = { ...item, name: e.target.value };
+                                updateSection(idx, { items: newItems });
+                              }}
+                              className="w-full text-xs border border-black/10 rounded p-2 focus:outline-none focus:border-black"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-[10px] uppercase font-bold text-black/40 block mb-1">Image URL</label>
+                            <input 
+                              type="text" 
+                              value={item.image} 
+                              onChange={(e) => {
+                                const newItems = [...(section.items || [])];
+                                newItems[itemIdx] = { ...item, image: e.target.value };
+                                updateSection(idx, { items: newItems });
+                              }}
+                              className="w-full text-xs border border-black/10 rounded p-2 focus:outline-none focus:border-black"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-[10px] uppercase font-bold text-black/40 block mb-1">Shop Link</label>
+                            <input 
+                              type="text" 
+                              value={item.link} 
+                              onChange={(e) => {
+                                const newItems = [...(section.items || [])];
+                                newItems[itemIdx] = { ...item, link: e.target.value };
+                                updateSection(idx, { items: newItems });
+                              }}
+                              className="w-full text-xs border border-black/10 rounded p-2 focus:outline-none focus:border-black"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {['hero', 'editorial', 'artisanship', 'newsletter'].includes(section.type) && (
                    <p className="text-sm text-[#0a0a0a]/70 font-medium">Fixed Section (Layout specific)</p>
                 )}
               </div>
