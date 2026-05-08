@@ -23,27 +23,26 @@ export function OrderTracking() {
   const initialEmail = searchParams.get('email') || '';
   
   const [orderId, setOrderId] = useState(initialId);
-  const [email, setEmail] = useState(initialEmail);
-  const [hasSearched, setHasSearched] = useState(!!(initialId && initialEmail));
+  const [hasSearched, setHasSearched] = useState(!!initialId);
   const [order, setOrder] = useState<any>(null);
   const [isSearching, setIsSearching] = useState(false);
   
   const getOrder = useOrderTrackingStore(state => state.getOrder);
 
   useEffect(() => {
-    if (initialId && initialEmail) {
+    if (initialId) {
       handleTrack(null);
     }
   }, []);
 
   const handleTrack = async (e: React.FormEvent | null) => {
     if (e) e.preventDefault();
-    if (!orderId || !email) return;
+    if (!orderId) return;
     
     setIsSearching(true);
     setHasSearched(true);
     try {
-      const foundOrder = await getOrder(orderId, email);
+      const foundOrder = await getOrder(orderId);
       setOrder(foundOrder || null);
     } catch (err) {
       console.error('Order lookup failed:', err);
@@ -71,7 +70,7 @@ export function OrderTracking() {
         <SEO title="Track Order" />
         <div className="max-w-[600px] mx-auto text-center">
           <h1 className="font-serif text-4xl mb-8 uppercase tracking-widest">Track Your Order</h1>
-          <p className="text-foreground/50 mb-12 font-sans text-sm">Enter your details to view live updates on your luxury selection.</p>
+          <p className="text-foreground/50 mb-12 font-sans text-sm">Enter your Order ID to view live updates on your luxury selection.</p>
           
           <form onSubmit={handleTrack} className="space-y-6">
             <input 
@@ -80,15 +79,7 @@ export function OrderTracking() {
               onChange={(e) => setOrderId(e.target.value)} 
               type="text" 
               placeholder="ORDER ID (E.G. WR-XXXXXX)" 
-              className="w-full bg-foreground/[0.03] border border-white/5 px-6 py-4 text-sm focus:outline-none focus:border-accent/30 transition-colors uppercase tracking-widest" 
-            />
-            <input 
-              required 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              type="email" 
-              placeholder="EMAIL ADDRESS" 
-              className="w-full bg-foreground/[0.03] border border-white/5 px-6 py-4 text-sm focus:outline-none focus:border-accent/30 transition-colors uppercase tracking-widest" 
+              className="w-full bg-foreground/[0.03] border border-white/5 px-6 py-4 text-sm focus:outline-none focus:border-accent/30 transition-colors uppercase tracking-widest text-center" 
             />
             <button 
               type="submit" 
@@ -100,7 +91,7 @@ export function OrderTracking() {
           </form>
 
           {hasSearched && !order && !isSearching && (
-            <p className="mt-8 text-red-500 text-xs font-sans">Order not found. Please verify your ID and email.</p>
+            <p className="mt-8 text-red-500 text-xs font-sans">Order not found. Please verify your ID.</p>
           )}
         </div>
       </div>

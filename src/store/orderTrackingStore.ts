@@ -43,11 +43,10 @@ export const useOrderTrackingStore = create<OrderTrackingState>()(
           orders: state.orders.map(o => o.id === id ? { ...o, status } : o)
         }));
       },
-      getOrder: async (orderId, email) => {
+      getOrder: async (orderId) => {
         const q = query(
           collection(db, 'orders'), 
-          where('orderId', '==', orderId), 
-          where('email', '==', email.toLowerCase())
+          where('orderId', '==', orderId)
         );
         const querySnapshot = await getDocs(q);
         if (!querySnapshot.empty) {
