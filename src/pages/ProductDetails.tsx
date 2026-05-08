@@ -107,36 +107,48 @@ export function ProductDetails() {
           <div className="sticky top-32 space-y-6">
             {/* Main Big Box */}
             <motion.div 
-              key={activeImageIdx}
+              key={activeImageIdx + selectedColor}
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
               className="w-full aspect-[3/4] bg-background-secondary overflow-hidden rounded-2xl shadow-2xl border border-white/5"
             >
-              {product.images && product.images.length > 0 ? (
-                <img 
-                  src={product.images[activeImageIdx]} 
-                  alt={product.title} 
-                  className="w-full h-full object-contain p-6 md:p-12 hover:scale-105 transition-transform duration-1000" 
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-foreground/20 uppercase tracking-widest text-xs">No Image</div>
-              )}
+              {(() => {
+                const displayImages = (selectedColor && product.colorImages?.[selectedColor] && product.colorImages[selectedColor].length > 0)
+                  ? product.colorImages[selectedColor]
+                  : product.images;
+                  
+                return displayImages && displayImages.length > 0 ? (
+                  <img 
+                    src={displayImages[activeImageIdx] || displayImages[0]} 
+                    alt={product.title} 
+                    className="w-full h-full object-contain p-6 md:p-12 hover:scale-105 transition-transform duration-1000" 
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-foreground/20 uppercase tracking-widest text-xs">No Image</div>
+                );
+              })()}
             </motion.div>
 
             {/* Thumbnails Row */}
             <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
-              {product.images?.map((img: string, idx: number) => (
-                <button
-                  key={idx}
-                  onClick={() => { setActiveImageIdx(idx); triggerHaptic('light'); }}
-                  className={`relative flex-shrink-0 w-24 h-32 rounded-lg overflow-hidden border-2 transition-all ${
-                    activeImageIdx === idx ? 'border-accent shadow-lg scale-105' : 'border-white/5 opacity-50 grayscale hover:opacity-100 hover:grayscale-0'
-                  }`}
-                >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
-                </button>
-              ))}
+              {(() => {
+                const displayImages = (selectedColor && product.colorImages?.[selectedColor] && product.colorImages[selectedColor].length > 0)
+                  ? product.colorImages[selectedColor]
+                  : product.images;
+                
+                return displayImages?.map((img: string, idx: number) => (
+                  <button
+                    key={idx}
+                    onClick={() => { setActiveImageIdx(idx); triggerHaptic('light'); }}
+                    className={`relative flex-shrink-0 w-24 h-32 rounded-lg overflow-hidden border-2 transition-all ${
+                      activeImageIdx === idx ? 'border-accent shadow-lg scale-105' : 'border-white/5 opacity-50 grayscale hover:opacity-100 hover:grayscale-0'
+                    }`}
+                  >
+                    <img src={img} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ));
+              })()}
             </div>
           </div>
         </div>

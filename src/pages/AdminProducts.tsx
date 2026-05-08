@@ -19,6 +19,7 @@ interface Product {
   isFeatured?: boolean;
   isUnstitched?: boolean;
   colors?: string[];
+  colorImages?: Record<string, string[]>;
   createdAt?: any;
 }
 
@@ -40,17 +41,15 @@ export function AdminProducts() {
   const [isFeatured, setIsFeatured] = useState(false);
   const [isUnstitched, setIsUnstitched] = useState(false);
   const [colors, setColors] = useState('');
+  const [colorImages, setColorImages] = useState<Record<string, string[]>>({});
   const [isUploading, setIsUploading] = useState(false);
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, colorKey?: string) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
 
     setIsUploading(true);
     try {
-      const formData = new FormData();
-      formData.append('image', file);
-      
       const apiKey = import.meta.env.VITE_IMGBB_API_KEY;
       if (!apiKey || apiKey === 'YOUR_IMGBB_API_KEY') {
         alert('Please configure VITE_IMGBB_API_KEY in your .env file or settings.');
@@ -58,23 +57,39 @@ export function AdminProducts() {
         return;
       }
 
-      const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
-        method: 'POST',
-        body: formData,
+      const uploadPromises = files.map(async (file) => {
+        const formData = new FormData();
+        formData.append('image', file);
+        
+        const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          return data.data.url;
+        } else {
+          throw new Error(data.error?.message || 'Unknown error');
+        }
       });
 
-      const data = await response.json();
-      if (data.success) {
-        const imageUrl = data.data.url;
-        setImages((prev) => (prev ? `${prev}, ${imageUrl}` : imageUrl));
+      const uploadedUrls = await Promise.all(uploadPromises);
+      
+      if (colorKey) {
+        setColorImages(prev => ({
+          ...prev,
+          [colorKey]: [...(prev[colorKey] || []), ...uploadedUrls]
+        }));
       } else {
-        alert('Image upload failed: ' + (data.error?.message || 'Unknown error'));
+        setImages((prev) => (prev ? `${prev}, ${uploadedUrls.join(', ')}` : uploadedUrls.join(', ')));
       }
     } catch (err: any) {
       console.error(err);
-      alert('Error uploading image: ' + err.message);
+      alert('Error uploading images: ' + err.message);
     } finally {
       setIsUploading(false);
+      e.target.value = '';
     }
   };
 
@@ -104,6 +119,7 @@ export function AdminProducts() {
     setIsFeatured(false);
     setIsUnstitched(false);
     setColors('');
+    setColorImages({});
     setIsModalOpen(true);
   };
 
@@ -121,6 +137,7 @@ export function AdminProducts() {
     setIsFeatured(p.isFeatured ?? false);
     setIsUnstitched(p.isUnstitched ?? false);
     setColors(p.colors ? p.colors.join(', ') : '');
+    setColorImages(p.colorImages || {});
     setIsModalOpen(true);
   };
 
@@ -221,7 +238,8 @@ export function AdminProducts() {
       isPublished,
       isFeatured,
       isUnstitched,
-      colors: colors.split(',').map(c => c.trim()).filter(Boolean)
+      colors: colors.split(',').map(c => c.trim()).filter(Boolean),
+      colorImages
     };
 
     try {
@@ -411,6 +429,7 @@ export function AdminProducts() {
                       type="file"
                       id="image-upload"
                       accept="image/*"
+                      multiple
                       onChange={handleImageUpload}
                       disabled={isUploading}
                       className="hidden"
@@ -419,7 +438,7 @@ export function AdminProducts() {
                       htmlFor="image-upload"
                       className="cursor-pointer flex items-center gap-2 bg-black/5 text-[#0a0a0a] px-4 py-2 rounded-md text-sm font-medium hover:bg-black/10 transition-colors"
                     >
-                      {isUploading ? 'Uploading...' : 'Upload Image'}
+                      {isUploading ? 'Uploading...' : 'Upload Images'}
                     </label>
                   </div>
                 </div>
@@ -486,6 +505,56 @@ export function AdminProducts() {
                   className="border border-black/10 rounded-md p-3 focus:outline-none focus:border-foreground resize-none text-[#0a0a0a] w-full text-xs font-mono" 
                 />
               </div>
+
+              {/* Color Specific Images */}
+              {colors.split(',').map(c => c.trim()).filter(Boolean).map(color => (
+                <div key={color} className="flex flex-col gap-2 mt-2 p-4 border border-black/10 rounded-lg bg-black/[0.02]">
+                  <label className="text-xs uppercase tracking-widest text-[#0a0a0a]/60 font-medium">
+                    Images for {color}
+                  </label>
+                  <div className="flex items-center gap-4 mb-2">
+                    <div className="relative">
+                      <input
+                        type="file"
+                        id={`image-upload-${color}`}
+                        accept="image/*"
+                        multiple
+                        onChange={(e) => handleImageUpload(e, color)}
+                        disabled={isUploading}
+                        className="hidden"
+                      />
+                      <label 
+                        htmlFor={`image-upload-${color}`}
+                        className="cursor-pointer flex items-center gap-2 bg-white text-[#0a0a0a] px-4 py-2 rounded-md text-sm font-medium border border-black/10 hover:bg-black/5 transition-colors"
+                      >
+                        {isUploading ? 'Uploading...' : `Upload ${color} Images`}
+                      </label>
+                    </div>
+                  </div>
+                  
+                  {colorImages[color] && colorImages[color].length > 0 && (
+                    <div className="flex flex-wrap gap-4">
+                      {colorImages[color].map((url, i) => (
+                        <div key={i} className="relative w-20 h-24 group border border-black/10 rounded-lg overflow-visible bg-white">
+                          <img src={url} alt="" className="w-full h-full object-cover rounded p-1" />
+                          <button 
+                            type="button"
+                            onClick={() => {
+                              setColorImages(prev => ({
+                                ...prev,
+                                [color]: prev[color].filter((_, idx) => idx !== i)
+                              }));
+                            }}
+                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-lg hover:scale-110 transition-transform z-20"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
 
               <div className="flex flex-col sm:flex-row gap-6">
                 <div className="flex items-center gap-3">
