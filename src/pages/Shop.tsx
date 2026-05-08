@@ -4,6 +4,7 @@ import { db } from '../firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ProductCard } from '../components/shop/ProductCard';
+import { SEO } from '../components/layout/SEO';
 
 const CATEGORIES = [
   { name: 'All', value: '' },
@@ -87,6 +88,10 @@ export function Shop() {
 
   return (
     <div className="w-full pt-40 px-6 md:px-12 pb-32 bg-background">
+      <SEO 
+        title={categoryFilter ? `${categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1)} Collection` : 'Shop the Collection'}
+        description="Explore WEARITION's curated collection of luxury fashion. Premium menswear and womenswear designed for the modern visionary."
+      />
       <div className="max-w-[1440px] mx-auto">
         <header className="mb-12 text-center">
           <motion.h1

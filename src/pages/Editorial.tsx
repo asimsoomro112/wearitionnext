@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
+import { Link } from 'react-router-dom';
 
 export function Editorial() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -24,6 +25,7 @@ export function Editorial() {
             src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2000&auto=format&fit=crop" 
             alt="Autumn Editorial" 
             className="w-full h-full object-cover grayscale brightness-75"
+            loading="eager"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/20 to-background"></div>
         </motion.div>
@@ -74,8 +76,9 @@ export function Editorial() {
             className="aspect-[3/4] bg-background-secondary overflow-hidden shadow-2xl"
           >
             <img 
-              src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1000" 
+              src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1000&fm=webp" 
               alt="Editorial look 1" 
+              loading="lazy"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-1000"
             />
           </motion.div>
@@ -85,8 +88,9 @@ export function Editorial() {
       {/* Visual Break - Full Width */}
       <section className="h-[70vh] md:h-[90vh] w-full overflow-hidden relative">
         <img 
-          src="https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=2000" 
+          src="https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=2000&fm=webp" 
           alt="Visual break" 
+          loading="lazy"
           className="w-full h-full object-cover fixed top-0 left-0 z-[-1] brightness-90"
         />
         <div className="absolute inset-0 bg-black/10"></div>
@@ -102,9 +106,10 @@ export function Editorial() {
             className="order-2 md:order-1 aspect-[3/4] bg-background-secondary overflow-hidden shadow-2xl"
           >
             <img 
-              src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=1000" 
+              src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=1000&fm=webp" 
               alt="Editorial look 2" 
-              className="w-full h-full object-cover"
+              loading="lazy"
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-1000"
             />
           </motion.div>
           <motion.div
@@ -134,9 +139,9 @@ export function Editorial() {
         <h3 className="font-serif text-4xl md:text-6xl text-foreground mb-12 uppercase tracking-tight">
           Redefine Your Silhouette
         </h3>
-        <button className="bg-foreground text-background px-16 py-6 uppercase text-xs tracking-[0.3em] font-bold hover:bg-accent hover:text-white transition-all duration-300 shadow-xl">
+        <Link to="/shop" className="inline-block bg-foreground text-background px-16 py-6 uppercase text-xs tracking-[0.3em] font-bold hover:bg-accent hover:text-white transition-all duration-300 shadow-xl" data-cursor="SHOP">
           Shop The Edit
-        </button>
+        </Link>
       </section>
     </div>
   );

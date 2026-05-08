@@ -14,7 +14,7 @@ interface Message {
   products?: any[];
 }
 
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyC9XCjfyFuyoYh01xOyufrKE2vkKGiC0EM' });
+const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY || '' });
 
 const SYSTEM_PROMPT = `You are a luxury personal stylist for WEARITION, a high-end Pakistani fashion brand. You help customers find perfect outfits.
 Your personality: elegant, knowledgeable, warm but sophisticated — like a Harrods personal shopper.

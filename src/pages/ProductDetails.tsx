@@ -9,6 +9,7 @@ import { useWishlistStore } from '../store/wishlistStore';
 import { toast } from 'sonner';
 import { formatCurrency } from '../utils/currency';
 import { triggerHaptic } from '../utils/haptics';
+import { SEO } from '../components/layout/SEO';
 
 export function ProductDetails() {
   const { id } = useParams();
@@ -82,6 +83,12 @@ export function ProductDetails() {
 
   return (
     <div className="w-full relative bg-background">
+      <SEO 
+        title={product.title}
+        description={product.description || `Shop ${product.title} at WEARITION — Premium luxury fashion from Pakistan.`}
+        image={product.images?.[0]}
+        type="product"
+      />
       <div className="flex flex-col md:flex-row w-full max-w-[1600px] mx-auto">
         {/* Left Side: Sticky/Scroll Image Gallery */}
         <div className="w-full md:w-[60%] flex flex-col pt-24 md:pt-32 pb-12 px-6 md:px-12 gap-4">

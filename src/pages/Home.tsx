@@ -9,6 +9,7 @@ import { db, handleFirestoreError, OperationType } from "../firebase";
 import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import heroImg from "@/1.png";
 import { BrandStory } from "../components/layout/BrandStory";
+import { SEO } from "../components/layout/SEO";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -31,7 +32,7 @@ const CategoryGrid = ({ items }: { items?: any[] }) => (
                i === 0 ? 'bento-item-large' : i === 1 ? 'bento-item-tall' : ''
              }`}
            >
-              <img src={cat.image} alt={cat.name} onError={handleImageError} className="parallax-img absolute inset-0 w-full h-[120%] object-cover transition-transform duration-1000 group-hover:scale-[1.05]" style={{ willChange: "transform" }} />
+              <img src={cat.image} alt={cat.name} onError={handleImageError} loading="lazy" className="parallax-img absolute inset-0 w-full h-[120%] object-cover transition-transform duration-1000 group-hover:scale-[1.05]" style={{ willChange: "transform" }} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8 z-10">
                  <span className="text-accent text-[10px] uppercase tracking-[0.3em] mb-2 opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0">Explore Collection</span>
                  <h3 className="text-white text-2xl md:text-4xl font-serif uppercase tracking-widest group-hover:text-accent transition-colors">{cat.name}</h3>
@@ -510,12 +511,31 @@ export function Home() {
         );
 
       case 'newsletter':
+        const handleNewsletterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+          e.preventDefault();
+          const form = e.currentTarget;
+          const emailInput = form.querySelector('input[type="email"]') as HTMLInputElement;
+          const email = emailInput?.value?.trim();
+          if (!email) return;
+          try {
+            const { doc: firestoreDoc, setDoc, serverTimestamp } = await import('firebase/firestore');
+            await setDoc(firestoreDoc(db, 'subscribers', email), {
+              email,
+              subscribedAt: serverTimestamp(),
+            });
+            emailInput.value = '';
+            alert('Welcome to the WEARITION community! ✨');
+          } catch {
+            alert('Something went wrong. Please try again.');
+          }
+        };
         return (
           <section key={section.id || index} className="newsletter-section relative z-10 w-full py-24 md:py-40 px-6 flex items-center justify-center overflow-hidden bg-background">
             <div className="absolute inset-0 z-0 opacity-20">
               <img
                 src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=2000&auto=format&fit=crop"
                 alt="Newsletter background"
+                loading="lazy"
                 className="w-full h-full object-cover grayscale blur-sm"
               />
               <div className="absolute inset-0 bg-background/80"></div>
@@ -530,7 +550,7 @@ export function Home() {
               </p>
               <form
                 className="flex flex-col sm:flex-row border-b border-foreground/30 pb-3 relative"
-                onSubmit={(e) => e.preventDefault()}
+                onSubmit={handleNewsletterSubmit}
               >
                 <input
                   type="email"
@@ -555,6 +575,7 @@ export function Home() {
 
   return (
     <div className="w-full relative" ref={containerRef}>
+      <SEO />
       <div ref={bgRef} className="fixed inset-0 z-[-3] bg-background" />
       {sections.map((section, index) => renderSection(section, index))}
       <BrandStory />

@@ -1,5 +1,8 @@
+/**
+ * Format a price in Pakistani Rupees.
+ * Prices are stored directly in PKR in Firestore.
+ */
 export function formatCurrency(amount: number): string {
-  // Convert assumed USD to PKR (approximate exchange rate)
-  const pkrAmount = amount * 280;
-  return `Rs. ${Math.round(pkrAmount).toLocaleString('en-PK')}`;
+  if (!amount && amount !== 0) return 'Rs. 0';
+  return `Rs. ${Math.round(amount).toLocaleString('en-PK')}`;
 }

@@ -4,13 +4,13 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC9XCjfyFuyoYh01xOyufrKE2vkKGiC0EM",
-  authDomain: "wearition-d14b5.firebaseapp.com",
-  projectId: "wearition-d14b5",
-  storageBucket: "wearition-d14b5.firebasestorage.app",
-  messagingSenderId: "460215017837",
-  appId: "1:460215017837:web:e1fb657d03c9b05c163a64",
-  measurementId: "G-JHWT4XCMGK"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);

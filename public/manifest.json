@@ -1,0 +1,24 @@
+{
+  "name": "WEARITION — Luxury Fashion House",
+  "short_name": "WEARITION",
+  "description": "Premium curated fashion for the modern visionary. Pakistan's premier luxury fashion destination.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "orientation": "portrait-primary",
+  "categories": ["shopping", "fashion", "lifestyle"],
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

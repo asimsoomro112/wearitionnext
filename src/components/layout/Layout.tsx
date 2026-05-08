@@ -5,6 +5,9 @@ import { CartDrawer } from './CartDrawer';
 import { MobileBottomBar } from './MobileBottomBar';
 import { SearchOverlay } from './SearchOverlay';
 import { AIStyleAssistant } from './AIStyleAssistant';
+import { WhatsAppButton } from './WhatsAppButton';
+import { CustomCursor } from './CustomCursor';
+import { PageTransition } from './PageTransition';
 import { useEffect } from 'react';
 import Lenis from 'lenis';
 
@@ -25,13 +28,17 @@ export function Layout() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background-secondary text-foreground font-sans selection:bg-foreground selection:text-background-secondary flex flex-col pb-16 md:pb-0">
+    <div className="min-h-screen bg-background-secondary text-foreground font-sans selection:bg-foreground selection:text-background-secondary flex flex-col pb-16 md:pb-0 cursor-none lg:cursor-none">
+      <CustomCursor />
       <Navbar />
       <CartDrawer />
       <SearchOverlay />
       <AIStyleAssistant />
+      <WhatsAppButton />
       <main className="flex-grow min-h-screen">
-        <Outlet />
+        <PageTransition>
+          <Outlet />
+        </PageTransition>
       </main>
       <Footer />
       <MobileBottomBar />
