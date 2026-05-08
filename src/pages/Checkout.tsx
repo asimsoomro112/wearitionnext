@@ -25,11 +25,29 @@ export function Checkout() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('cod');
   const [email, setEmail] = useState('');
+  const [saveAddress, setSaveAddress] = useState(false);
   const [shipping, setShipping] = useState<ShippingAddress>({
     firstName: '', lastName: '', address: '', city: '', zip: '', phone: ''
   });
   const addOrder = useOrderTrackingStore(state => state.addOrder);
   const { user } = useAuthStore();
+
+  // Auto-fill user data
+  useState(() => {
+    if (user) {
+      setEmail(user.email || '');
+      // Try to load saved address from user's meta if we have it
+      // For now, we'll just check if displayName exists to split it
+      if (user.displayName) {
+        const parts = user.displayName.split(' ');
+        setShipping(prev => ({
+          ...prev,
+          firstName: parts[0] || '',
+          lastName: parts.slice(1).join(' ') || ''
+        }));
+      }
+    }
+  });
 
   const shippingCost = 200;
   const total = subtotal + shippingCost;
@@ -78,6 +96,18 @@ export function Checkout() {
 
     try {
       await addOrder(orderData);
+
+      // Save address to user profile if requested
+      if (saveAddress && user) {
+        const userRef = doc(db, 'users', user.uid);
+        await setDoc(userRef, {
+          savedAddress: {
+            ...shipping,
+            email: email.toLowerCase()
+          }
+        }, { merge: true });
+      }
+
       // Send rich branded confirmation email
       sendOrderConfirmationEmail({
         email: email.toLowerCase(),
@@ -96,12 +126,16 @@ export function Checkout() {
           city: shipping.city,
         },
       }).catch(() => {});
+
       toast.success(`Order ${orderId} placed successfully!`);
       clearCart();
       navigate(`/track-order?id=${orderId}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Order placement failed:', error);
-      toast.error('Failed to place order. Please try again.');
+      const errorMessage = error.code === 'permission-denied' 
+        ? 'Permission denied. Please ensure you are logged in correctly.'
+        : error.message || 'Failed to place order. Please check your connection.';
+      toast.error(errorMessage);
     } finally {
       setIsProcessing(false);
     }
@@ -174,6 +208,19 @@ export function Checkout() {
                     <label className={labelClass}>Postal Code</label>
                     <input value={shipping.zip} onChange={handleShippingChange('zip')} type="text" className={inputClass} placeholder="75500" />
                   </div>
+                  
+                  {user && (
+                    <div className="md:col-span-2 flex items-center gap-3 mt-2">
+                      <input 
+                        type="checkbox" 
+                        id="saveAddress" 
+                        checked={saveAddress} 
+                        onChange={(e) => setSaveAddress(e.target.checked)}
+                        className="w-4 h-4 accent-accent"
+                      />
+                      <label htmlFor="saveAddress" className="text-xs text-foreground/60 cursor-pointer">Save this address for future orders</label>
+                    </div>
+                  )}
                 </div>
               </section>
 

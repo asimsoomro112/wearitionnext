@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase';
 import { useAuthStore } from '../store/authStore';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { useCartStore } from '../store/cartStore';
+import { doc, setDoc, getDocs, collection, query, where, serverTimestamp } from 'firebase/firestore';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -15,6 +16,7 @@ import {
 } from 'firebase/auth';
 import { toast } from 'sonner';
 import { sendWelcomeEmail } from '../utils/emailService';
+import { formatCurrency } from '../utils/currency';
 
 export function Account() {
   const [isLogin, setIsLogin] = useState(true);
@@ -28,6 +30,11 @@ export function Account() {
   const { user, isAdmin, isLoading } = useAuthStore();
   const navigate = useNavigate();
 
+  const { items: cartItems } = useCartStore();
+  const [userOrders, setUserOrders] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<'orders' | 'profile'>('orders');
+  const [isOrdersLoading, setIsOrdersLoading] = useState(true);
+
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -37,16 +44,13 @@ export function Account() {
         await signInWithEmailAndPassword(auth, email, password);
       } else {
         const cred = await createUserWithEmailAndPassword(auth, email, password);
-        // Save display name to Firebase Auth profile
         await updateProfile(cred.user, { displayName: `${firstName} ${lastName}` });
-        // Save user details to Firestore
         await setDoc(doc(db, 'users', cred.user.uid), {
           email: cred.user.email,
           displayName: `${firstName} ${lastName}`,
           role: 'user',
           createdAt: serverTimestamp(),
         }, { merge: true });
-        // Send branded welcome email
         sendWelcomeEmail({ name: firstName, email }).catch(() => {});
         toast.success('Welcome to WEARITION! Check your email.');
       }
@@ -81,41 +85,210 @@ export function Account() {
     }
   };
 
+  useEffect(() => {
+    async function fetchUserOrders() {
+      if (!user) return;
+      setIsOrdersLoading(true);
+      try {
+        const q = query(
+          collection(db, 'orders'),
+          where('userId', '==', user.uid)
+        );
+        const querySnapshot = await getDocs(q);
+        const orders = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        setUserOrders(orders);
+      } catch (err) {
+        console.error('Failed to fetch orders:', err);
+      } finally {
+        setIsOrdersLoading(false);
+      }
+    }
+    if (user) fetchUserOrders();
+  }, [user]);
+
   if (isLoading) {
     return <div className="w-full min-h-screen flex items-center justify-center bg-background text-foreground uppercase tracking-widest text-xs">Loading...</div>;
   }
 
   if (user) {
     return (
-      <div className="w-full min-h-[80vh] pt-40 px-6 pb-20 bg-background flex flex-col items-center">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md text-center"
-        >
-          <h1 className="font-serif text-4xl sm:text-5xl tracking-wide text-foreground mb-6 uppercase">
-            My Account
-          </h1>
-          <p className="text-foreground/60 mb-12">Logged in as {user.email}</p>
+      <div className="w-full min-h-screen pt-32 md:pt-40 px-6 pb-32 bg-background">
+        <div className="max-w-[1200px] mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col lg:flex-row gap-16"
+          >
+            {/* Sidebar / Profile Summary */}
+            <aside className="w-full lg:w-1/3">
+              <div className="sticky top-40 bg-foreground/[0.03] p-10 rounded-2xl border border-white/5">
+                <div className="w-20 h-20 bg-accent/20 rounded-full flex items-center justify-center mb-8 mx-auto lg:mx-0">
+                  <span className="text-accent text-3xl font-serif">{user.email?.[0].toUpperCase()}</span>
+                </div>
+                <h1 className="font-serif text-3xl text-foreground mb-2 text-center lg:text-left">Welcome,</h1>
+                <p className="text-foreground/60 text-sm font-sans mb-10 text-center lg:text-left break-all">{user.email}</p>
+                
+                <nav className="flex flex-col gap-4">
+                  <button 
+                    onClick={() => setActiveTab('orders')}
+                    className={`flex items-center justify-between px-6 py-4 rounded-xl transition-all ${activeTab === 'orders' ? 'bg-foreground text-background font-bold' : 'text-foreground/60 hover:bg-white/5'}`}
+                  >
+                    <span className="uppercase text-[10px] tracking-widest">Order History</span>
+                    <span className="text-[10px] opacity-40">{userOrders.length}</span>
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('profile')}
+                    className={`flex items-center justify-between px-6 py-4 rounded-xl transition-all ${activeTab === 'profile' ? 'bg-foreground text-background font-bold' : 'text-foreground/60 hover:bg-white/5'}`}
+                  >
+                    <span className="uppercase text-[10px] tracking-widest">Personal Info</span>
+                  </button>
+                  {isAdmin && (
+                    <Link 
+                      to="/admin"
+                      className="flex items-center justify-between px-6 py-4 rounded-xl text-accent border border-accent/20 hover:bg-accent/5 mt-4 text-center"
+                    >
+                      <span className="uppercase text-[10px] tracking-widest">Admin Dashboard</span>
+                    </Link>
+                  )}
+                  <button
+                    onClick={handleSignOut}
+                    className="flex items-center justify-between px-6 py-4 rounded-xl text-red-500/60 hover:text-red-500 hover:bg-red-500/5 mt-8 border border-red-500/10"
+                  >
+                    <span className="uppercase text-[10px] tracking-widest">Sign Out</span>
+                  </button>
+                </nav>
+              </div>
+            </aside>
 
-          <div className="flex flex-col gap-4">
-            {isAdmin && (
-              <Link 
-                to="/admin"
-                className="bg-accent text-background py-4 uppercase text-xs tracking-[0.2em] font-medium hover:opacity-90 transition-opacity w-full text-center"
-              >
-                Admin Portal
-              </Link>
-            )}
-            <button
-              onClick={handleSignOut}
-              disabled={isLoadingAction}
-              className="border border-border-color text-foreground py-4 uppercase text-xs tracking-[0.2em] font-medium hover:bg-foreground hover:text-background transition-colors w-full"
-            >
-              Sign Out
-            </button>
-          </div>
-        </motion.div>
+            {/* Main Content Area */}
+            <main className="w-full lg:w-2/3">
+              <AnimatePresence mode="wait">
+                {activeTab === 'orders' ? (
+                  <motion.div
+                    key="orders"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-8"
+                  >
+                    <div className="flex items-center justify-between mb-8">
+                      <h2 className="font-serif text-3xl uppercase tracking-wider">My Orders</h2>
+                      <Link to="/shop" className="text-[10px] uppercase tracking-widest text-accent hover:underline">Continue Shopping</Link>
+                    </div>
+
+                    {isOrdersLoading ? (
+                      <div className="flex flex-col items-center py-20 gap-4">
+                        <div className="w-6 h-6 border-2 border-accent/20 border-t-accent rounded-full animate-spin" />
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-foreground/40">Fetching your orders...</p>
+                      </div>
+                    ) : userOrders.length === 0 ? (
+                      <div className="text-center py-32 border border-white/5 rounded-3xl bg-foreground/[0.01]">
+                        <p className="font-serif text-5xl text-foreground/10 mb-6">◇</p>
+                        <h3 className="font-serif text-2xl mb-4">No orders yet</h3>
+                        <p className="text-foreground/40 text-sm font-sans mb-10 max-w-xs mx-auto">Your journey with WEARITION begins with your first selection.</p>
+                        <Link to="/shop" className="px-10 py-4 bg-foreground text-background text-xs uppercase tracking-widest hover:bg-accent transition-colors">
+                          Start Shopping
+                        </Link>
+                      </div>
+                    ) : (
+                      <div className="grid gap-6">
+                        {userOrders.map((order) => (
+                          <div key={order.id} className="bg-foreground/[0.03] border border-white/5 p-8 rounded-2xl hover:border-white/10 transition-colors">
+                            <div className="flex flex-col md:flex-row justify-between md:items-center gap-6 mb-8 pb-6 border-b border-white/5">
+                              <div>
+                                <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-1">Order ID</p>
+                                <p className="font-sans text-lg font-bold">{order.orderId}</p>
+                              </div>
+                              <div className="flex gap-12">
+                                <div>
+                                  <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-1">Date</p>
+                                  <p className="text-sm">{new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                                </div>
+                                <div>
+                                  <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-1">Total</p>
+                                  <p className="text-sm font-bold text-accent">{formatCurrency(order.total)}</p>
+                                </div>
+                                <div>
+                                  <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-1">Status</p>
+                                  <span className={`text-[9px] uppercase tracking-widest px-3 py-1 rounded-full font-bold ${
+                                    order.status === 'delivered' ? 'bg-green-500/10 text-green-500' :
+                                    order.status === 'shipped' ? 'bg-blue-500/10 text-blue-500' :
+                                    'bg-accent/10 text-accent'
+                                  }`}>
+                                    {order.status}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="flex justify-between items-center">
+                              <div className="flex -space-x-3 overflow-hidden">
+                                {order.items?.slice(0, 4).map((item: any, i: number) => (
+                                  <div key={i} className="w-12 h-16 border-2 border-background rounded-lg overflow-hidden bg-white/5">
+                                    <img src={item.image} alt="" className="w-full h-full object-cover" />
+                                  </div>
+                                ))}
+                                {order.items?.length > 4 && (
+                                  <div className="w-12 h-16 border-2 border-background rounded-lg bg-foreground/10 flex items-center justify-center text-[10px] font-bold">
+                                    +{order.items.length - 4}
+                                  </div>
+                                )}
+                              </div>
+                              <Link 
+                                to={`/track-order?id=${order.orderId}&email=${order.email}`}
+                                className="px-8 py-3 bg-foreground text-background text-[10px] uppercase tracking-widest font-bold hover:bg-accent transition-colors rounded-lg shadow-lg"
+                              >
+                                Track Order
+                              </Link>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="profile"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="max-w-xl"
+                  >
+                    <h2 className="font-serif text-3xl uppercase tracking-wider mb-12">Personal Information</h2>
+                    
+                    <div className="space-y-8">
+                      <div className="grid grid-cols-2 gap-8">
+                        <div>
+                          <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-2">Display Name</p>
+                          <p className="text-lg pb-4 border-b border-white/5 font-serif">{user.displayName || 'Guest Member'}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-2">Member Since</p>
+                          <p className="text-lg pb-4 border-b border-white/5 font-serif">{new Date(user.metadata.creationTime || '').toLocaleDateString('en-US', { year: 'numeric' })}</p>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-2">Email Address</p>
+                        <p className="text-lg pb-4 border-b border-white/5 font-sans italic">{user.email}</p>
+                      </div>
+
+                      <div className="p-8 border border-accent/20 bg-accent/5 rounded-2xl">
+                        <h4 className="uppercase text-[10px] tracking-[0.2em] text-accent font-bold mb-4">Elite Membership</h4>
+                        <p className="text-sm text-foreground/70 leading-relaxed font-sans italic">
+                          As a registered member of WEARITION, you receive exclusive access to early drops, priority customer support, and tailored luxury styling.
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </main>
+          </motion.div>
+        </div>
       </div>
     );
   }
@@ -132,7 +305,7 @@ export function Account() {
           {isLogin ? 'Sign In' : 'Create Account'}
         </h1>
 
-        <div className="flex gap-8 mb-8 border-b border-border-color">
+        <div className="flex gap-8 mb-8 border-b border-white/10">
           <button
             type="button"
             onClick={() => { setIsLogin(true); setError(null); }}
@@ -190,7 +363,7 @@ export function Account() {
                     required
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="bg-transparent border-b border-border-color py-3 text-foreground font-sans focus:outline-none focus:border-foreground transition-colors placeholder:text-foreground/20"
+                    className="bg-transparent border-b border-white/10 py-3 text-foreground font-sans focus:outline-none focus:border-foreground transition-colors placeholder:text-foreground/20"
                     placeholder="Jane"
                   />
                 </div>
@@ -201,7 +374,7 @@ export function Account() {
                     required
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="bg-transparent border-b border-border-color py-3 text-foreground font-sans focus:outline-none focus:border-foreground transition-colors placeholder:text-foreground/20"
+                    className="bg-transparent border-b border-white/10 py-3 text-foreground font-sans focus:outline-none focus:border-foreground transition-colors placeholder:text-foreground/20"
                     placeholder="Doe"
                   />
                 </div>
@@ -215,7 +388,7 @@ export function Account() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-transparent border-b border-border-color py-3 text-foreground font-sans focus:outline-none focus:border-foreground transition-colors placeholder:text-foreground/20"
+                className="bg-transparent border-b border-white/10 py-3 text-foreground font-sans focus:outline-none focus:border-foreground transition-colors placeholder:text-foreground/20"
                 placeholder="email@example.com"
               />
             </div>
@@ -246,7 +419,7 @@ export function Account() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="bg-transparent border-b border-border-color py-3 text-foreground font-sans focus:outline-none focus:border-foreground transition-colors placeholder:text-foreground/20"
+                className="bg-transparent border-b border-white/10 py-3 text-foreground font-sans focus:outline-none focus:border-foreground transition-colors placeholder:text-foreground/20"
                 placeholder="••••••••"
               />
             </div>
@@ -268,7 +441,7 @@ export function Account() {
               type="button"
               onClick={handleGoogleAuth}
               disabled={isLoadingAction}
-              className="flex-1 py-3 border border-border-color text-foreground uppercase text-[10px] tracking-[0.2em] hover:bg-foreground hover:text-background transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+              className="flex-1 py-3 border border-white/10 text-foreground uppercase text-[10px] tracking-[0.2em] hover:bg-foreground hover:text-background transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
             >
               Google
             </button>
