@@ -93,8 +93,8 @@ export function OrderTracking() {
                   <div className="absolute top-1/2 left-0 w-full h-px bg-white/10 -z-10" />
                   <div className="flex justify-between items-center relative z-10 w-full max-w-2xl mx-auto">
                     {[
-                      { status: 'pending', label: 'Confirmed', icon: ClipboardCheck },
-                      { status: 'processing', label: 'Processing', icon: Package },
+                      { status: 'pending', label: 'Placed', icon: ClipboardCheck },
+                      { status: 'processing', label: 'Confirmed', icon: Package },
                       { status: 'shipped', label: 'Shipped', icon: Truck },
                       { status: 'delivered', label: 'Delivered', icon: CheckCircle }
                     ].map((step, idx) => {

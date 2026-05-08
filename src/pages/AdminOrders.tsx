@@ -53,11 +53,12 @@ export function AdminOrders() {
       await updateDoc(doc(db, 'orders', docId), { status: newStatus });
       toast.success(`Order ${orderId} status updated to ${newStatus}`);
       
-      // Send branded status email (skip for pending — no change)
+      // Send rich branded status email (skip for pending — no change)
       if (newStatus !== 'pending') {
+        const order = orders.find(o => o.id === docId);
         sendOrderStatusEmail({
           email,
-          name: 'Valued Customer',
+          name: order?.shippingAddress?.name?.split(' ')[0] || 'Valued Customer',
           orderId,
           status: newStatus as 'processing' | 'shipped' | 'delivered',
         }).catch(() => {});
@@ -84,7 +85,7 @@ export function AdminOrders() {
       // Send shipped email with tracking details
       sendOrderStatusEmail({
         email,
-        name: 'Valued Customer',
+        name: orders.find(o => o.id === docId)?.shippingAddress?.name?.split(' ')[0] || 'Valued Customer',
         orderId,
         status: 'shipped',
         trackingNumber: trackingNumber || undefined,
