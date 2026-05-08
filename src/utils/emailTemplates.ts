@@ -7,19 +7,19 @@
 const BRAND = {
   name: 'WEARITION',
   tagline: 'Modern Luxury. Timeless Craft.',
-  logo: 'https://i.ibb.co/4RQDBbfS/navbar-logo.png', // Update with your hosted logo URL
-  website: 'https://wearition.com',
+  logo: 'https://wearition.vercel.app/logo.png', 
+  website: 'https://wearition.vercel.app',
   instagram: 'https://instagram.com/wearition',
-  whatsapp: '923000000000', // Update with real number
-  supportEmail: 'support@wearition.com',
+  whatsapp: '923000000000', 
+  supportEmail: 'wearition.80@gmail.com',
   colors: {
     bg: '#0A0A0A',
-    card: '#141414',
-    accent: '#C9A96E',
-    text: '#F5F0EB',
-    muted: '#8A8A8A',
+    card: '#0f0f0f',
+    accent: '#D4AF37', // Premium Gold
+    text: '#ffffff',
+    muted: '#666666',
     white: '#FFFFFF',
-    border: '#2A2A2A',
+    border: '#1a1a1a',
   }
 };
 
@@ -59,9 +59,9 @@ function emailWrapper(content: string, preheader: string = ''): string {
           
           <!-- HEADER with Logo -->
           <tr>
-            <td style="padding:40px 48px 24px;text-align:center;border-bottom:1px solid ${BRAND.colors.border};" class="mobile-padding">
+            <td style="padding:60px 48px 40px;text-align:center;" class="mobile-padding">
               <a href="${BRAND.website}" target="_blank">
-                <img src="${BRAND.logo}" alt="${BRAND.name}" width="180" style="max-width:180px;height:auto;" />
+                <img src="${BRAND.logo}" alt="${BRAND.name}" width="220" style="max-width:220px;height:auto;filter:brightness(1.2);" />
               </a>
             </td>
           </tr>
