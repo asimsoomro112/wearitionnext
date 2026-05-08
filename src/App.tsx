@@ -28,7 +28,7 @@ import { Contact } from './pages/Contact';
 import { NotFound } from './pages/NotFound';
 import { ScrollToTop } from './components/layout/ScrollToTop';
 import { LoadingScreen } from './components/layout/LoadingScreen';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Toaster } from 'sonner';
 import { isAdminEmail } from './config/admin';
 
