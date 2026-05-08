@@ -33,53 +33,57 @@ const HorizontalScroller = ({ title, products, sectionClass, scrollClass, isSale
   useEffect(() => {
     if (!scrollRef.current || !containerRef.current || products.length === 0) return;
     
-    // Check if the screen is large enough or content is wide enough
-    const scrollWidth = containerRef.current.scrollWidth;
-    const windowWidth = window.innerWidth;
-    const paddingRight = 100;
+    // GSAP only for Desktop
+    const isDesktop = window.innerWidth > 1024;
     
-    if (scrollWidth > windowWidth) {
-      const ctx = gsap.context(() => {
-        gsap.to(containerRef.current, {
-          x: -(scrollWidth - windowWidth + paddingRight),
-          ease: "none",
-          scrollTrigger: {
-            trigger: scrollRef.current,
-            pin: true,
-            scrub: 1, // Smooth scrub
-            start: "center center", 
-            end: () => `+=${scrollWidth}`,
-            invalidateOnRefresh: true,
-          }
-        });
-      }, scrollRef);
-      return () => ctx.revert();
+    if (isDesktop) {
+      const scrollWidth = containerRef.current.scrollWidth;
+      const windowWidth = window.innerWidth;
+      const paddingRight = 100;
+      
+      if (scrollWidth > windowWidth) {
+        const ctx = gsap.context(() => {
+          gsap.to(containerRef.current, {
+            x: -(scrollWidth - windowWidth + paddingRight),
+            ease: "none",
+            scrollTrigger: {
+              trigger: scrollRef.current,
+              pin: true,
+              scrub: 1,
+              start: "center center", 
+              end: () => `+=${scrollWidth}`,
+              invalidateOnRefresh: true,
+            }
+          });
+        }, scrollRef);
+        return () => ctx.revert();
+      }
     }
   }, [products]);
 
   if (!products || products.length === 0) return null;
 
   return (
-    <section ref={scrollRef} className={`${sectionClass} relative w-full h-screen flex flex-col justify-center overflow-hidden bg-background`}>
-      <div className="w-full max-w-[1440px] mx-auto px-6 relative z-10 mb-[8vh]">
+    <section ref={scrollRef} className={`${sectionClass} relative w-full lg:h-screen flex flex-col justify-center overflow-hidden bg-background py-16 lg:py-0`}>
+      <div className="w-full max-w-[1440px] mx-auto px-6 relative z-10 mb-8 lg:mb-[8vh]">
         <div className="flex justify-between items-end border-b border-foreground/30 pb-4 mix-blend-difference">
-          <h2 className="font-serif text-4xl md:text-5xl lg:text-7xl uppercase tracking-widest text-foreground">
+          <h2 className="font-serif text-3xl md:text-5xl lg:text-7xl uppercase tracking-widest text-foreground">
             {title}
           </h2>
-          <Link to="/shop" className="text-sm uppercase tracking-widest hover:text-accent transition-colors text-foreground whitespace-nowrap ml-4">
+          <Link to="/shop" className="text-xs uppercase tracking-widest hover:text-accent transition-colors text-foreground whitespace-nowrap ml-4">
             View All
           </Link>
         </div>
       </div>
 
-      <div className="relative w-full overflow-hidden z-10 pl-6 lg:pl-[max(1.5rem,calc((100vw-1440px)/2))]">
-        <div ref={containerRef} className={`flex gap-6 md:gap-10 items-center w-max pb-12 pr-[10vw] ${scrollClass}`}>
+      <div className="relative w-full overflow-x-auto lg:overflow-hidden z-10 pl-6 lg:pl-[max(1.5rem,calc((100vw-1440px)/2))] hide-scrollbar touch-pan-x">
+        <div ref={containerRef} className={`flex gap-6 md:gap-10 items-center w-max pb-8 pr-[10vw] ${scrollClass}`}>
           {products.map((product: any, i: number) => (
-            <Link to={`/product/${product.id}`} key={i} className="product-card w-[260px] md:w-[350px] group cursor-pointer flex-shrink-0 block">
-               <div className="relative aspect-[3/4] overflow-hidden mb-6 bg-background-secondary/20 shadow-xl parallax-container">
+            <Link to={`/product/${product.id}`} key={i} className="product-card w-[220px] sm:w-[260px] md:w-[350px] group cursor-pointer flex-shrink-0 block">
+               <div className="relative aspect-[3/4] overflow-hidden mb-4 md:mb-6 bg-background-secondary/20 shadow-xl parallax-container">
                  <img src={product.images?.[0] || product.image || 'https://images.unsplash.com/photo-1595777457583-95e059f581ce?q=80&w=800'} alt={product.name} className="parallax-img absolute top-[-10%] left-0 w-full h-[120%] object-cover group-hover:scale-[1.02] transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]" style={{ willChange: "transform" }}/>
                  {((product.isOnSale || isSale) && product.salePrice) && (
-                   <div className="absolute top-4 left-4 bg-red-600/90 text-white text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 z-10">Sale</div>
+                   <div className="absolute top-4 left-4 bg-red-600/90 text-white text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 z-10 shadow-lg">Sale</div>
                  )}
                  <div className="absolute inset-0 bg-background-secondary/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center z-20">
                    <button className="bg-foreground text-background px-8 py-3 text-xs uppercase tracking-widest hover:scale-105 transition-transform duration-300">Quick View</button>
@@ -87,14 +91,14 @@ const HorizontalScroller = ({ title, products, sectionClass, scrollClass, isSale
                </div>
                <div className="flex justify-between items-start text-foreground">
                  <div>
-                   <h3 className="font-serif text-sm tracking-wide uppercase mb-1 truncate">{product.name}</h3>
+                   <h3 className="font-serif text-[11px] sm:text-sm tracking-wide uppercase mb-1 truncate max-w-[200px]">{product.title || product.name}</h3>
                    {((product.isOnSale || isSale) && product.salePrice) ? (
-                     <div className="flex gap-3 text-sm font-sans">
+                     <div className="flex gap-2 sm:gap-3 text-xs sm:text-sm font-sans">
                        <span className="text-foreground font-medium">{formatCurrency(product.salePrice)}</span>
                        <span className="opacity-50 line-through">{formatCurrency(product.price)}</span>
                      </div>
                    ) : (
-                     <p className="opacity-70 text-sm font-sans">{formatCurrency(product.price)}</p>
+                     <p className="opacity-70 text-xs sm:text-sm font-sans">{formatCurrency(product.price)}</p>
                    )}
                  </div>
                </div>

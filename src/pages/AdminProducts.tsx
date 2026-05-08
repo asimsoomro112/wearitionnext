@@ -287,17 +287,52 @@ export function AdminProducts() {
               <div className="flex flex-col gap-2">
                 <label className="text-xs uppercase tracking-widest text-[#0a0a0a]/60 font-medium">Images</label>
                 <div className="flex items-center gap-4 mb-2">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    disabled={isUploading}
-                    className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-black/5 file:text-[#0a0a0a] hover:file:bg-black/10 transition-colors"
-                  />
-                  {isUploading && <span className="text-sm text-[#0a0a0a]/60">Uploading...</span>}
+                  <div className="relative">
+                    <input
+                      type="file"
+                      id="image-upload"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={isUploading}
+                      className="hidden"
+                    />
+                    <label 
+                      htmlFor="image-upload"
+                      className="cursor-pointer flex items-center gap-2 bg-black/5 text-[#0a0a0a] px-4 py-2 rounded-md text-sm font-medium hover:bg-black/10 transition-colors"
+                    >
+                      {isUploading ? 'Uploading...' : 'Upload Image'}
+                    </label>
+                  </div>
                 </div>
+                
+                <div className="flex flex-wrap gap-3 mb-2">
+                  {images.split(',').map(img => img.trim()).filter(Boolean).map((url, i) => (
+                    <div key={i} className="relative w-20 h-20 group">
+                      <img src={url} alt="" className="w-full h-full object-cover rounded border border-black/10" />
+                      <button 
+                        type="button"
+                        onClick={() => {
+                          const current = images.split(',').map(img => img.trim()).filter(Boolean);
+                          const updated = current.filter((_, idx) => idx !== i);
+                          setImages(updated.join(', '));
+                        }}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
                 <label className="text-xs uppercase tracking-widest text-[#0a0a0a]/60 font-medium">Image URLs (comma separated) *</label>
-                <textarea rows={3} required value={images} onChange={e => setImages(e.target.value)} placeholder="https://..., https://..." className="border border-black/10 rounded-md p-3 focus:outline-none focus:border-foreground resize-none text-[#0a0a0a]" />
+                <textarea 
+                  rows={3} 
+                  required 
+                  value={images} 
+                  onChange={e => setImages(e.target.value)} 
+                  placeholder="https://..., https://..." 
+                  className="border border-black/10 rounded-md p-3 focus:outline-none focus:border-foreground resize-none text-[#0a0a0a] w-full" 
+                />
               </div>
 
               <div className="flex items-center gap-3">
@@ -305,12 +340,16 @@ export function AdminProducts() {
                 <label htmlFor="isPublished" className="text-sm font-medium text-[#0a0a0a]">Publish immediately</label>
               </div>
 
-              <div className="mt-4 pt-6 border-t border-black/10 flex justify-end gap-4">
+              <div className="mt-4 pt-6 border-t border-black/10 flex justify-end gap-4 sticky bottom-0 bg-white">
                 <button type="button" onClick={() => setIsModalOpen(false)} className="px-6 py-3 font-medium text-[#0a0a0a]/40 hover:text-[#0a0a0a] transition-colors">
                   Cancel
                 </button>
-                <button type="submit" className="bg-foreground text-background px-8 py-3 uppercase text-xs tracking-widest font-medium hover:bg-accent transition-colors">
-                  {editingId ? 'Save Changes' : 'Create Product'}
+                <button 
+                  type="submit" 
+                  disabled={isUploading}
+                  className="bg-[#0a0a0a] text-white px-10 py-3 uppercase text-xs tracking-widest font-bold hover:bg-accent transition-colors shadow-lg disabled:opacity-50"
+                >
+                  {editingId ? 'Update Product' : 'Create Product'}
                 </button>
               </div>
             </form>
