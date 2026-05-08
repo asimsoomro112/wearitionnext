@@ -143,8 +143,8 @@ export function Home() {
           ]
         },
         { id: '3', type: 'products_scroll', title: 'Featured Menswear', productQueryType: 'category', categoryValue: 'men' },
-        { id: '4', type: 'editorial' },
-        { id: '5', type: 'products_scroll', title: 'Featured Womenswear', productQueryType: 'category', categoryValue: 'women' },
+        { id: '4', type: 'products_scroll', title: 'Featured Womenswear', productQueryType: 'category', categoryValue: 'women' },
+        { id: '5', type: 'editorial' },
         { id: '6', type: 'artisanship' },
         { id: '7', type: 'newsletter' },
       ];
