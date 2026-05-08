@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import logo from '../../assets/navbar_logo.png';
+import logo from '../../assets/logo.png';
 
 export function LoadingScreen() {
   return (
@@ -20,15 +20,13 @@ export function LoadingScreen() {
           transition={{ 
             duration: 1.5, 
             ease: "easeOut",
-            repeat: Infinity,
-            repeatType: "reverse"
           }}
-          className="w-48 md:w-[300px] mb-12"
+          className="w-64 md:w-[500px] mb-12"
         >
           <img 
             src={logo} 
             alt="Wearition Logo" 
-            className="w-full h-auto object-contain" 
+            className="w-full h-auto object-contain brightness-125" 
           />
         </motion.div>
 

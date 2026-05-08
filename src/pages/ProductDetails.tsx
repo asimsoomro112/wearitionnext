@@ -112,7 +112,7 @@ export function ProductDetails() {
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              className="w-full aspect-[3/4] bg-background-secondary overflow-hidden rounded-2xl shadow-2xl border border-white/5"
+              className="w-full aspect-[3/4] bg-foreground/5 overflow-hidden rounded-md relative group"
             >
               {(() => {
                 const displayImages = (selectedColor && product.colorImages?.[selectedColor] && product.colorImages[selectedColor].length > 0)
@@ -123,10 +123,10 @@ export function ProductDetails() {
                   <img 
                     src={displayImages[activeImageIdx] || displayImages[0]} 
                     alt={product.title} 
-                    className="w-full h-full object-contain p-6 md:p-12 hover:scale-105 transition-transform duration-1000" 
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-foreground/20 uppercase tracking-widest text-xs">No Image</div>
+                  <div className="absolute inset-0 flex items-center justify-center text-foreground/20 uppercase tracking-widest text-xs">No Image</div>
                 );
               })()}
             </motion.div>
