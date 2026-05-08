@@ -114,6 +114,12 @@ export function OrderTracking() {
 
   const currentStatusIdx = getStatusIndex(order.status);
 
+  const computedSubtotal = order.subtotal || order.items.reduce((acc: number, item: any) => acc + ((item.price || 0) * (item.quantity || 1)), 0);
+  const computedShipping = order.shippingDetails?.shippingAmount || 0;
+  // Fallback to order.total only if it's greater than or equal to our computed values, otherwise trust the dynamic computation
+  const computedTotal = (order.total && order.total > computedShipping) ? order.total : (computedSubtotal + computedShipping);
+
+
   return (
     <div className="w-full pt-32 md:pt-40 px-6 md:px-12 pb-32 bg-background min-h-screen">
       <SEO title={`Order ${order.orderId} Tracking`} />
@@ -214,17 +220,17 @@ export function OrderTracking() {
               <div className="space-y-4 font-sans text-sm">
                 <div className="flex justify-between text-foreground/60">
                   <span>Subtotal</span>
-                  <span>{formatCurrency(order.subtotal || order.items.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0))}</span>
+                  <span>{formatCurrency(computedSubtotal)}</span>
                 </div>
                 <div className="flex justify-between text-foreground/60">
                   <span>Shipping</span>
                   <span className="text-green-500 font-bold uppercase tracking-widest text-[10px]">
-                    {order.shippingDetails?.shippingAmount > 0 ? formatCurrency(order.shippingDetails.shippingAmount) : 'FREE'}
+                    {computedShipping > 0 ? formatCurrency(computedShipping) : 'FREE'}
                   </span>
                 </div>
                 <div className="pt-4 border-t border-white/10 flex justify-between items-end">
                   <span className="text-foreground font-bold uppercase text-[10px] tracking-widest">Total</span>
-                  <span className="text-2xl font-serif text-foreground">{formatCurrency(order.total)}</span>
+                  <span className="text-2xl font-serif text-foreground">{formatCurrency(computedTotal)}</span>
                 </div>
                 <div className="mt-4 flex items-center gap-2 text-[10px] uppercase tracking-widest text-foreground/40">
                   <Clock className="w-3 h-3" />
