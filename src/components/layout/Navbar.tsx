@@ -4,12 +4,23 @@ import { motion } from 'framer-motion';
 import { useUIStore } from '../../store/uiStore';
 import { useCartStore } from '../../store/cartStore';
 import { MobileMenu } from './MobileMenu';
+import { triggerHaptic } from '../../utils/haptics';
 import logo from '../../assets/navbar_logo.png';
 
 export function Navbar() {
   const { openCart, openMobileMenu, isDarkMode, toggleDarkMode, toggleSearch } = useUIStore();
   const { items } = useCartStore();
   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
+
+  const handleToggleMenu = () => {
+    triggerHaptic('light');
+    openMobileMenu();
+  };
+
+  const handleToggleTheme = () => {
+    triggerHaptic('medium');
+    toggleDarkMode();
+  };
 
   return (
     <>
@@ -23,11 +34,11 @@ export function Navbar() {
           <Link to="/shop" className="hidden md:block uppercase text-xs tracking-widest md:hover:opacity-70 transition-opacity">Shop</Link>
           <button className="hidden md:block uppercase text-xs tracking-widest md:hover:opacity-70 transition-opacity">Collections</button>
           
-          <button className="md:hidden active:opacity-70" onClick={openMobileMenu}>
+          <button className="md:hidden active:opacity-70" onClick={handleToggleMenu}>
             <Menu className="w-6 h-6" />
           </button>
           
-          <button onClick={toggleDarkMode} className="md:hover:opacity-70 transition-opacity md:hover:text-accent">
+          <button onClick={handleToggleTheme} className="md:hover:opacity-70 transition-opacity md:hover:text-accent">
             {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
         </div>

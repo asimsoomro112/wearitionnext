@@ -2,44 +2,63 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useUIStore } from '../../store/uiStore';
+import { triggerHaptic } from '../../utils/haptics';
 import logo from '../../assets/logo.png';
 
 export function MobileMenu() {
   const { isMobileMenuOpen, closeMobileMenu } = useUIStore();
 
+  const handleClose = () => {
+    triggerHaptic('light');
+    closeMobileMenu();
+  };
+
   return (
     <AnimatePresence>
       {isMobileMenuOpen && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-          className="fixed inset-0 z-[60] bg-background text-foreground flex flex-col pt-24 px-8 pb-12"
+          initial={{ y: '100%' }}
+          animate={{ y: 0 }}
+          exit={{ y: '100%' }}
+          transition={{ type: "spring", damping: 30, stiffness: 300 }}
+          className="fixed inset-0 z-[200] liquid-glass flex flex-col pt-24 px-10 pb-12 rounded-t-[3rem]"
         >
           <button 
-            onClick={closeMobileMenu} 
-            className="absolute top-6 right-6 p-2"
+            onClick={handleClose} 
+            className="absolute top-8 right-8 p-3 bg-white/5 rounded-full"
           >
             <X className="w-8 h-8" />
           </button>
           
-          <div className="mb-12">
-            <img src={logo} alt="Wearition" className="h-24 w-auto object-contain brightness-110" />
+          <div className="mb-20">
+            <img src={logo} alt="Wearition" className="h-20 w-auto object-contain brightness-125" />
           </div>
           
-          <nav className="flex flex-col gap-8 text-3xl font-serif mb-auto">
-            <Link to="/" onClick={closeMobileMenu} className="hover:text-accent transition-colors">Home</Link>
-            <Link to="/shop" onClick={closeMobileMenu} className="hover:text-accent transition-colors">Shop</Link>
-            <Link to="/shop?category=collections" onClick={closeMobileMenu} className="hover:text-accent transition-colors">Collections</Link>
-            <Link to="/about" onClick={closeMobileMenu} className="hover:text-accent transition-colors">About Us</Link>
-            <Link to="/journal" onClick={closeMobileMenu} className="hover:text-accent transition-colors">Journal</Link>
+          <nav className="flex flex-col gap-10 text-4xl font-serif mb-auto">
+            <Link to="/" onClick={handleClose} className="hover:text-accent transition-colors flex items-center justify-between group">
+              <span>Home</span>
+              <span className="text-xl opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all">→</span>
+            </Link>
+            <Link to="/shop" onClick={handleClose} className="hover:text-accent transition-colors flex items-center justify-between group">
+              <span>Collections</span>
+              <span className="text-xl opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all">→</span>
+            </Link>
+            <Link to="/about" onClick={handleClose} className="hover:text-accent transition-colors flex items-center justify-between group">
+              <span>Heritage</span>
+              <span className="text-xl opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all">→</span>
+            </Link>
+            <Link to="/contact" onClick={handleClose} className="hover:text-accent transition-colors flex items-center justify-between group">
+              <span>Concierge</span>
+              <span className="text-xl opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all">→</span>
+            </Link>
           </nav>
 
-          <div className="flex flex-col gap-6 text-xs uppercase tracking-widest mt-12">
-            <Link to="/wishlist" onClick={closeMobileMenu} className="active:text-accent transition-colors">Wishlist</Link>
-            <Link to="/account" onClick={closeMobileMenu} className="text-left active:text-accent transition-colors">Account</Link>
-            <button onClick={() => { closeMobileMenu(); useUIStore.getState().toggleSearch(); }} className="text-left active:text-accent transition-colors">Search</button>
+          <div className="flex flex-col gap-8 text-[10px] uppercase tracking-[0.3em] mt-12 pt-12 border-t border-white/10">
+            <div className="flex justify-between items-center">
+              <Link to="/wishlist" onClick={handleClose} className="active:text-accent">Wishlist</Link>
+              <Link to="/account" onClick={handleClose} className="active:text-accent">Account</Link>
+            </div>
+            <p className="text-center text-white/20">Maison Wearition &copy; 2026</p>
           </div>
         </motion.div>
       )}

@@ -63,12 +63,14 @@ export function ProductDetails() {
       size: selectedSize || undefined,
       color: selectedColor || undefined
     });
+    triggerHaptic('success');
     toast.success(`${product.title} added to your bag`);
     openCart();
   };
 
   const handleWishlistToggle = () => {
     if (!product) return;
+    triggerHaptic('medium');
     toggleWishlist(product.id);
     if (!isWished) {
       toast.success(`${product.title} added to your wishlist`);

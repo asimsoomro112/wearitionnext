@@ -31,6 +31,7 @@ import { LoadingScreen } from './components/layout/LoadingScreen';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Toaster } from 'sonner';
 import { isAdminEmail } from './config/admin';
+import { triggerHaptic } from './utils/haptics';
 
 // Protected Route Component for Admin
 function AdminRoute({ children }: { children: React.ReactNode }) {
