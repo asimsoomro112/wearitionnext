@@ -214,11 +214,13 @@ export function OrderTracking() {
               <div className="space-y-4 font-sans text-sm">
                 <div className="flex justify-between text-foreground/60">
                   <span>Subtotal</span>
-                  <span>{formatCurrency(order.total - (order.shippingDetails?.shippingAmount || 0))}</span>
+                  <span>{formatCurrency(order.subtotal || (order.total - (order.shippingDetails?.shippingAmount || 0)))}</span>
                 </div>
                 <div className="flex justify-between text-foreground/60">
                   <span>Shipping</span>
-                  <span className="text-green-500 font-bold">FREE</span>
+                  <span className="text-green-500 font-bold uppercase tracking-widest text-[10px]">
+                    {order.shippingDetails?.shippingAmount > 0 ? formatCurrency(order.shippingDetails.shippingAmount) : 'FREE'}
+                  </span>
                 </div>
                 <div className="pt-4 border-t border-white/10 flex justify-between items-end">
                   <span className="text-foreground font-bold uppercase text-[10px] tracking-widest">Total</span>

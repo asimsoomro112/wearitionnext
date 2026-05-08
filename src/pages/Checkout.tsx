@@ -80,6 +80,7 @@ export function Checkout() {
       userId: user.uid,
       status: 'pending' as const,
       date: new Date().toISOString(),
+      subtotal,
       total,
       items: items.map(i => ({
         id: i.id, 
