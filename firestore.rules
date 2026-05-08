@@ -1,0 +1,87 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Primitive Helpers
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    function isSignedIn() { return request.auth != null; }
+    // An admin is anyone whose email matches our admin config or is explicitly set in standard auth but for simplicity, we look up a specific user if needed.
+    // For now, let's say the admin is the user with our specific email address.
+    function isAdmin() { 
+      return isSignedIn() && 
+        (request.auth.token.email == 'asimsoomro195@gmail.com' || 
+         request.auth.token.email == 'admin@wearition.com'); 
+    }
+
+    // Validation Helpers
+    function isValidUser(data) {
+      return data.keys().hasAll(['email', 'role', 'createdAt']) &&
+             data.email is string && data.email.size() <= 100 &&
+             data.role in ['user', 'admin'] &&
+             data.createdAt == request.time;
+    }
+
+    function isValidOrder(data) {
+      return data.keys().hasAll(['userId', 'totalAmount', 'status', 'items', 'createdAt']) &&
+             data.userId is string && data.userId.size() <= 128 &&
+             data.userId == request.auth.uid &&
+             data.totalAmount is number &&
+             data.status in ['pending', 'processing', 'shipped', 'delivered'] &&
+             data.items is list && data.items.size() <= 100 &&
+             data.createdAt == request.time;
+    }
+
+    function isValidProduct(data) {
+      return data.keys().hasAll(['title', 'brand', 'price', 'stock', 'category', 'images', 'createdAt']) &&
+             data.title is string && data.title.size() <= 200 &&
+             data.brand is string && data.brand.size() <= 100 &&
+             data.price is number &&
+             data.stock is number &&
+             data.images is list && data.images.size() <= 20 &&
+             data.category is string && data.category.size() <= 100 &&
+             data.createdAt == request.time;
+    }
+
+    // Collections
+    match /users/{userId} {
+      allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      // Users can only create their own document
+      allow create: if isSignedIn() && isValidId(userId) && request.auth.uid == userId && isValidUser(incoming()) && incoming().role == 'user';
+      // Admins can create admins
+      // Users can update their own shipping address, but not role, email or createdAt
+      allow update: if isSignedIn() && request.auth.uid == userId && (
+        isAdmin() ||
+        (incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'shippingAddress']))
+      );
+    }
+
+    match /products/{productId} {
+      // Anyone can read published products
+      allow get: if existing().isPublished == true || isAdmin();
+      allow list: if resource.data.isPublished == true || isAdmin();
+      // Only admins can write products
+      allow create: if isAdmin() && isValidProduct(incoming());
+      allow update, delete: if isAdmin();
+    }
+
+    match /orders/{orderId} {
+      // Users can read their own orders; Admins can read all
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      // Users can create their own order with status pending
+      allow create: if isSignedIn() && isValidId(orderId) && isValidOrder(incoming()) && incoming().status == 'pending';
+      // Only admins can update orders (e.g. status)
+      allow update: if isAdmin();
+    }
+
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}
