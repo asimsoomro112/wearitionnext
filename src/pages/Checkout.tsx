@@ -134,7 +134,7 @@ export function Checkout() {
 
       toast.success(`Order ${orderId} placed successfully!`);
       clearCart();
-      navigate(`/track-order?id=${orderId}`);
+      navigate(`/order-success?id=${orderId}`);
     } catch (error: any) {
       console.error('Order placement failed:', error);
       const errorMessage = error.code === 'permission-denied' 

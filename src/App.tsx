@@ -29,6 +29,7 @@ const About = lazy(() => import('./pages/About').then(m => ({ default: m.About }
 const Contact = lazy(() => import('./pages/Contact').then(m => ({ default: m.Contact })));
 const Editorial = lazy(() => import('./pages/Editorial').then(m => ({ default: m.Editorial })));
 const NotFound = lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })));
+const OrderSuccess = lazy(() => import('./pages/OrderSuccess').then(m => ({ default: m.OrderSuccess })));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
 const AdminProducts = lazy(() => import('./pages/AdminProducts').then(m => ({ default: m.AdminProducts })));
 const AdminOrders = lazy(() => import('./pages/AdminOrders').then(m => ({ default: m.AdminOrders })));
@@ -111,6 +112,7 @@ export default function App() {
                     <Route path="about" element={<About />} />
                     <Route path="contact" element={<Contact />} />
                     <Route path="editorial" element={<Editorial />} />
+                    <Route path="order-success" element={<OrderSuccess />} />
                     <Route path="*" element={<NotFound />} />
                   </Route>
                   <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
