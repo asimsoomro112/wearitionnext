@@ -34,31 +34,59 @@ export function SearchOverlay() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closeSearch}
-            className="fixed inset-0 bg-background/80 backdrop-blur-md z-[50]"
-          />
-          <motion.div
-            initial={{ y: -100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -100, opacity: 0 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 left-0 right-0 h-40 bg-background border-b border-foreground/10 z-[60] px-6 lg:px-24 flex items-center"
+            className="fixed inset-0 bg-black/60 backdrop-blur-xl z-[150] flex flex-col items-center pt-[15vh] md:pt-[20vh] px-6"
           >
-            <div className="w-full max-w-4xl mx-auto flex items-center justify-between">
-              <form onSubmit={handleSearch} className="flex-1 flex items-center gap-4">
-                <Search className="w-6 h-6 text-foreground/50" />
+            <button 
+              onClick={closeSearch} 
+              className="absolute top-8 right-8 text-white/50 hover:text-white hover:rotate-90 transition-all duration-300 p-2"
+            >
+              <X className="w-8 h-8" strokeWidth={1} />
+            </button>
+
+            <motion.div
+              initial={{ y: 30, opacity: 0, scale: 0.95 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              exit={{ y: 20, opacity: 0, scale: 0.95 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-3xl flex flex-col items-center"
+            >
+              {/* Search Input Area */}
+              <form onSubmit={handleSearch} className="w-full relative group">
+                <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 text-white/30 group-focus-within:text-accent transition-colors duration-500" />
                 <input
                   ref={inputRef}
                   type="text"
-                  placeholder="Search products..."
+                  placeholder="What are you looking for?"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-transparent border-none outline-none text-2xl font-serif tracking-wide text-foreground placeholder-foreground/30"
+                  className="w-full bg-transparent border-b border-white/20 pb-4 pl-14 outline-none text-4xl md:text-6xl font-serif tracking-wide text-white placeholder-white/20 focus:border-accent transition-all duration-500"
                 />
               </form>
-              <button onClick={closeSearch} className="ml-8 text-foreground/60 hover:text-foreground transition-colors p-2">
-                <X className="w-8 h-8" />
-              </button>
-            </div>
+
+              {/* Trending / Quick Links */}
+              <div className="w-full mt-12 flex flex-col items-center opacity-0 animate-[fadeIn_1s_ease_0.3s_forwards]">
+                <p className="uppercase text-[10px] tracking-[0.3em] text-white/40 mb-6 font-bold">Trending Searches</p>
+                <div className="flex flex-wrap justify-center gap-3">
+                  {['Sculpted Gown', 'Velvet', 'Tech-Noir', 'Cashmere', 'Unstitched', 'Accessories'].map((term) => (
+                    <button
+                      key={term}
+                      onClick={() => {
+                        setSearchQuery(term);
+                        setTimeout(() => {
+                          closeSearch();
+                          navigate(`/shop?search=${encodeURIComponent(term)}`);
+                          setSearchQuery('');
+                        }, 100);
+                      }}
+                      className="px-5 py-2.5 rounded-full border border-white/10 bg-white/5 text-xs text-white/70 hover:bg-white/10 hover:border-white/30 hover:text-white transition-all duration-300"
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
         </>
       )}
