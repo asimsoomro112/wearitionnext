@@ -66,15 +66,19 @@ export function AIStyleAssistant() {
     setIsTyping(true);
 
     try {
-      const conversationHistory = messages.map(m => 
-        `${m.role === 'user' ? 'Customer' : 'Stylist'}: ${m.content}`
-      ).join('\n');
+      const model = genAI.getGenerativeModel({ 
+        model: 'gemini-1.5-flash',
+        systemInstruction: SYSTEM_PROMPT 
+      });
+      
+      const chat = model.startChat({
+        history: messages.slice(1).map(m => ({
+          role: m.role === 'user' ? 'user' : 'model',
+          parts: [{ text: m.content }],
+        })),
+      });
 
-      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-      
-      const prompt = `${SYSTEM_PROMPT}\n\nConversation:\n${conversationHistory}\nCustomer: ${input}\nStylist:`;
-      
-      const result = await model.generateContent(prompt);
+      const result = await chat.sendMessage(input);
       const response = await result.response;
       const text = response.text() || "I'd love to help you find something special. Could you tell me more about the occasion?";
       
@@ -94,10 +98,10 @@ export function AIStyleAssistant() {
         products: foundProducts.length > 0 ? foundProducts : undefined,
       }]);
     } catch (e: any) {
-      console.error("Gemini API Error:", e);
+      console.error("Gemini API Full Error:", e);
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: `My apologies — I'm experiencing a moment of silence. (Error: ${e.message || 'Unknown'})`,
+        content: `My apologies — I'm experiencing a connectivity issue. (Detail: ${e.message || 'Unknown Error'})`,
       }]);
     } finally {
       setIsTyping(false);
