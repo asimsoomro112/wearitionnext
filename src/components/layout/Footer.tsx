@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom';
+import logo from '../../assets/logo.png';
 
 export function Footer() {
   return (
     <footer className="px-6 md:px-12 py-24 border-t border-white/5 mt-auto bg-background-secondary">
       <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 md:gap-8">
         <div className="col-span-1 md:col-span-2">
-          <div className="font-serif text-3xl tracking-widest font-bold uppercase mb-8 opacity-90 transition-all inline-block">Wearition</div>
+          <div className="mb-8 opacity-90 transition-all inline-block">
+            <img src={logo} alt="Wearition" className="h-10 md:h-12 w-auto object-contain brightness-110" />
+          </div>
           <p className="text-sm text-foreground/50 max-w-sm font-sans leading-relaxed">
             Elegance redefined. Discover the latest in luxury women's fashion, crafted for the modern visionary.
           </p>

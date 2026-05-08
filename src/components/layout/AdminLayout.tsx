@@ -5,6 +5,7 @@ import { Link, useNavigate, NavLink, Outlet } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { Menu, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import logo from '../../assets/logo.png';
 
 export function AdminLayout() {
   const { user } = useAuthStore();
@@ -30,7 +31,7 @@ export function AdminLayout() {
       {/* Mobile Top Bar */}
       <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-black/10 flex items-center justify-between px-6 z-40">
         <Link to="/" className="flex items-center">
-          <span className="font-serif text-lg tracking-widest font-bold uppercase text-foreground">Wearition</span>
+          <img src={logo} alt="Wearition" className="h-8 w-auto object-contain brightness-110" />
         </Link>
         <button onClick={() => setIsMobileMenuOpen(true)}>
           <Menu className="w-6 h-6" />
@@ -56,7 +57,7 @@ export function AdminLayout() {
               className="fixed inset-y-0 left-0 w-64 bg-white border-r border-black/10 flex flex-col z-50 lg:hidden"
             >
               <div className="h-16 border-b border-black/10 flex items-center justify-between px-6">
-                <span className="font-serif text-lg tracking-widest font-bold uppercase text-foreground">Wearition</span>
+                <img src={logo} alt="Wearition" className="h-8 w-auto object-contain brightness-110" />
                 <button onClick={() => setIsMobileMenuOpen(false)}>
                   <X className="w-5 h-5 text-[#0a0a0a]/60" />
                 </button>
@@ -93,7 +94,7 @@ export function AdminLayout() {
       {/* Desktop Sidebar */}
       <aside className="w-64 border-r border-black/10 hidden lg:flex flex-col items-center py-10 fixed h-screen bg-white z-30">
         <Link to="/" className="w-full px-6 mb-16 flex items-center justify-start">
-          <span className="font-serif text-xl tracking-widest font-bold uppercase text-foreground">Wearition</span>
+          <img src={logo} alt="Wearition" className="h-10 w-auto object-contain brightness-110" />
         </Link>
         <nav className="flex flex-col gap-2 w-full px-4 mb-auto">
            {menuItems.map((item) => (

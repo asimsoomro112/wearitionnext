@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useUIStore } from '../../store/uiStore';
+import logo from '../../assets/logo.png';
 
 export function MobileMenu() {
   const { isMobileMenuOpen, closeMobileMenu } = useUIStore();
@@ -23,7 +24,11 @@ export function MobileMenu() {
             <X className="w-8 h-8" />
           </button>
           
-          <nav className="flex flex-col gap-8 text-3xl font-serif mt-12 mb-auto">
+          <div className="mb-12">
+            <img src={logo} alt="Wearition" className="h-10 w-auto object-contain brightness-110" />
+          </div>
+          
+          <nav className="flex flex-col gap-8 text-3xl font-serif mb-auto">
             <Link to="/" onClick={closeMobileMenu} className="hover:text-accent transition-colors">Home</Link>
             <Link to="/shop" onClick={closeMobileMenu} className="hover:text-accent transition-colors">Shop</Link>
             <Link to="/shop?category=collections" onClick={closeMobileMenu} className="hover:text-accent transition-colors">Collections</Link>

@@ -4,7 +4,7 @@
  */
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase';
 import { useAuthStore } from './store/authStore';
@@ -27,6 +27,8 @@ import { About } from './pages/About';
 import { Contact } from './pages/Contact';
 import { NotFound } from './pages/NotFound';
 import { ScrollToTop } from './components/layout/ScrollToTop';
+import { LoadingScreen } from './components/layout/LoadingScreen';
+import { AnimatePresence } from 'framer-motion';
 import { Toaster } from 'sonner';
 import { isAdminEmail } from './config/admin';
 
@@ -34,7 +36,7 @@ import { isAdminEmail } from './config/admin';
 function AdminRoute({ children }: { children: React.ReactNode }) {
   const { user, isAdmin, isLoading } = useAuthStore();
   
-  if (isLoading) return <div className="min-h-screen bg-background flex items-center justify-center">Loading...</div>;
+  if (isLoading) return null; // Let the global loader handle it
   if (!user || !isAdmin) return <Navigate to="/account" replace />;
   
   return <>{children}</>;
@@ -42,6 +44,7 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   const { setUser, setIsAdmin, setLoading } = useAuthStore();
+  const [appLoading, setAppLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -52,6 +55,11 @@ export default function App() {
         setIsAdmin(false);
       }
       setLoading(false);
+      
+      // Artificial delay to show premium loader and ensure hydration
+      setTimeout(() => {
+        setAppLoading(false);
+      }, 2500);
     });
 
     return () => unsubscribe();
@@ -59,6 +67,9 @@ export default function App() {
 
   return (
     <>
+      <AnimatePresence mode="wait">
+        {appLoading && <LoadingScreen key="loader" />}
+      </AnimatePresence>
       <Toaster position="bottom-right" toastOptions={{ className: 'font-sans' }} />
       <BrowserRouter>
         <ScrollToTop />

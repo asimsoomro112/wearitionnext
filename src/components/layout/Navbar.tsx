@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useUIStore } from '../../store/uiStore';
 import { useCartStore } from '../../store/cartStore';
 import { MobileMenu } from './MobileMenu';
+import logo from '../../assets/logo.png';
 
 export function Navbar() {
   const { openCart, openMobileMenu, isDarkMode, toggleDarkMode, toggleSearch } = useUIStore();
@@ -16,7 +17,7 @@ export function Navbar() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-6 md:px-12 backdrop-blur-md bg-background-secondary/30 border-b border-white/5 text-foreground"
+        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 md:px-12 backdrop-blur-md bg-background-secondary/30 border-b border-white/5 text-foreground"
       >
         <div className="flex items-center gap-6">
           <Link to="/shop" className="hidden md:block uppercase text-xs tracking-widest md:hover:opacity-70 transition-opacity">Shop</Link>
@@ -32,7 +33,7 @@ export function Navbar() {
         </div>
 
         <Link to="/" className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center">
-          <span className="font-serif text-2xl tracking-widest font-bold uppercase transition-all">Wearition</span>
+          <img src={logo} alt="Wearition" className="h-8 md:h-10 w-auto object-contain brightness-110" />
         </Link>
 
         <div className="flex items-center gap-4 md:gap-6">
