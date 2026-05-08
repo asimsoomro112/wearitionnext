@@ -99,12 +99,19 @@ const HorizontalScroller = ({ title, products, sectionClass, scrollClass, isSale
         <div ref={containerRef} className={`flex gap-6 md:gap-10 items-center w-max pb-8 pr-[10vw] ${scrollClass}`}>
           {products.map((product: any, i: number) => (
             <Link to={`/product/${product.id}`} key={i} className="product-card w-[220px] sm:w-[260px] md:w-[350px] group cursor-pointer flex-shrink-0 block">
-               <div className="relative aspect-[3/4] overflow-hidden mb-4 md:mb-6 bg-background-secondary/20 shadow-xl parallax-container">
-                 <img src={product.images?.[0] || product.image} alt={product.name} onError={handleImageError} className="parallax-img absolute top-[-10%] left-0 w-full h-[120%] object-cover group-hover:scale-[1.02] transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]" style={{ willChange: "transform" }}/>
+               <div className="relative aspect-[3/4] overflow-hidden mb-4 md:mb-6 bg-background-secondary/20 shadow-xl parallax-container group/img">
+                 {/* First Image */}
+                 <img src={product.images?.[0] || product.image} alt={product.name} onError={handleImageError} className="parallax-img absolute top-[-10%] left-0 w-full h-[120%] object-cover transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover/img:scale-[1.02]" style={{ willChange: "transform" }}/>
+                 
+                 {/* Second Image on Hover */}
+                 {product.images && product.images.length > 1 && (
+                   <img src={product.images[1]} alt={`${product.name} alternate`} onError={handleImageError} className="parallax-img absolute top-[-10%] left-0 w-full h-[120%] object-cover opacity-0 group-hover/img:opacity-100 transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover/img:scale-[1.02]" style={{ willChange: "transform" }}/>
+                 )}
+
                  {((product.isOnSale || isSale) && product.salePrice) && (
                    <div className="absolute top-4 left-4 bg-red-600/90 text-white text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-2 z-10 shadow-lg">Sale</div>
                  )}
-                 <div className="hidden md:flex absolute inset-0 bg-background-secondary/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 items-center justify-center z-20">
+                 <div className="hidden md:flex absolute inset-0 bg-background-secondary/40 opacity-0 group-hover/img:opacity-100 transition-opacity duration-500 items-center justify-center z-20">
                    <button className="bg-foreground text-background px-8 py-3 text-xs uppercase tracking-widest hover:scale-105 transition-transform duration-300">Quick View</button>
                  </div>
                </div>
@@ -186,10 +193,6 @@ export function Home() {
   // Use a separate useEffect or timeout to initialize GSAP after sections render
   useEffect(() => {
     if (loading || sections.length === 0) return;
-
-    // Only run GSAP animations on Desktop/Tablet to prevent mobile jank
-    const isMobile = window.innerWidth <= 768;
-    if (isMobile) return;
 
     let ctx = gsap.context(() => {
       // Hero Parallax Elements 3D Effect

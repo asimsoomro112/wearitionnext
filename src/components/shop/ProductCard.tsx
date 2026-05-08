@@ -42,8 +42,16 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             src={product.images?.[0] || ''} 
             alt={product.title}
             loading="lazy"
-            className={`w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-[1.06] ${isOutOfStock ? 'grayscale opacity-60' : ''}`}
+            className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-[1.06] ${product.images?.length > 1 ? 'group-hover:opacity-0' : ''} ${isOutOfStock ? 'grayscale opacity-60' : ''}`}
           />
+          {product.images && product.images.length > 1 && (
+            <img 
+              src={product.images[1]} 
+              alt={`${product.title} alternate`}
+              loading="lazy"
+              className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] opacity-0 group-hover:opacity-100 group-hover:scale-[1.06] ${isOutOfStock ? 'grayscale opacity-60' : ''}`}
+            />
+          )}
           
           {/* Hover overlay with subtle gradient */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-center pb-8 pointer-events-none">
