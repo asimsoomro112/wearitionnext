@@ -13,13 +13,24 @@ import { BrandStory } from "../components/layout/BrandStory";
 gsap.registerPlugin(ScrollTrigger);
 
 const CategoryGrid = ({ items }: { items?: any[] }) => (
-  <section className="py-12 md:py-24 px-6 lg:px-12 w-full max-w-[1600px] mx-auto z-10 relative bg-background">
-     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  <section className="py-16 md:py-32 px-6 lg:px-12 w-full max-w-[1600px] mx-auto z-10 relative bg-background">
+     <div className="flex flex-col mb-12">
+        <h2 className="font-serif text-3xl md:text-5xl uppercase tracking-[0.2em] mb-4">Curated Selections</h2>
+        <div className="h-[1px] w-32 bg-accent"></div>
+     </div>
+     <div className="bento-grid">
         {(items || []).map((cat, i) => (
-           <Link to={cat.link || `/shop?category=${cat.name?.toLowerCase()}`} key={i} className="group relative aspect-[3/4] overflow-hidden lg:aspect-auto lg:h-[60vh] bg-background-secondary/20 shadow-md block parallax-container">
-              <img src={cat.image} alt={cat.name} className="parallax-img absolute inset-x-0 top-[-15%] w-full h-[130%] object-cover transition-transform duration-1000 group-hover:scale-[1.03]" style={{ willChange: "transform" }} />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent flex items-end p-8 z-10 pointer-events-none">
-                 <h3 className="text-white text-3xl font-serif uppercase tracking-widest group-hover:text-accent transition-colors pointer-events-auto">{cat.name}</h3>
+           <Link 
+             to={cat.link || `/shop?category=${cat.name?.toLowerCase()}`} 
+             key={i} 
+             className={`group relative overflow-hidden bg-background-secondary/20 shadow-xl block parallax-container rounded-lg ${
+               i === 0 ? 'bento-item-large' : i === 1 ? 'bento-item-tall' : ''
+             }`}
+           >
+              <img src={cat.image} alt={cat.name} className="parallax-img absolute inset-0 w-full h-[120%] object-cover transition-transform duration-1000 group-hover:scale-[1.05]" style={{ willChange: "transform" }} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8 z-10">
+                 <span className="text-accent text-[10px] uppercase tracking-[0.3em] mb-2 opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0">Explore Collection</span>
+                 <h3 className="text-white text-2xl md:text-4xl font-serif uppercase tracking-widest group-hover:text-accent transition-colors">{cat.name}</h3>
               </div>
            </Link>
         ))}
@@ -316,22 +327,52 @@ export function Home() {
               willChange: "transform"
             }}></div>
 
-            <div className="hero-content relative z-[2] max-w-[720px] parallax-foreground pt-4 md:pt-0 pb-20 md:pb-0 scale-[0.85] sm:scale-95 md:scale-100 origin-left">
-              <div className="font-['Great_Vibes'] text-[1.8rem] md:text-[2.5rem] text-[#f7e1cf] mb-[8px] md:mb-[10px] opacity-95">
-                Made from luxurious material
+            <div className="hero-content relative z-[2] max-w-[820px] parallax-foreground pt-4 md:pt-0 pb-20 md:pb-0 scale-[0.85] sm:scale-95 md:scale-100 origin-left">
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1, delay: 0.5 }}
+                className="font-['Great_Vibes'] text-[1.8rem] md:text-[3rem] text-accent mb-[8px] md:mb-[15px]"
+              >
+                The Art of Living
+              </motion.div>
+              <div className="leading-[0.85] mb-[25px] md:mb-[35px] perspective-[1000px]">
+                <motion.span 
+                  initial={{ rotateX: 90, opacity: 0 }}
+                  animate={{ rotateX: 0, opacity: 1 }}
+                  transition={{ duration: 1, delay: 0.7, ease: "easeOut" }}
+                  className="block font-['Anton'] uppercase tracking-tighter text-[#f5e7d9] text-[18vw] md:text-[10vw] drop-shadow-2xl whitespace-nowrap hover:text-accent transition-colors duration-500 cursor-default"
+                >
+                  BEYOND
+                </motion.span>
+                <motion.span 
+                  initial={{ rotateX: 90, opacity: 0 }}
+                  animate={{ rotateX: 0, opacity: 1 }}
+                  transition={{ duration: 1, delay: 0.9, ease: "easeOut" }}
+                  className="block font-['Anton'] uppercase tracking-tighter text-[#f5e7d9] text-[18vw] md:text-[10vw] drop-shadow-2xl md:ml-[120px] whitespace-nowrap hover:text-accent transition-colors duration-500 cursor-default"
+                >
+                  ELEGANCE
+                </motion.span>
               </div>
-              <div className="leading-[0.9] mb-[20px] md:mb-[28px]">
-                <span className="block font-['Anton'] uppercase tracking-[1px] md:tracking-[2px] text-[#f5e7d9] text-[18vw] md:text-[8vw] drop-shadow-[0_4px_20px_rgba(0,0,0,0.35)] whitespace-nowrap">STEP BACK</span>
-                <span className="block font-['Anton'] uppercase tracking-[1px] md:tracking-[2px] text-[#f5e7d9] text-[18vw] md:text-[8vw] drop-shadow-[0_4px_20px_rgba(0,0,0,0.35)] md:ml-[160px] whitespace-nowrap">INTO STYLE</span>
-              </div>
-              <p className="max-w-[420px] md:max-w-[520px] text-[0.9rem] md:text-[1.08rem] leading-[1.6] md:leading-[1.8] text-white/80 mb-[28px] md:mb-[38px] font-['Inter'] pr-4">
-                Explore timeless pieces that blend classic elegance with a modern twist.
-                Embrace iconic styles and discover your perfect look with premium fashion
-                crafted for confidence.
-              </p>
-              <Link to="/shop" className="inline-flex items-center gap-[10px] md:gap-[14px] px-[32px] md:px-[42px] py-[16px] md:py-[20px] bg-[#d85d20] border-2 border-white/15 rounded-[12px] text-white font-semibold tracking-[0.5px] text-[0.9rem] md:text-[1rem] transition-all duration-300 shadow-[0_10px_35px_rgba(216,93,32,0.35)] hover:-translate-y-1 hover:bg-[#f06f2f] hover:shadow-[0_14px_40px_rgba(240,111,47,0.45)] font-['Inter']">
-                SHOP NOW →
-              </Link>
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.8 }}
+                transition={{ duration: 1, delay: 1.2 }}
+                className="max-w-[420px] md:max-w-[550px] text-[0.9rem] md:text-[1.1rem] leading-relaxed text-white mb-[35px] md:mb-[45px] font-sans pr-4 border-l-2 border-accent pl-6"
+              >
+                Maison Wearition redefines the architectural silhouette. 
+                Discover a curated collection where precision tailoring meets the fluid poetry of silk.
+              </motion.p>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.5 }}
+              >
+                <Link to="/shop" className="group relative inline-flex items-center gap-[14px] px-[42px] py-[22px] bg-foreground text-background overflow-hidden rounded-full font-bold tracking-[0.2em] text-[0.9rem] md:text-[1rem] transition-all duration-500 hover:text-accent">
+                  <span className="relative z-10">DISCOVER THE COLLECTION</span>
+                  <div className="absolute inset-0 bg-accent translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                </Link>
+              </motion.div>
             </div>
 
             <div className="bottom-features absolute bottom-[120px] md:bottom-[90px] left-5 md:left-[6%] z-[2] flex gap-[12px] md:gap-[50px] flex-wrap md:flex-nowrap parallax-features max-w-[80vw] md:max-w-none">
