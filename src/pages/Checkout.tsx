@@ -31,20 +31,41 @@ export function Checkout() {
     setTimeout(async () => {
       const orderId = 'PK-' + Math.random().toString(36).substring(2, 8).toUpperCase();
       
-      addOrder({
-        id: orderId,
-        email: email,
-        status: 'processing',
+      const orderData = {
+        orderId: orderId,
+        email: email.toLowerCase(),
+        status: 'pending' as const,
         date: new Date().toISOString(),
-        total: total
-      });
+        total: total,
+        items: items.map(i => ({
+          id: i.id,
+          title: i.title,
+          price: i.price,
+          quantity: i.quantity,
+          size: i.size,
+          color: i.color,
+          image: i.image
+        })),
+        paymentMethod: paymentMethod,
+        shippingDetails: {
+          // You can collect these from the form as well
+          shippingAmount: shipping
+        }
+      };
 
-      await sendEmailNotification(email, 'confirmation', { orderId: orderId });
-      toast.success(`Email sent. Order ${orderId} placed successfully!`);
-      
-      setIsProcessing(false);
-      clearCart();
-      navigate(`/track-order?id=${orderId}`);
+      try {
+        await addOrder(orderData);
+        await sendEmailNotification(email, 'confirmation', { orderId: orderId });
+        toast.success(`Email sent. Order ${orderId} placed successfully!`);
+        
+        setIsProcessing(false);
+        clearCart();
+        navigate(`/track-order?id=${orderId}`);
+      } catch (error) {
+        console.error('Order placement failed:', error);
+        toast.error('Failed to place order. Please try again.');
+        setIsProcessing(false);
+      }
     }, 2000);
   };
 

@@ -1,33 +1,69 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { db } from '../firebase';
+import { collection, addDoc, updateDoc, doc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
 
 export interface Order {
-  id: string;
+  id?: string;
+  orderId: string;
   email: string;
-  status: 'processing' | 'shipped' | 'delivered';
+  status: 'pending' | 'processing' | 'shipped' | 'delivered';
   date: string;
   total: number;
+  items: any[];
+  shippingDetails?: any;
+  paymentMethod?: string;
+  createdAt?: any;
 }
 
 interface OrderTrackingState {
   orders: Order[];
-  addOrder: (order: Order) => void;
-  updateOrderStatus: (id: string, status: Order['status']) => void;
-  getOrder: (id: string, email: string) => Order | undefined;
+  addOrder: (order: Order) => Promise<string>;
+  updateOrderStatus: (id: string, status: Order['status']) => Promise<void>;
+  getOrder: (orderId: string, email: string) => Promise<Order | undefined>;
+  fetchAllOrders: () => Promise<void>;
 }
 
 export const useOrderTrackingStore = create<OrderTrackingState>()(
   persist(
     (set, get) => ({
       orders: [],
-      addOrder: (order) => set((state) => ({ orders: [...state.orders, order] })),
-      updateOrderStatus: (id, status) => set((state) => ({
-        orders: state.orders.map(o => o.id === id ? { ...o, status } : o)
-      })),
-      getOrder: (id, email) => get().orders.find(o => o.id === id && o.email.toLowerCase() === email.toLowerCase()),
+      addOrder: async (order) => {
+        const docRef = await addDoc(collection(db, 'orders'), {
+          ...order,
+          createdAt: serverTimestamp()
+        });
+        set((state) => ({ orders: [...state.orders, { ...order, id: docRef.id }] }));
+        return docRef.id;
+      },
+      updateOrderStatus: async (id, status) => {
+        const orderRef = doc(db, 'orders', id);
+        await updateDoc(orderRef, { status });
+        set((state) => ({
+          orders: state.orders.map(o => o.id === id ? { ...o, status } : o)
+        }));
+      },
+      getOrder: async (orderId, email) => {
+        const q = query(
+          collection(db, 'orders'), 
+          where('orderId', '==', orderId), 
+          where('email', '==', email.toLowerCase())
+        );
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+          const doc = querySnapshot.docs[0];
+          return { id: doc.id, ...doc.data() } as Order;
+        }
+        return undefined;
+      },
+      fetchAllOrders: async () => {
+        const querySnapshot = await getDocs(collection(db, 'orders'));
+        const fetchedOrders = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order));
+        set({ orders: fetchedOrders });
+      },
     }),
     {
-      name: 'wearition-orders',
+      name: 'wearition-orders-v2',
     }
   )
 );
