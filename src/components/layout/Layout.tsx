@@ -5,7 +5,6 @@ import { CartDrawer } from './CartDrawer';
 import { MobileBottomBar } from './MobileBottomBar';
 import { SearchOverlay } from './SearchOverlay';
 import { AIStyleAssistant } from './AIStyleAssistant';
-import { WhatsAppButton } from './WhatsAppButton';
 import { CustomCursor } from './CustomCursor';
 import { PageTransition } from './PageTransition';
 import { useEffect } from 'react';
@@ -34,7 +33,6 @@ export function Layout() {
       <CartDrawer />
       <SearchOverlay />
       <AIStyleAssistant />
-      <WhatsAppButton />
       <main className="flex-grow min-h-screen">
         <PageTransition>
           <Outlet />
