@@ -14,7 +14,6 @@ import { MobileMenu } from "@/components/layout/MobileMenu";
 import { MobileBottomBar } from "@/components/layout/MobileBottomBar";
 import { SearchOverlay } from "@/components/layout/SearchOverlay";
 import { AIStyleAssistant } from "@/components/layout/AIStyleAssistant";
-import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { LoadingScreen } from "@/components/layout/LoadingScreen";
 
 export function ClientShell({ children }: { children: React.ReactNode }) {
@@ -67,7 +66,6 @@ export function StoreLayout({ children }: { children: React.ReactNode }) {
       <Footer />
       <MobileBottomBar />
       <AIStyleAssistant />
-      <WhatsAppButton />
     </>
   );
 }

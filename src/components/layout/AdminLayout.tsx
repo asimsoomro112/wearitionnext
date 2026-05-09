@@ -27,6 +27,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
     { name: 'Orders', path: '/admin/orders' },
     { name: 'Users', path: '/admin/users' },
     { name: 'Analytics', path: '/admin/analytics' },
+    { name: 'Settings', path: '/admin/settings' },
   ];
 
   return (

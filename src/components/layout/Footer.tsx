@@ -19,17 +19,17 @@ export function Footer() {
           <ul className="space-y-4 text-xs font-sans text-foreground/60">
             <li><Link href="/contact" className="hover:text-foreground transition-colors">Contact Us</Link></li>
             <li><Link href="/track-order" className="hover:text-foreground transition-colors">Track Order</Link></li>
-            <li><Link href="/contact" className="hover:text-foreground transition-colors">Returns & Exchanges</Link></li>
-            <li><Link href="/contact" className="hover:text-foreground transition-colors">Shipping</Link></li>
+            <li><Link href="/returns" className="hover:text-foreground transition-colors">Returns & Exchanges</Link></li>
+            <li><Link href="/shipping" className="hover:text-foreground transition-colors">Shipping</Link></li>
           </ul>
         </div>
         <div>
           <h3 className="uppercase text-[10px] tracking-[0.2em] font-medium mb-8 text-accent">The House</h3>
           <ul className="space-y-4 text-xs font-sans text-foreground/60">
             <li><Link href="/about" className="hover:text-foreground transition-colors">About Us</Link></li>
-            <li><Link href="/about" className="hover:text-foreground transition-colors">Sustainability</Link></li>
-            <li><Link href="/contact" className="hover:text-foreground transition-colors">Careers</Link></li>
-            <li><Link href="/about" className="hover:text-foreground transition-colors">Privacy</Link></li>
+            <li><Link href="/sustainability" className="hover:text-foreground transition-colors">Sustainability</Link></li>
+            <li><Link href="/careers" className="hover:text-foreground transition-colors">Careers</Link></li>
+            <li><Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link></li>
           </ul>
         </div>
       </div>

@@ -9,7 +9,6 @@ import { AIStyleAssistant } from './AIStyleAssistant';
 import { CustomCursor } from './CustomCursor';
 import { PageTransition } from './PageTransition';
 import { MobileMenu } from './MobileMenu';
-import { WhatsAppButton } from './WhatsAppButton';
 import { useEffect, useState } from 'react';
 import Lenis from 'lenis';
 
@@ -45,7 +44,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <MobileMenu />
       <SearchOverlay />
       <AIStyleAssistant />
-      <WhatsAppButton />
       <main className="flex-grow min-h-screen">
         <PageTransition>
           {children}

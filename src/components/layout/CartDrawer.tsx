@@ -1,7 +1,7 @@
 "use client";
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Minus, Plus, ShoppingBag } from 'lucide-react';
-import { useCartStore } from '../../store/cartStore';
+import { useCartStore, getCartSubtotal } from '../../store/cartStore';
 import { useUIStore } from '../../store/uiStore';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -10,7 +10,8 @@ import { getOptimizedImage } from '../../lib/images';
 
 export function CartDrawer() {
   const { isCartOpen, closeCart } = useUIStore();
-  const { items, removeItem, updateQuantity, subtotal } = useCartStore();
+  const { items, removeItem, updateQuantity } = useCartStore();
+  const subtotal = getCartSubtotal(items);
   const router = useRouter();
 
   return (

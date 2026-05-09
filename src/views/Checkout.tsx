@@ -1,9 +1,9 @@
 "use client";
-import { useCartStore } from '../store/cartStore';
+import { useCartStore, getCartSubtotal } from '../store/cartStore';
 import { useUIStore } from '../store/uiStore';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { formatCurrency } from '@/lib/currency';
 import { getOptimizedImage } from '../lib/images';
@@ -12,7 +12,7 @@ import { useOrderTrackingStore } from '../store/orderTrackingStore';
 import { useAuthStore } from '../store/authStore';
 import { motion } from 'framer-motion';
 import { SEO } from '../components/layout/SEO';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 interface ShippingAddress {
@@ -25,7 +25,8 @@ interface ShippingAddress {
 }
 
 export function Checkout() {
-  const { items, subtotal, clearCart } = useCartStore();
+  const { items, clearCart } = useCartStore();
+  const subtotal = getCartSubtotal(items);
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('cod');
@@ -54,8 +55,32 @@ export function Checkout() {
     }
   });
 
-  const shippingCost = 200;
-  const total = subtotal + shippingCost;
+  const [baseShipping, setBaseShipping] = useState(250);
+  const [incrementalShipping, setIncrementalShipping] = useState(100);
+  const [taxPercent, setTaxPercent] = useState(0);
+
+  useEffect(() => {
+    async function fetchStoreSettings() {
+      try {
+        const docRef = doc(db, 'settings', 'store');
+        const snap = await getDoc(docRef);
+        if (snap.exists()) {
+          const data = snap.data();
+          setBaseShipping(data.baseShipping ?? 250);
+          setIncrementalShipping(data.incrementalShipping ?? 100);
+          setTaxPercent(data.taxPercentage ?? 0);
+        }
+      } catch (e) {
+        console.error("Error fetching checkout settings:", e);
+      }
+    }
+    fetchStoreSettings();
+  }, []);
+
+  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+  const shippingCost = totalQuantity > 0 ? baseShipping + (totalQuantity - 1) * incrementalShipping : 0;
+  const taxAmount = (subtotal * taxPercent) / 100;
+  const total = subtotal + taxAmount + shippingCost;
 
   const handleShippingChange = (field: keyof ShippingAddress) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setShipping(prev => ({ ...prev, [field]: e.target.value }));
@@ -84,6 +109,7 @@ export function Checkout() {
       status: 'pending' as const,
       date: new Date().toISOString(),
       subtotal,
+      tax: taxAmount,
       total,
       items: items.map(i => ({
         id: i.id, 
@@ -102,7 +128,10 @@ export function Checkout() {
         zip: shipping.zip || "",
         phone: shipping.phone || "",
       },
-      shippingDetails: { shippingAmount: shippingCost }
+      shippingDetails: { 
+        shippingAmount: shippingCost,
+        taxAmount: taxAmount
+      }
     };
 
     try {
@@ -304,7 +333,7 @@ export function Checkout() {
                   <span>Subtotal</span><span>{formatCurrency(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-foreground/60">
-                  <span>Shipping</span><span>{formatCurrency(shippingCost)}</span>
+                  <span>Shipping & Handling</span><span>{formatCurrency(shippingCost + taxAmount)}</span>
                 </div>
                 <div className="border-t border-white/10 pt-4 flex justify-between font-bold text-lg text-foreground">
                   <span>Total</span><span className="text-accent">{formatCurrency(total)}</span>

@@ -17,7 +17,6 @@ interface CartState {
   removeItem: (id: string, size?: string, color?: string) => void;
   updateQuantity: (id: string, quantity: number, size?: string, color?: string) => void;
   clearCart: () => void;
-  get subtotal(): number;
 }
 
 export const useCartStore = create<CartState>()(
@@ -25,19 +24,24 @@ export const useCartStore = create<CartState>()(
     (set, get) => ({
       items: [],
       addItem: (newItem) => set((state) => {
+        // Ensure price is a number to prevent calculation bugs
+        const price = typeof newItem.price === 'string' ? parseFloat(newItem.price) : newItem.price;
+        const processedItem = { ...newItem, price: isNaN(price) ? 0 : price };
+
         const existingItem = state.items.find(
-          (item) => item.id === newItem.id && item.size === newItem.size && item.color === newItem.color
+          (item) => item.id === processedItem.id && item.size === processedItem.size && item.color === processedItem.color
         );
+
         if (existingItem) {
           return {
             items: state.items.map((item) =>
-              item.id === newItem.id && item.size === newItem.size && item.color === newItem.color
-                ? { ...item, quantity: item.quantity + newItem.quantity }
+              item.id === processedItem.id && item.size === processedItem.size && item.color === processedItem.color
+                ? { ...item, quantity: item.quantity + processedItem.quantity }
                 : item
             ),
           };
         }
-        return { items: [...state.items, newItem] };
+        return { items: [...state.items, processedItem] };
       }),
       removeItem: (id, size, color) => set((state) => ({
         items: state.items.filter(
@@ -52,10 +56,15 @@ export const useCartStore = create<CartState>()(
         )
       })),
       clearCart: () => set({ items: [] }),
-      get subtotal() {
-        return get().items.reduce((total, item) => total + (item.price * item.quantity), 0);
-      }
     }),
     { name: 'wearition-cart' }
   )
 );
+
+// Helper selector for subtotal calculation
+export const getCartSubtotal = (items: CartItem[]) => {
+  return items.reduce((total, item) => {
+    const price = typeof item.price === 'string' ? parseFloat(item.price) : item.price;
+    return total + (price * item.quantity);
+  }, 0);
+};

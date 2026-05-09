@@ -45,6 +45,7 @@ export function Shop() {
   const searchParams = useSearchParams();
   const searchString = searchParams.get('search')?.toLowerCase() || '';
   const categoryFilter = searchParams.get('category')?.toLowerCase() || '';
+  const brandFilter = searchParams.get('brand')?.toLowerCase() || '';
 
   useEffect(() => {
     async function fetchProducts() {
@@ -68,6 +69,10 @@ export function Shop() {
           fetched = fetched.filter(p => p.category?.toLowerCase() === categoryFilter);
         }
 
+        if (brandFilter) {
+          fetched = fetched.filter(p => p.brand?.toLowerCase() === brandFilter);
+        }
+
         setProducts(fetched);
       } catch (e) {
         console.error("Error fetching products", e);
@@ -76,7 +81,7 @@ export function Shop() {
       }
     }
     fetchProducts();
-  }, [searchString, categoryFilter]);
+  }, [searchString, categoryFilter, brandFilter]);
 
   // Client-side sorting — no re-fetch needed
   const sortedProducts = useMemo(() => {
@@ -91,13 +96,15 @@ export function Shop() {
     const params = new URLSearchParams(searchParams.toString());
     if (value) params.set('category', value);
     else params.delete('category');
+    // Clear brand filter when switching category for better UX
+    params.delete('brand');
     router.push(`${pathname}?${params.toString()}`);
   };
 
   return (
     <div className="w-full pt-40 px-6 md:px-12 pb-32 bg-background">
       <SEO 
-        title={categoryFilter ? `${categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1)} Collection` : 'Shop the Collection'}
+        title={brandFilter ? `${brandFilter.charAt(0).toUpperCase() + brandFilter.slice(1)} Collection` : categoryFilter ? `${categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1)} Collection` : 'Shop the Collection'}
         description="Explore WEARITION's curated collection of luxury fashion. Premium menswear and womenswear designed for the modern visionary."
       />
       <div className="max-w-[1440px] mx-auto">
@@ -108,7 +115,7 @@ export function Shop() {
             transition={{ duration: 0.8 }}
             className="font-serif text-4xl sm:text-5xl md:text-[4rem] leading-tight tracking-tight text-foreground mb-4"
           >
-            {categoryFilter ? categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1) : 'The Collection'}
+            {brandFilter ? brandFilter.toUpperCase() : categoryFilter ? categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1) : 'The Collection'}
           </motion.h1>
           <p className="text-foreground/50 text-sm max-w-xl mx-auto font-sans">
             {loading ? 'Curating your collection...' : `${products.length} piece${products.length !== 1 ? 's' : ''} available`}
@@ -163,8 +170,11 @@ export function Shop() {
             <p className="text-foreground/40 text-sm font-sans mb-10">
               This collection is being carefully curated. Please check back soon.
             </p>
-            <button onClick={() => setCategory('')} className="text-xs uppercase tracking-widest border-b border-foreground/30 pb-1 hover:text-accent hover:border-accent transition-colors">
-              View All Pieces
+            <button onClick={() => {
+              const params = new URLSearchParams();
+              router.push(`${pathname}`);
+            }} className="text-xs uppercase tracking-widest border-b border-foreground/30 pb-1 hover:text-accent hover:border-accent transition-colors">
+              Clear All Filters
             </button>
           </motion.div>
         ) : (

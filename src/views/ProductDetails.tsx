@@ -13,7 +13,6 @@ import { triggerHaptic } from '@/lib/haptics';
 import { SEO } from '../components/layout/SEO';
 import { TextReveal } from '../components/layout/TextReveal';
 import { MagneticButton } from '../components/layout/MagneticButton';
-import { WhatsAppButton } from '../components/layout/WhatsAppButton';
 import { getOptimizedImage } from '../lib/images';
 import { ShoppingBag, Heart, MessageSquare, ShieldCheck, Truck, RotateCcw, ChevronRight } from 'lucide-react';
 import { WearitionSpinner } from '../components/layout/WearitionSpinner';
@@ -94,7 +93,6 @@ export function ProductDetails() {
     }
   };
 
-  const whatsappOrderUrl = `https://wa.me/923000000000?text=${encodeURIComponent(`Hi! I'd like to order "${product.title}" (${formatCurrency(product.price)}) from Wearition. ${product.isUnstitched ? 'Type: Unstitched' : `Size: ${selectedSize || 'Not selected'}`}. Link: ${window.location.href}`)}`;
 
   return (
     <div className="w-full relative bg-background">
@@ -218,15 +216,6 @@ export function ProductDetails() {
               {isOutOfStock ? 'Out of Stock' : 'Add to Bag'}
             </MagneticButton>
 
-            <a 
-              href={whatsappOrderUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full border border-[#25D366]/30 text-[#25D366] py-6 uppercase text-xs tracking-[0.2em] font-medium hover:bg-[#25D366]/10 transition-colors duration-300 mb-4 flex items-center justify-center gap-3 rounded-full"
-            >
-              <MessageSquare className="w-4 h-4" />
-              Order on WhatsApp
-            </a>
 
             <button 
               onClick={handleWishlistToggle}
