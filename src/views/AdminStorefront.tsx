@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 
 export interface StoreSection {
   id: string;
-  type: 'products_scroll' | 'categories' | 'hero' | 'editorial' | 'artisanship' | 'newsletter';
+  type: 'products_scroll' | 'categories' | 'hero' | 'editorial' | 'artisanship' | 'newsletter' | 'brands_marquee';
   title?: string;
   productQueryType?: 'trending' | 'sale' | 'category' | 'all' | 'featured';
   categoryValue?: string;
@@ -16,21 +16,13 @@ export interface StoreSection {
 }
 
 const DEFAULT_SECTIONS: StoreSection[] = [
-  { id: '1', type: 'hero' },
-  { 
-    id: '2', type: 'categories', title: 'The 2026 Collections',
-    items: [
-      { name: 'Women', image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=800', link: '/shop?category=women' },
-      { name: 'Men', image: 'https://images.unsplash.com/photo-1550246140-5119ae4790b7?q=80&w=800', link: '/shop?category=men' },
-      { name: 'Shirts', image: 'https://images.unsplash.com/photo-1598033129183-c4f50c7176c8?q=80&w=800', link: '/shop?category=shirts' },
-      { name: 'Pants', image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=800', link: '/shop?category=pants' },
-    ]
-  },
-  { id: '3', type: 'products_scroll', title: 'Featured Menswear', productQueryType: 'featured', categoryValue: 'men' },
-  { id: '4', type: 'products_scroll', title: 'Featured Womenswear', productQueryType: 'featured', categoryValue: 'women' },
-  { id: '5', type: 'editorial' },
-  { id: '6', type: 'artisanship' },
-  { id: '7', type: 'newsletter' },
+  { id: 'sec-1', type: 'hero' },
+  { id: 'sec-brands', type: 'brands_marquee' },
+  { id: 'sec-3', type: 'products_scroll', title: 'New Arrivals', productQueryType: 'featured' },
+  { id: 'sec-4', type: 'products_scroll', title: 'Seasonal Collection', productQueryType: 'all' },
+  { id: 'sec-5', type: 'editorial' },
+  { id: 'sec-6', type: 'artisanship' },
+  { id: 'sec-7', type: 'newsletter' },
 ];
 
 export function AdminStorefront() {
@@ -169,7 +161,7 @@ export function AdminStorefront() {
                   <span className="uppercase text-[10px] font-bold tracking-widest text-[#0a0a0a]/60 bg-black/5 px-2 py-1 rounded">
                     {section.type.replace('_', ' ')}
                   </span>
-                  {!['hero', 'editorial', 'artisanship', 'newsletter', 'categories'].includes(section.type) && (
+                  {!['hero', 'editorial', 'artisanship', 'newsletter', 'categories', 'brands_marquee'].includes(section.type) && (
                     <button onClick={() => removeSection(idx)} className="text-red-500 p-1 hover:bg-red-50 rounded">
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -263,7 +255,7 @@ export function AdminStorefront() {
                     ))}
                   </div>
                 )}
-                {['hero', 'editorial', 'artisanship', 'newsletter'].includes(section.type) && (
+                {['hero', 'editorial', 'artisanship', 'newsletter', 'brands_marquee'].includes(section.type) && (
                    <p className="text-sm text-[#0a0a0a]/70 font-medium">Fixed Section (Layout specific)</p>
                 )}
               </div>
