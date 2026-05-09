@@ -9,6 +9,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { ProductCard } from '../components/shop/ProductCard';
 import { ArrowLeft, ArrowRight, Grid } from 'lucide-react';
 import { WearitionSpinner } from '../components/layout/WearitionSpinner';
+import { PerspectiveContainer } from '../components/layout/PerspectiveContainer';
 
 export function Brands() {
   const searchParams = useSearchParams();
@@ -123,30 +124,31 @@ export function Brands() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                   {dynamicBrands.map((brand, i) => (
-                    <button 
-                      key={brand}
-                      onClick={() => handleBrandSelect(brand)}
-                      className="group relative bg-background-secondary/10 border border-white/5 p-10 md:p-14 overflow-hidden rounded-xl transition-all hover:border-accent/30 hover:bg-background-secondary/20 shadow-2xl text-left"
-                    >
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                      <div className="relative z-10 h-full flex flex-col justify-between">
-                        <div>
-                          <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4 uppercase tracking-tighter group-hover:text-accent transition-colors">
-                            {brand}
-                          </h2>
-                          <p className="text-[10px] text-foreground/40 leading-loose uppercase tracking-widest">
-                            Official {brand} Resale Collection
-                          </p>
+                    <PerspectiveContainer strength={15} key={brand}>
+                      <button 
+                        onClick={() => handleBrandSelect(brand)}
+                        className="group relative bg-background-secondary/10 border border-white/5 p-10 md:p-14 overflow-hidden rounded-xl transition-all hover:border-accent/30 hover:bg-background-secondary/20 shadow-2xl text-left w-full h-full"
+                      >
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative z-10 h-full flex flex-col justify-between">
+                          <div>
+                            <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4 uppercase tracking-tighter group-hover:text-accent transition-colors">
+                              {brand}
+                            </h2>
+                            <p className="text-[10px] text-foreground/40 leading-loose uppercase tracking-widest">
+                              Official {brand} Resale Collection
+                            </p>
+                          </div>
+                          <div className="mt-12 flex items-center gap-3 text-accent opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
+                            <span className="text-[10px] uppercase tracking-[0.3em] font-bold">View Collection</span>
+                            <ArrowRight className="w-4 h-4" />
+                          </div>
                         </div>
-                        <div className="mt-12 flex items-center gap-3 text-accent opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
-                          <span className="text-[10px] uppercase tracking-[0.3em] font-bold">View Collection</span>
-                          <ArrowRight className="w-4 h-4" />
-                        </div>
-                      </div>
-                      <span className="absolute bottom-6 right-8 font-serif text-8xl text-foreground/[0.03] pointer-events-none group-hover:text-accent/[0.05] transition-colors">
-                        {i + 1 < 10 ? `0${i + 1}` : i + 1}
-                      </span>
-                    </button>
+                        <span className="absolute bottom-6 right-8 font-serif text-8xl text-foreground/[0.03] pointer-events-none group-hover:text-accent/[0.05] transition-colors">
+                          {i + 1 < 10 ? `0${i + 1}` : i + 1}
+                        </span>
+                      </button>
+                    </PerspectiveContainer>
                   ))}
                 </div>
               )}

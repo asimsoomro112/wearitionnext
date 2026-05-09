@@ -173,15 +173,17 @@ const HeroCarousel = ({ products }: { products: any[] }) => {
                 exit="exit"
                 className="absolute inset-0 w-full h-full"
               >
-                <div className="w-full h-full rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden shadow-[0_40px_100px_-30px_rgba(0,0,0,0.5)] border border-border-color group">
-                  <img 
-                    src={cur?.images?.[0] || heroImg.src || heroImg} 
-                    alt={cur?.title}
-                    onError={onImgError}
-                    className="w-full h-full object-cover transition-transform duration-[10000ms] group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
+                <PerspectiveContainer strength={20}>
+                  <div className="w-full h-full rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden shadow-[0_40px_100px_-30px_rgba(0,0,0,0.5)] border border-border-color group">
+                    <img 
+                      src={cur?.images?.[0] || heroImg.src || heroImg} 
+                      alt={cur?.title}
+                      onError={onImgError}
+                      className="w-full h-full object-cover transition-transform duration-[10000ms] group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                </PerspectiveContainer>
               </motion.div>
             </AnimatePresence>
             <div className="absolute -right-12 top-1/2 -translate-y-1/2 w-48 h-48 border border-accent/10 rounded-full animate-spin-slow pointer-events-none hidden lg:block" />
@@ -315,6 +317,8 @@ const HorizontalScroller = ({ title, products, sectionClass, scrollClass, isSale
     </section>
   );
 };
+
+import { PerspectiveContainer } from '../components/layout/PerspectiveContainer';
 
 export function Home() {
   const containerRef = useRef<HTMLDivElement>(null);

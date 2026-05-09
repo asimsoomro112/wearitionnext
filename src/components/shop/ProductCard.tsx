@@ -8,6 +8,8 @@ import { toast } from 'sonner';
 import { formatCurrency } from '@/lib/currency';
 import { getOptimizedImage } from '../../lib/images';
 
+import { PerspectiveContainer } from '../layout/PerspectiveContainer';
+
 interface ProductCardProps {
   product: any;
   index?: number;
@@ -37,37 +39,41 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
       className="group"
+      style={{ perspective: "1000px" }}
     >
       <Link href={`/product/${product.id}`} className="block relative" data-cursor="VIEW">
-        <div className="relative aspect-[3/4] overflow-hidden mb-4 bg-foreground/5 cursor-pointer rounded-sm">
-          <img 
-            src={getOptimizedImage(product.images?.[0])} 
-            alt={product.title}
-            loading="lazy"
-            referrerPolicy="no-referrer"
-            className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-[1.06] ${product.images?.length > 1 ? 'group-hover:opacity-0' : ''} ${isOutOfStock ? 'grayscale opacity-60' : ''}`}
-          />
-          {product.images && product.images.length > 1 && (
+        <PerspectiveContainer strength={10} className="mb-4">
+          <div className="relative aspect-[3/4] overflow-hidden bg-foreground/5 cursor-pointer rounded-sm">
             <img 
-              src={getOptimizedImage(product.images[1])} 
-              alt={`${product.title} alternate`}
+              src={getOptimizedImage(product.images?.[0])} 
+              alt={product.title}
               loading="lazy"
               referrerPolicy="no-referrer"
-              className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] opacity-0 group-hover:opacity-100 group-hover:scale-[1.06] ${isOutOfStock ? 'grayscale opacity-60' : ''}`}
+              className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-[1.06] ${product.images?.length > 1 ? 'group-hover:opacity-0' : ''} ${isOutOfStock ? 'grayscale opacity-60' : ''}`}
             />
-          )}
-          
-          {/* Hover overlay with subtle gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-center pb-8 pointer-events-none">
-            <motion.span 
-              initial={{ y: 10, opacity: 0 }}
-              whileHover={{ y: 0, opacity: 1 }}
-              className="bg-white/90 text-black px-6 py-2.5 text-[10px] uppercase tracking-[0.25em] font-bold pointer-events-auto backdrop-blur-sm rounded-sm"
-            >
-              <Eye className="w-3 h-3 inline mr-2 -mt-0.5" />
-              Quick View
-            </motion.span>
+            {product.images && product.images.length > 1 && (
+              <img 
+                src={getOptimizedImage(product.images[1])} 
+                alt={`${product.title} alternate`}
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] opacity-0 group-hover:opacity-100 group-hover:scale-[1.06] ${isOutOfStock ? 'grayscale opacity-60' : ''}`}
+              />
+            )}
+            
+            {/* Hover overlay with subtle gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-center pb-8 pointer-events-none">
+              <motion.span 
+                initial={{ y: 10, opacity: 0 }}
+                whileHover={{ y: 0, opacity: 1 }}
+                className="bg-white/90 text-black px-6 py-2.5 text-[10px] uppercase tracking-[0.25em] font-bold pointer-events-auto backdrop-blur-sm rounded-sm"
+              >
+                <Eye className="w-3 h-3 inline mr-2 -mt-0.5" />
+                Quick View
+              </motion.span>
+            </div>
           </div>
+        </PerspectiveContainer>
 
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-2">
