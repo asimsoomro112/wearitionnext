@@ -1,12 +1,13 @@
+"use client";
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, X, Send, ShoppingBag } from 'lucide-react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { db } from '../../firebase';
+import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import { Link } from 'react-router-dom';
-import { formatCurrency } from '../../utils/currency';
-import { triggerHaptic } from '../../utils/haptics';
+import Link from 'next/link';
+import { formatCurrency } from '@/lib/currency';
+import { triggerHaptic } from '@/lib/haptics';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -14,7 +15,7 @@ interface Message {
   products?: any[];
 }
 
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || '');
+const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || '');
 
 const SYSTEM_PROMPT = `You are a luxury personal stylist for WEARITION, a high-end Pakistani fashion brand. You help customers find perfect outfits.
 Your personality: elegant, knowledgeable, warm but sophisticated — like a Harrods personal shopper.
@@ -72,7 +73,7 @@ export function AIStyleAssistant() {
       }));
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.NEXT_PUBLIC_GEMINI_API_KEY}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -97,7 +98,7 @@ export function AIStyleAssistant() {
       
       let foundProducts: any[] = [];
       if (searchMatch) {
-        const keywords = searchMatch[1].split(',').map(k => k.trim().toLowerCase());
+        const keywords = searchMatch[1].split(',').map((k: string) => k.trim().toLowerCase());
         foundProducts = await searchProducts(keywords);
       }
 
@@ -173,7 +174,7 @@ export function AIStyleAssistant() {
                         {msg.products.map(p => (
                           <Link
                             key={p.id}
-                            to={`/product/${p.id}`}
+                            href={`/product/${p.id}`}
                             onClick={() => setIsOpen(false)}
                             className="flex items-center gap-3 bg-white/5 rounded-lg p-2 hover:bg-white/10 transition-colors"
                           >

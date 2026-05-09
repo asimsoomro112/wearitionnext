@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { db } from '../firebase';
+import { db } from '@/lib/firebase';
 import { collection, addDoc, updateDoc, doc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
 
 export interface Order {
@@ -20,7 +20,7 @@ interface OrderTrackingState {
   orders: Order[];
   addOrder: (order: Order) => Promise<string>;
   updateOrderStatus: (id: string, status: Order['status']) => Promise<void>;
-  getOrder: (orderId: string, email: string) => Promise<Order | undefined>;
+  getOrder: (orderId: string) => Promise<Order | undefined>;
   fetchAllOrders: () => Promise<void>;
 }
 

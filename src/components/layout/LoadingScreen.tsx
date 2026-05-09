@@ -24,7 +24,7 @@ export function LoadingScreen() {
           className="w-64 md:w-[500px] mb-12"
         >
           <img 
-            src={logo} 
+            src={typeof logo === 'string' ? logo : logo.src} 
             alt="Wearition Logo" 
             className="w-full h-auto object-contain brightness-125" 
           />

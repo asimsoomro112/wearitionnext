@@ -1,6 +1,7 @@
+"use client";
 import { MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { triggerHaptic } from '../../utils/haptics';
+import { triggerHaptic } from '@/lib/haptics';
 
 interface WhatsAppButtonProps {
   phoneNumber?: string;

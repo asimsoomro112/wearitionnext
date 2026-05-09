@@ -11,7 +11,7 @@ export function WearitionSpinner() {
           transition={{ duration: 1.5, ease: "easeOut", repeat: Infinity, repeatType: "reverse" }}
           className="w-32 md:w-[200px] mb-8"
         >
-          <img src={logo} alt="Wearition Logo" className="w-full h-auto object-contain" />
+          <img src={typeof logo === 'string' ? logo : logo.src} alt="Wearition Logo" className="w-full h-auto object-contain" />
         </motion.div>
         <div className="w-24 h-[1px] bg-white/10 relative overflow-hidden">
           <motion.div 

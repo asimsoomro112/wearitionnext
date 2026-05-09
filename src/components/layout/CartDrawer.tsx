@@ -1,14 +1,17 @@
+"use client";
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Minus, Plus, ShoppingBag } from 'lucide-react';
 import { useCartStore } from '../../store/cartStore';
 import { useUIStore } from '../../store/uiStore';
-import { Link, useNavigate } from 'react-router-dom';
-import { formatCurrency } from '../../utils/currency';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { formatCurrency } from '@/lib/currency';
+import { getOptimizedImage } from '../../lib/images';
 
 export function CartDrawer() {
   const { isCartOpen, closeCart } = useUIStore();
   const { items, removeItem, updateQuantity, subtotal } = useCartStore();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
     <AnimatePresence>
@@ -47,7 +50,7 @@ export function CartDrawer() {
                 <div className="flex flex-col items-center justify-center h-full text-foreground/50 space-y-4">
                   <ShoppingBag className="w-12 h-12 mb-4" strokeWidth={1} />
                   <p className="uppercase text-xs tracking-[0.2em]">Your bag is empty</p>
-                  <button onClick={closeCart} className="mt-8 px-10 py-4 border border-foreground/30 hover:border-foreground transition-colors uppercase text-xs tracking-[0.2em] text-foreground">
+                  <button onClick={closeCart} className="mt-8 px-10 py-4 border border-foreground/30 hover:border-foreground transition-colors uppercase text-xs tracking-[0.2em] text-foreground rounded-full">
                     Continue Shopping
                   </button>
                 </div>
@@ -55,11 +58,11 @@ export function CartDrawer() {
                 items.map((item) => (
                   <div key={`${item.id}-${item.size}-${item.color}`} className="flex gap-6 border-b border-white/5 pb-8 mb-4">
                     <div className="w-28 h-36 bg-background-secondary overflow-hidden">
-                      <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                      <img src={getOptimizedImage(item.image)} alt={item.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                     </div>
                     <div className="flex flex-col flex-grow">
                       <div className="flex justify-between items-start mb-2">
-                        <Link to={`/product/${item.id}`} onClick={closeCart} className="font-sans font-medium uppercase tracking-wide text-sm hover:text-accent transition-colors pr-4">
+                        <Link href={`/product/${item.id}`} onClick={closeCart} className="font-sans font-medium uppercase tracking-wide text-sm hover:text-accent transition-colors pr-4">
                           {item.title}
                         </Link>
                         <button 
@@ -108,8 +111,8 @@ export function CartDrawer() {
                 <p className="text-xs text-foreground/40 mb-8 text-center font-sans tracking-wide">Shipping, taxes, and discounts calculated at checkout.</p>
                 <button onClick={() => {
                   closeCart();
-                  navigate('/checkout');
-                }} className="w-full bg-foreground text-background py-5 uppercase text-xs tracking-[0.2em] font-medium hover:bg-accent transition-colors shadow-xl">
+                  router.push('/checkout');
+                }} className="w-full bg-foreground text-background py-5 uppercase text-xs tracking-[0.2em] font-medium hover:bg-accent transition-colors shadow-xl rounded-full">
                   Checkout Securely
                 </button>
               </div>

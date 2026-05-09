@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import logo from '../../assets/logo.png';
 import { MagneticButton } from './MagneticButton';
 
@@ -8,7 +8,7 @@ export function Footer() {
       <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 md:gap-8">
         <div className="col-span-1 md:col-span-2">
           <div className="mb-8 opacity-90 transition-all inline-block">
-            <img src={logo} alt="Wearition" className="h-32 md:h-48 w-auto object-contain brightness-110" />
+            <img src={typeof logo === 'string' ? logo : logo.src} alt="Wearition" className="h-32 md:h-48 w-auto object-contain brightness-110" />
           </div>
           <p className="text-sm text-foreground/50 max-w-sm font-sans leading-relaxed">
             Elegance redefined. Discover the latest in luxury fashion, crafted for the modern visionary.
@@ -17,19 +17,19 @@ export function Footer() {
         <div>
           <h3 className="uppercase text-[10px] tracking-[0.2em] font-medium mb-8 text-accent">Client Services</h3>
           <ul className="space-y-4 text-xs font-sans text-foreground/60">
-            <li><Link to="/contact" className="hover:text-foreground transition-colors">Contact Us</Link></li>
-            <li><Link to="/track-order" className="hover:text-foreground transition-colors">Track Order</Link></li>
-            <li><Link to="/contact" className="hover:text-foreground transition-colors">Returns & Exchanges</Link></li>
-            <li><Link to="/contact" className="hover:text-foreground transition-colors">Shipping</Link></li>
+            <li><Link href="/contact" className="hover:text-foreground transition-colors">Contact Us</Link></li>
+            <li><Link href="/track-order" className="hover:text-foreground transition-colors">Track Order</Link></li>
+            <li><Link href="/contact" className="hover:text-foreground transition-colors">Returns & Exchanges</Link></li>
+            <li><Link href="/contact" className="hover:text-foreground transition-colors">Shipping</Link></li>
           </ul>
         </div>
         <div>
           <h3 className="uppercase text-[10px] tracking-[0.2em] font-medium mb-8 text-accent">The House</h3>
           <ul className="space-y-4 text-xs font-sans text-foreground/60">
-            <li><Link to="/about" className="hover:text-foreground transition-colors">About Us</Link></li>
-            <li><Link to="/about" className="hover:text-foreground transition-colors">Sustainability</Link></li>
-            <li><Link to="/contact" className="hover:text-foreground transition-colors">Careers</Link></li>
-            <li><Link to="/about" className="hover:text-foreground transition-colors">Privacy</Link></li>
+            <li><Link href="/about" className="hover:text-foreground transition-colors">About Us</Link></li>
+            <li><Link href="/about" className="hover:text-foreground transition-colors">Sustainability</Link></li>
+            <li><Link href="/contact" className="hover:text-foreground transition-colors">Careers</Link></li>
+            <li><Link href="/about" className="hover:text-foreground transition-colors">Privacy</Link></li>
           </ul>
         </div>
       </div>

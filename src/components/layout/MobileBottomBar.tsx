@@ -1,17 +1,19 @@
-import { Link, useLocation } from 'react-router-dom';
+"use client";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Home, Search, ShoppingBag, Heart, User } from 'lucide-react';
 import { useUIStore } from '../../store/uiStore';
 import { useCartStore } from '../../store/cartStore';
-import { triggerHaptic } from '../../utils/haptics';
+import { triggerHaptic } from '@/lib/haptics';
 import { motion } from 'framer-motion';
 
 export function MobileBottomBar() {
-  const location = useLocation();
+  const pathname = usePathname();
   const { openCart, closeCart, closeSearch, toggleSearch } = useUIStore();
   const { items } = useCartStore();
   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => pathname === path;
 
   const handleAction = (callback?: () => void, isSearchToggle = false) => {
     triggerHaptic('light');
@@ -29,7 +31,7 @@ export function MobileBottomBar() {
         className="liquid-glass rounded-[2rem] px-4 py-2 flex justify-around items-center shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-white/10"
       >
         <Link 
-          to="/" 
+          href="/" 
           onClick={() => handleAction()}
           className={`flex flex-col items-center justify-center py-2 px-3 rounded-2xl transition-all ${isActive('/') ? 'text-accent bg-white/5' : 'text-foreground/40'}`}
         >
@@ -46,7 +48,7 @@ export function MobileBottomBar() {
         </button>
 
         <Link 
-          to="/wishlist" 
+          href="/wishlist" 
           onClick={() => handleAction()}
           className={`flex flex-col items-center justify-center py-2 px-3 rounded-2xl transition-all ${isActive('/wishlist') ? 'text-accent bg-white/5' : 'text-foreground/40'}`}
         >
@@ -72,7 +74,7 @@ export function MobileBottomBar() {
         </button>
 
         <Link 
-          to="/account" 
+          href="/account" 
           onClick={() => handleAction()}
           className={`flex flex-col items-center justify-center py-2 px-3 rounded-2xl transition-all ${isActive('/account') ? 'text-accent bg-white/5' : 'text-foreground/40'}`}
         >

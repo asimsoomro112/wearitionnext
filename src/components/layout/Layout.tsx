@@ -1,4 +1,5 @@
-import { Outlet } from 'react-router-dom';
+"use client";
+
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 import { CartDrawer } from './CartDrawer';
@@ -7,14 +8,20 @@ import { SearchOverlay } from './SearchOverlay';
 import { AIStyleAssistant } from './AIStyleAssistant';
 import { CustomCursor } from './CustomCursor';
 import { PageTransition } from './PageTransition';
-import { useEffect } from 'react';
+import { MobileMenu } from './MobileMenu';
+import { WhatsAppButton } from './WhatsAppButton';
+import { useEffect, useState } from 'react';
 import Lenis from 'lenis';
 
-export function Layout() {
-  const isMobile = typeof window !== 'undefined' && (window.innerWidth < 1024 || 'ontouchstart' in window);
+export function Layout({ children }: { children: React.ReactNode }) {
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (isMobile) return; // Disable Lenis on mobile for better performance
+    setIsMobile(window.innerWidth < 1024 || 'ontouchstart' in window);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return;
 
     const lenis = new Lenis({
       duration: 1.2,
@@ -35,11 +42,13 @@ export function Layout() {
       <CustomCursor />
       <Navbar />
       <CartDrawer />
+      <MobileMenu />
       <SearchOverlay />
       <AIStyleAssistant />
+      <WhatsAppButton />
       <main className="flex-grow min-h-screen">
         <PageTransition>
-          <Outlet />
+          {children}
         </PageTransition>
       </main>
       <Footer />

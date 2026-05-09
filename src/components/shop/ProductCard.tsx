@@ -1,10 +1,12 @@
+"use client";
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Eye } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { useWishlistStore } from '../../store/wishlistStore';
 import { toast } from 'sonner';
-import { formatCurrency } from '../../utils/currency';
+import { formatCurrency } from '@/lib/currency';
+import { getOptimizedImage } from '../../lib/images';
 
 interface ProductCardProps {
   product: any;
@@ -36,19 +38,21 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       transition={{ duration: 0.6, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
       className="group"
     >
-      <Link to={`/product/${product.id}`} className="block relative" data-cursor="VIEW">
+      <Link href={`/product/${product.id}`} className="block relative" data-cursor="VIEW">
         <div className="relative aspect-[3/4] overflow-hidden mb-4 bg-foreground/5 cursor-pointer rounded-sm">
           <img 
-            src={product.images?.[0] || ''} 
+            src={getOptimizedImage(product.images?.[0])} 
             alt={product.title}
             loading="lazy"
+            referrerPolicy="no-referrer"
             className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-[1.06] ${product.images?.length > 1 ? 'group-hover:opacity-0' : ''} ${isOutOfStock ? 'grayscale opacity-60' : ''}`}
           />
           {product.images && product.images.length > 1 && (
             <img 
-              src={product.images[1]} 
+              src={getOptimizedImage(product.images[1])} 
               alt={`${product.title} alternate`}
               loading="lazy"
+              referrerPolicy="no-referrer"
               className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] opacity-0 group-hover:opacity-100 group-hover:scale-[1.06] ${isOutOfStock ? 'grayscale opacity-60' : ''}`}
             />
           )}

@@ -1,10 +1,11 @@
-import { Link } from 'react-router-dom';
+"use client";
+import Link from 'next/link';
 import { ShoppingBag, Search, Menu, User, Heart, Sun, Moon } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useUIStore } from '../../store/uiStore';
 import { useCartStore } from '../../store/cartStore';
 import { MobileMenu } from './MobileMenu';
-import { triggerHaptic } from '../../utils/haptics';
+import { triggerHaptic } from '@/lib/haptics';
 import logo from '../../assets/navbar_logo.png';
 
 export function Navbar() {
@@ -31,8 +32,8 @@ export function Navbar() {
         className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 md:px-12 liquid-glass text-foreground border-none m-4 rounded-2xl shadow-2xl"
       >
         <div className="flex items-center gap-6">
-          <Link to="/shop" className="hidden md:block uppercase text-xs tracking-widest md:hover:opacity-70 transition-opacity">Shop</Link>
-          <Link to="/shop" className="hidden md:block uppercase text-xs tracking-widest md:hover:opacity-70 transition-opacity">Collections</Link>
+          <Link href="/shop" className="hidden md:block uppercase text-xs tracking-widest md:hover:opacity-70 transition-opacity">Shop</Link>
+          <Link href="/shop" className="hidden md:block uppercase text-xs tracking-widest md:hover:opacity-70 transition-opacity">Collections</Link>
           
           <button className="md:hidden active:opacity-70" onClick={handleToggleMenu}>
             <Menu className="w-6 h-6" />
@@ -43,14 +44,14 @@ export function Navbar() {
           </button>
         </div>
 
-        <Link to="/" className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center">
-          <img src={logo} alt="Wearition" className="h-16 md:h-24 w-auto object-contain brightness-110" />
+        <Link href="/" className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center">
+          <img src={typeof logo === 'string' ? logo : logo.src} alt="Wearition" className="h-16 md:h-24 w-auto object-contain brightness-110" />
         </Link>
 
         <div className="flex items-center gap-4 md:gap-6">
           <button className="md:hover:text-accent active:text-accent" onClick={toggleSearch}><Search className="w-5 h-5" /></button>
-          <Link to="/account" className="hidden md:block md:hover:text-accent"><User className="w-5 h-5" /></Link>
-          <Link to="/wishlist" className="md:hover:text-accent active:text-accent"><Heart className="w-5 h-5" /></Link>
+          <Link href="/account" className="hidden md:block md:hover:text-accent"><User className="w-5 h-5" /></Link>
+          <Link href="/wishlist" className="md:hover:text-accent active:text-accent"><Heart className="w-5 h-5" /></Link>
           <button className="relative md:hover:text-accent active:text-accent" onClick={openCart}>
             <ShoppingBag className="w-5 h-5" />
             {cartCount > 0 && (

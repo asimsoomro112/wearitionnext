@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { db, auth, handleFirestoreError, OperationType } from '../firebase';
+import { db, auth, handleFirestoreError, OperationType } from '@/lib/firebase';
 import { doc, getDoc, setDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 
 interface WishlistState {

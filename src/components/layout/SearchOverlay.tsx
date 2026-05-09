@@ -1,13 +1,14 @@
+"use client";
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X } from 'lucide-react';
 import { useUIStore } from '../../store/uiStore';
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 
 export function SearchOverlay() {
   const { isSearchOpen, closeSearch } = useUIStore();
   const [searchQuery, setSearchQuery] = useState('');
-  const navigate = useNavigate();
+  const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -20,7 +21,7 @@ export function SearchOverlay() {
     e.preventDefault();
     if (searchQuery.trim()) {
       closeSearch();
-      navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+      router.push(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery('');
     }
   };
@@ -75,7 +76,7 @@ export function SearchOverlay() {
                         setSearchQuery(term);
                         setTimeout(() => {
                           closeSearch();
-                          navigate(`/shop?search=${encodeURIComponent(term)}`);
+                          router.push(`/shop?search=${encodeURIComponent(term)}`);
                           setSearchQuery('');
                         }, 100);
                       }}
