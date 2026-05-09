@@ -2,7 +2,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { db } from '@/lib/firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { ProductCard } from '../components/shop/ProductCard';
