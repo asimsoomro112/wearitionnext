@@ -15,6 +15,7 @@
   font-family: 'Jost', sans-serif;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
+  background-color: var(--background);
 }
 
 /* ─── Morphing Background ─── */
@@ -23,6 +24,11 @@
   inset: 0;
   transition: background 0.9s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 0;
+  opacity: 0.8;
+}
+
+:global(.dark) .bg {
+  opacity: 0.2;
 }
 
 /* ─── Noise Texture Overlay ─── */
@@ -49,12 +55,20 @@
   animation: ringFloat 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
+:global(.dark) .ring {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
 .ring::after {
   content: '';
   position: absolute;
   inset: 30px;
   border-radius: 50%;
   border: 0.5px solid rgba(0, 0, 0, 0.05);
+}
+
+:global(.dark) .ring::after {
+  border-color: rgba(255, 255, 255, 0.05);
 }
 
 @keyframes ringFloat {
@@ -90,26 +104,21 @@
     box-shadow 0.6s ease;
   cursor: pointer;
   will-change: transform;
-  box-shadow:
-    0 0px 0px rgba(0,0,0,0),
-    0 20px 60px rgba(0,0,0,0.08),
-    0 8px 20px rgba(0,0,0,0.06);
+  box-shadow: 0 0px 0px rgba(0,0,0,0);
   filter: brightness(0.7) scale(0.88);
   opacity: 0;
   transform: translateX(0) translateZ(-120px) rotateY(0deg);
   pointer-events: none;
+  background: var(--background-secondary);
 }
 
 .cardActive {
   transform: translateX(0) translateZ(0) rotateY(0deg) scale(1) !important;
   filter: brightness(1) !important;
   opacity: 1 !important;
-  box-shadow:
-    0 30px 80px rgba(0,0,0,0.18),
-    0 10px 30px rgba(0,0,0,0.12);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.18);
   pointer-events: auto;
   z-index: 20;
-  animation: cardReveal 0.75s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
 }
 
 .cardPrev {
@@ -128,11 +137,6 @@
   pointer-events: auto;
 }
 
-@keyframes cardReveal {
-  0%   { transform: translateX(50px) translateZ(-60px) scale(0.9) rotateY(-8deg); opacity: 0.5; }
-  100% { transform: translateX(0) translateZ(0) scale(1) rotateY(0deg); opacity: 1; }
-}
-
 .cardImg {
   width: 100%;
   height: 100%;
@@ -148,19 +152,25 @@
   object-fit: cover;
   object-position: top center;
   z-index: 2;
+  transition: transform 0.5s ease;
 }
 
-/* Gradient silhouette placeholder (shows when no image) */
+/* Zoom on Desktop */
+@media (min-width: 1024px) {
+  .productImg {
+    transform: scale(1.15);
+  }
+}
+
 .silhouette {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background:
-    linear-gradient(
-      180deg,
-      transparent 30%,
-      rgba(0,0,0,0.04) 100%
-    );
+  background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.04) 100%);
+}
+
+:global(.dark) .silhouette {
+  background: linear-gradient(180deg, transparent 30%, rgba(255,255,255,0.04) 100%);
 }
 
 /* ─── Price Tag ─── */
@@ -185,9 +195,10 @@
   animation: priceSlide 0.6s 0.4s cubic-bezier(0.34, 1.4, 0.64, 1) both;
 }
 
-@keyframes priceSlide {
-  from { transform: translateX(-50%) translateY(12px); opacity: 0; }
-  to   { transform: translateX(-50%) translateY(0); opacity: 1; }
+:global(.dark) .priceTag {
+  background: rgba(20, 20, 20, 0.8);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
 }
 
 .priceLabel {
@@ -197,7 +208,6 @@
   letter-spacing: 0.18em;
   color: #999;
   text-transform: uppercase;
-  line-height: 1;
 }
 
 .priceValue {
@@ -206,7 +216,10 @@
   font-weight: 600;
   color: var(--text-accent, #3a2a08);
   line-height: 1.1;
-  letter-spacing: -0.01em;
+}
+
+:global(.dark) .priceValue {
+  color: #fff;
 }
 
 /* ─── Text Content Area ─── */
@@ -221,14 +234,6 @@
   align-items: center;
   gap: 10px;
   text-align: center;
-}
-
-/* Label Row */
-.labelRow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  animation: fadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 .labelLine {
@@ -248,64 +253,56 @@
   text-transform: uppercase;
 }
 
-/* Brand + Collection */
-.titleBlock {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-  overflow: hidden;
-}
-
 .brand {
   font-family: 'Jost', sans-serif;
   font-size: 11px;
   font-weight: 300;
   letter-spacing: 0.38em;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--foreground);
+  opacity: 0.45;
   text-transform: uppercase;
   margin: 0 0 4px;
-  animation: fadeUp 0.5s 0.08s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 .collection {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 600;
   line-height: 1.0;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--foreground);
   margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: hidden;
 }
 
-.line1 {
+.line1, .line2 {
   display: block;
   font-size: clamp(36px, 10vw, 46px);
-  animation: slideUp 0.65s 0.15s cubic-bezier(0.34, 1.2, 0.64, 1) both;
   letter-spacing: 0.06em;
+  animation: slideUp 0.65s both;
 }
 
-.line2 {
-  display: block;
-  font-size: clamp(36px, 10vw, 46px);
-  animation: slideUp 0.65s 0.24s cubic-bezier(0.34, 1.2, 0.64, 1) both;
-  letter-spacing: 0.06em;
-}
+.line1 { animation-delay: 0.15s; }
+.line2 { animation-delay: 0.24s; }
 
-/* Tag Pill */
 .tagPill {
   font-family: 'Jost', sans-serif;
   font-size: 10px;
   font-weight: 400;
   letter-spacing: 0.16em;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--foreground);
+  opacity: 0.45;
   text-transform: uppercase;
   padding: 5px 14px;
-  border: 0.5px solid rgba(0, 0, 0, 0.15);
+  border: 0.5px solid var(--foreground);
   border-radius: 100px;
-  animation: fadeUp 0.5s 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+  opacity: 0.2;
+}
+
+:global(.dark) .tagPill {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.6);
+  opacity: 1;
 }
 
 /* CTA Button */
@@ -313,8 +310,8 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: rgba(0, 0, 0, 0.86);
-  color: #fff;
+  background: var(--foreground);
+  color: var(--background);
   text-decoration: none;
   font-family: 'Jost', sans-serif;
   font-size: 11px;
@@ -324,42 +321,10 @@
   padding: 14px 28px;
   border-radius: 100px;
   margin-top: 4px;
-  position: relative;
-  overflow: hidden;
-  animation: fadeUp 0.5s 0.38s cubic-bezier(0.4, 0, 0.2, 1) both;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s ease;
 }
 
-.cta::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%);
-  transform: translateX(-100%);
-  transition: transform 0.5s ease;
-}
-
-.cta:active {
-  transform: scale(0.97);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-}
-
-.cta:active::before {
-  transform: translateX(100%);
-}
-
-.ctaArrow {
-  display: flex;
-  align-items: center;
-  transition: transform 0.3s ease;
-}
-
-.cta:active .ctaArrow {
-  transform: translateX(4px);
-}
-
-/* ─── Progress Dots ─── */
+/* Progress Dots */
 .dots {
   position: relative;
   z-index: 10;
@@ -368,35 +333,62 @@
   gap: 8px;
   margin-top: auto;
   margin-bottom: max(24px, env(safe-area-inset-bottom, 24px));
-  padding-top: 16px;
 }
 
 .dot {
-  position: relative;
   width: 28px;
   height: 2px;
-  background: rgba(0, 0, 0, 0.15);
+  background: var(--foreground);
+  opacity: 0.15;
   border-radius: 2px;
   border: none;
-  padding: 0;
-  cursor: pointer;
-  overflow: hidden;
-  transition: width 0.3s ease, background 0.3s ease;
-  -webkit-tap-highlight-color: transparent;
 }
 
 .dotActive {
   width: 44px;
-  background: rgba(0, 0, 0, 0.12);
 }
 
 .dotProgress {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: var(--foreground);
+  opacity: 0.75;
   border-radius: 2px;
   transform-origin: left;
   animation: progressFill linear forwards;
+}
+
+/* Navigation Arrows */
+.navBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  background: var(--background-secondary);
+  border: 0.5px solid var(--border-color);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--foreground);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+@media (min-width: 480px) {
+  .navBtn { opacity: 0.6; pointer-events: auto; }
+  .navBtn:hover { opacity: 1; }
+}
+
+.navPrev { left: 16px; }
+.navNext { right: 16px; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes progressFill {
@@ -404,73 +396,7 @@
   to   { transform: scaleX(1); }
 }
 
-/* ─── Navigation Arrows ─── */
-.navBtn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 30;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 0.5px solid rgba(0, 0, 0, 0.08);
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(0, 0, 0, 0.6);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
-  /* Only visible on wider screens or hover */
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Show on tablet+ */
-@media (min-width: 480px) {
-  .navBtn {
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-
-.navPrev { left: 16px; }
-.navNext { right: 16px; }
-
-.navBtn:active {
-  background: rgba(255, 255, 255, 0.95);
-  transform: translateY(-50%) scale(0.95);
-}
-
-/* ─── Shared Keyframes ─── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(32px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ─── Reduced Motion ─── */
-@media (prefers-reduced-motion: reduce) {
-  .card,
-  .cardActive,
-  .bg,
-  .ring,
-  .priceTag,
-  .labelRow,
-  .brand,
-  .line1,
-  .line2,
-  .tagPill,
-  .cta {
-    animation: none !important;
-    transition: none !important;
-    opacity: 1 !important;
-  }
+@keyframes priceSlide {
+  from { transform: translateX(-50%) translateY(12px); opacity: 0; }
+  to   { transform: translateX(-50%) translateY(0); opacity: 1; }
 }
