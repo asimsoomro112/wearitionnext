@@ -495,10 +495,9 @@ export function AdminProducts() {
                   ))}
                 </div>
 
-                <label className="text-xs uppercase tracking-widest text-[#0a0a0a]/60 font-medium">Image URLs (comma separated) *</label>
+                <label className="text-xs uppercase tracking-widest text-[#0a0a0a]/60 font-medium">Image URLs (comma separated)</label>
                 <textarea 
                   rows={3} 
-                  required 
                   value={images} 
                   onChange={e => setImages(e.target.value)} 
                   placeholder="https://..., https://..." 
