@@ -13,70 +13,39 @@
   flex-direction: column;
   align-items: center;
   font-family: 'Jost', sans-serif;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
   background-color: var(--background);
 }
 
-/* ─── Morphing Background ─── */
+@media (min-width: 1024px) {
+  .hero {
+    flex-direction: row;
+    justify-content: center;
+    padding: 0 5vw;
+  }
+}
+
+/* ─── Background & Effects ─── */
 .bg {
   position: absolute;
   inset: 0;
-  transition: background 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background 1.2s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 0;
   opacity: 0.8;
 }
 
-:global(.dark) .bg {
-  opacity: 0.2;
-}
+:global(.dark) .bg { opacity: 0.2; }
 
-/* ─── Noise Texture Overlay ─── */
 .noise {
   position: absolute;
   inset: 0;
   z-index: 1;
-  opacity: 0.035;
+  opacity: 0.05;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 200px 200px;
   pointer-events: none;
 }
 
-/* ─── Decorative Floating Ring ─── */
-.ring {
-  position: absolute;
-  top: -20%;
-  right: -25%;
-  width: 380px;
-  height: 380px;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  z-index: 1;
-  animation: ringFloat 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-:global(.dark) .ring {
-  border-color: rgba(255, 255, 255, 0.08);
-}
-
-.ring::after {
-  content: '';
-  position: absolute;
-  inset: 30px;
-  border-radius: 50%;
-  border: 0.5px solid rgba(0, 0, 0, 0.05);
-}
-
-:global(.dark) .ring::after {
-  border-color: rgba(255, 255, 255, 0.05);
-}
-
-@keyframes ringFloat {
-  from { transform: scale(0.7) translate(60px, -60px); opacity: 0; }
-  to   { transform: scale(1) translate(0, 0); opacity: 1; }
-}
-
-/* ─── Card Stack / 3D Carousel ─── */
+/* ─── Card Stack / 8-Card Loop ─── */
 .cardWrapper {
   position: relative;
   width: 100%;
@@ -85,65 +54,99 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  perspective: 1000px;
+  perspective: 2500px;
   z-index: 10;
+}
+
+@media (min-width: 1024px) {
+  .cardWrapper {
+    width: 60%;
+    height: 80svh;
+    margin-top: 0;
+  }
 }
 
 .card {
   position: absolute;
-  width: 58%;
-  max-width: 240px;
+  width: 65%;
+  max-width: 260px;
   aspect-ratio: 3 / 4;
-  border-radius: 20px;
+  border-radius: 24px;
   overflow: hidden;
-  transform-origin: center center;
-  transition:
-    transform 0.75s cubic-bezier(0.34, 1.2, 0.64, 1),
-    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-    filter 0.6s ease,
-    box-shadow 0.6s ease;
+  transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
   cursor: pointer;
-  will-change: transform;
-  box-shadow: 0 0px 0px rgba(0,0,0,0);
-  filter: brightness(0.7) scale(0.88);
+  will-change: transform, opacity;
   opacity: 0;
-  transform: translateX(0) translateZ(-120px) rotateY(0deg);
+  transform: translateX(180%) translateZ(-1200px) rotateY(-80deg);
   pointer-events: none;
   background: var(--background-secondary);
 }
 
+@media (min-width: 1024px) {
+  .card { max-width: 440px; width: 75%; }
+}
+
+/* ─── The 8-Card Stack Logic ─── */
+
 .cardActive {
-  transform: translateX(0) translateZ(0) rotateY(0deg) scale(1) !important;
-  filter: brightness(1) !important;
+  transform: translateX(-15%) translateZ(0) rotateY(0deg) scale(1) !important;
   opacity: 1 !important;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.18);
+  z-index: 80;
   pointer-events: auto;
-  z-index: 20;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.3);
 }
 
-.cardPrev {
-  transform: translateX(-62%) translateZ(-80px) rotateY(12deg) scale(0.88) !important;
-  filter: brightness(0.65) !important;
+@media (min-width: 1024px) {
+  .cardActive { transform: translateX(-25%) translateZ(0) rotateY(0deg) scale(1) !important; }
+}
+
+/* Entry Queue (Right Side) */
+.cardNext1 {
+  transform: translateX(45%) translateZ(-150px) rotateY(-15deg) scale(0.9) !important;
   opacity: 0.85 !important;
-  z-index: 10;
+  z-index: 70;
   pointer-events: auto;
 }
 
-.cardNext {
-  transform: translateX(62%) translateZ(-80px) rotateY(-12deg) scale(0.88) !important;
-  filter: brightness(0.65) !important;
-  opacity: 0.85 !important;
+.cardNext2 {
+  transform: translateX(75%) translateZ(-300px) rotateY(-30deg) scale(0.8) !important;
+  opacity: 0.6 !important;
+  z-index: 60;
+}
+
+.cardNext3 {
+  transform: translateX(95%) translateZ(-450px) rotateY(-45deg) scale(0.7) !important;
+  opacity: 0.3 !important;
+  z-index: 50;
+}
+
+.cardNext4 {
+  transform: translateX(115%) translateZ(-600px) rotateY(-60deg) scale(0.6) !important;
+  opacity: 0.1 !important;
+  z-index: 40;
+}
+
+/* Exit Queue (Looping back to right behind the scene) */
+.cardPrev1 {
+  transform: translateX(120%) translateZ(-600px) rotateY(-45deg) scale(0.7) !important;
+  opacity: 0.3 !important;
   z-index: 10;
-  pointer-events: auto;
 }
 
-.cardImg {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
+.cardPrev2 {
+  transform: translateX(150%) translateZ(-800px) rotateY(-60deg) scale(0.6) !important;
+  opacity: 0.1 !important;
+  z-index: 5;
 }
 
+.cardPrev3 {
+  transform: translateX(180%) translateZ(-1000px) rotateY(-75deg) scale(0.5) !important;
+  opacity: 0 !important;
+  z-index: 1;
+}
+
+/* ─── Content Styles ─── */
+.cardImg { width: 100%; height: 100%; position: relative; overflow: hidden; }
 .productImg {
   position: absolute;
   inset: 0;
@@ -151,252 +154,157 @@
   height: 100%;
   object-fit: cover;
   object-position: top center;
-  z-index: 2;
-  transition: transform 0.5s ease;
+  transition: transform 0.8s ease;
 }
+@media (min-width: 1024px) { .productImg { transform: scale(1.2); } }
 
-/* Zoom on Desktop */
-@media (min-width: 1024px) {
-  .productImg {
-    transform: scale(1.15);
-  }
-}
-
-.silhouette {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.04) 100%);
-}
-
-:global(.dark) .silhouette {
-  background: linear-gradient(180deg, transparent 30%, rgba(255,255,255,0.04) 100%);
-}
-
-/* ─── Price Tag ─── */
 .priceTag {
   position: absolute;
-  bottom: 16px;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-radius: 100px;
-  padding: 6px 16px;
+  padding: 10px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0px;
-  z-index: 30;
-  white-space: nowrap;
-  border: 0.5px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
-  animation: priceSlide 0.6s 0.4s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+  z-index: 100;
+  box-shadow: 0 15px 45px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255, 255, 255, 1);
+  animation: priceFade 0.6s both;
 }
 
-:global(.dark) .priceTag {
-  background: rgba(20, 20, 20, 0.8);
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+:global(.dark) .priceTag { 
+  background: rgba(15, 15, 15, 0.92); 
+  border: 1px solid rgba(255,255,255,0.15); 
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
 }
 
-.priceLabel {
-  font-family: 'Jost', sans-serif;
-  font-size: 8px;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  color: #999;
+.priceLabel { 
+  font-size: 8px; 
+  font-weight: 700; 
+  letter-spacing: 0.25em; 
+  color: #999; 
   text-transform: uppercase;
+  margin-bottom: 2px;
 }
 
-.priceValue {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--text-accent, #3a2a08);
-  line-height: 1.1;
+.priceValue { 
+  font-family: 'Cormorant Garamond', serif; 
+  font-size: 22px; 
+  font-weight: 700; 
+  color: #1a1a1a; 
+  line-height: 1;
 }
 
-:global(.dark) .priceValue {
-  color: #fff;
-}
+:global(.dark) .priceValue { color: #fff; }
 
-/* ─── Text Content Area ─── */
 .content {
   position: relative;
-  z-index: 10;
+  z-index: 20;
   width: 100%;
   padding: 0 24px;
-  margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
   text-align: center;
 }
 
-.labelLine {
-  display: block;
-  width: 28px;
-  height: 1px;
-  background: var(--accent, #8B6914);
-  opacity: 0.6;
+@media (min-width: 1024px) {
+  .content {
+    width: 40%;
+    align-items: flex-start;
+    text-align: left;
+    padding-left: 8vw;
+  }
 }
 
-.label {
-  font-family: 'Jost', sans-serif;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  color: var(--accent, #8B6914);
-  text-transform: uppercase;
-}
-
-.brand {
-  font-family: 'Jost', sans-serif;
-  font-size: 11px;
-  font-weight: 300;
-  letter-spacing: 0.38em;
-  color: var(--foreground);
-  opacity: 0.45;
-  text-transform: uppercase;
-  margin: 0 0 4px;
-}
-
-.collection {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 600;
-  line-height: 1.0;
-  color: var(--foreground);
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
+.label { font-size: 11px; font-weight: 600; letter-spacing: 0.4em; color: var(--accent); text-transform: uppercase; }
+.brand { font-size: 13px; font-weight: 300; letter-spacing: 0.5em; opacity: 0.6; text-transform: uppercase; color: var(--foreground); }
 .line1, .line2 {
   display: block;
-  font-size: clamp(36px, 10vw, 46px);
-  letter-spacing: 0.06em;
-  animation: slideUp 0.65s both;
-}
-
-.line1 { animation-delay: 0.15s; }
-.line2 { animation-delay: 0.24s; }
-
-.tagPill {
-  font-family: 'Jost', sans-serif;
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 0.16em;
+  font-size: clamp(38px, 6vw, 72px);
+  font-family: 'Cormorant Garamond', serif;
+  line-height: 0.9;
   color: var(--foreground);
-  opacity: 0.45;
-  text-transform: uppercase;
-  padding: 5px 14px;
-  border: 0.5px solid var(--foreground);
-  border-radius: 100px;
-  opacity: 0.2;
+  animation: slideUp 0.8s both;
 }
 
-:global(.dark) .tagPill {
-  border-color: rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.6);
-  opacity: 1;
-}
-
-/* CTA Button */
 .cta {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
   background: var(--foreground);
   color: var(--background);
-  text-decoration: none;
-  font-family: 'Jost', sans-serif;
   font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  padding: 14px 28px;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  padding: 20px 48px;
   border-radius: 100px;
-  margin-top: 4px;
-  transition: transform 0.2s ease;
+  text-decoration: none;
+  margin-top: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid transparent;
 }
 
-/* Progress Dots */
-.dots {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: auto;
-  margin-bottom: max(24px, env(safe-area-inset-bottom, 24px));
+.cta:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
 }
 
-.dot {
-  width: 28px;
-  height: 2px;
-  background: var(--foreground);
-  opacity: 0.15;
-  border-radius: 2px;
-  border: none;
-}
-
-.dotActive {
-  width: 44px;
-}
-
-.dotProgress {
-  position: absolute;
-  inset: 0;
-  background: var(--foreground);
-  opacity: 0.75;
-  border-radius: 2px;
-  transform-origin: left;
-  animation: progressFill linear forwards;
-}
-
-/* Navigation Arrows */
+/* ─── Fixed Navigation Buttons ─── */
 .navBtn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 30;
-  background: var(--background-secondary);
-  border: 0.5px solid var(--border-color);
+  z-index: 200; /* Ensure on top */
+  background: var(--foreground);
+  color: var(--background);
+  border: none;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 56px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--foreground);
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.2s ease;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0.9; /* High visibility */
 }
 
-@media (min-width: 480px) {
-  .navBtn { opacity: 0.6; pointer-events: auto; }
-  .navBtn:hover { opacity: 1; }
+@media (max-width: 768px) {
+  .navBtn {
+    width: 44px;
+    height: 44px;
+    opacity: 0.6;
+  }
 }
 
-.navPrev { left: 16px; }
-.navNext { right: 16px; }
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(32px); }
-  to   { opacity: 1; transform: translateY(0); }
+.navBtn:hover {
+  transform: translateY(-50%) scale(1.1);
+  opacity: 1;
 }
 
-@keyframes progressFill {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
+.navPrev { left: 20px; }
+.navNext { right: 20px; }
+
+@media (min-width: 1024px) {
+  .navPrev { left: 40px; }
+  .navNext { right: 40px; }
 }
 
-@keyframes priceSlide {
-  from { transform: translateX(-50%) translateY(12px); opacity: 0; }
-  to   { transform: translateX(-50%) translateY(0); opacity: 1; }
-}
+.dots { position: absolute; bottom: 40px; display: flex; gap: 10px; }
+.dot { width: 30px; height: 2px; background: var(--foreground); opacity: 0.2; border: none; }
+.dotActive { width: 50px; opacity: 0.6; }
+
+@keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes priceFade { from { opacity: 0; transform: translate(-50%, 10px); } to { opacity: 1; transform: translate(-50%, 0); } }

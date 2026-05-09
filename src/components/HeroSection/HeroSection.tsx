@@ -40,10 +40,8 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
   const [progressKey, setProgressKey] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
 
-  // Map products to the collection format
   const collections = products.length > 0 ? products.map((p, i) => {
     const grad = BG_GRADIENTS[i % BG_GRADIENTS.length]
-    // Split title for line1 and line2
     const parts = p.title.split(' ')
     const line1 = parts.slice(0, Math.ceil(parts.length / 2)).join(' ')
     const line2 = parts.slice(Math.ceil(parts.length / 2)).join(' ')
@@ -61,10 +59,7 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
     }
   }) : FALLBACK_COLLECTIONS
 
-  const touchStartX = useRef(0)
-  const touchStartY = useRef(0)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
 
   const goTo = useCallback((index: number) => {
     setActive(index)
@@ -90,21 +85,6 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
     }
   }, [active, isPaused, goNext, collections.length])
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX
-    touchStartY.current = e.touches[0].clientY
-    setIsPaused(true)
-  }
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const dx = e.changedTouches[0].clientX - touchStartX.current
-    const dy = e.changedTouches[0].clientY - touchStartY.current
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
-      dx < 0 ? goNext() : goPrev()
-    }
-    setTimeout(() => setIsPaused(false), 500)
-  }
-
   const col = collections[active] || FALLBACK_COLLECTIONS[0]
 
   return (
@@ -114,38 +94,44 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
       `}</style>
 
       <section
-        ref={containerRef}
         className={styles.hero}
         style={{ '--accent': col.accent, '--text-accent': col.textAccent } as React.CSSProperties}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
       >
-        {/* Morphing Background */}
-        <div
-          className={styles.bg}
-          style={{ background: col.bg }}
-          key={`bg-${active}`}
-        />
-
-        {/* Noise Texture Overlay */}
+        <div className={styles.bg} style={{ background: col.bg }} key={`bg-${active}`} />
         <div className={styles.noise} />
 
-        {/* Floating decorative ring */}
-        <div className={styles.ring} key={`ring-${active}`} />
-
-        {/* Image Card Stack */}
         <div className={styles.cardWrapper}>
           {collections.map((c, i) => {
-            const offset = i - active
+            // Logic for a long 8-card stack
+            // -4, -3, -2, -1, 0, 1, 2, 3
+            const diff = i - active
+            // Handle wrapping
+            let offset = diff
+            if (diff > collections.length / 2) offset -= collections.length
+            if (diff < -collections.length / 2) offset += collections.length
+
             const isActive = offset === 0
-            const isPrev = offset === -1 || (active === 0 && i === collections.length - 1)
-            const isNext = offset === 1 || (active === collections.length - 1 && i === 0)
+            const absOffset = Math.abs(offset)
+            
+            // Only show cards within a certain range
+            if (absOffset > 5) return null
+
+            let classNames = [styles.card]
+            if (isActive) classNames.push(styles.cardActive)
+            else if (offset === 1) classNames.push(styles.cardNext1)
+            else if (offset === 2) classNames.push(styles.cardNext2)
+            else if (offset === 3) classNames.push(styles.cardNext3)
+            else if (offset === 4) classNames.push(styles.cardNext4)
+            else if (offset === -1) classNames.push(styles.cardPrev1)
+            else if (offset === -2) classNames.push(styles.cardPrev2)
+            else if (offset === -3) classNames.push(styles.cardPrev3)
 
             return (
               <div
                 key={c.id}
-                className={`${styles.card} ${isActive ? styles.cardActive : ''} ${isPrev ? styles.cardPrev : ''} ${isNext ? styles.cardNext : ''}`}
+                className={classNames.join(' ')}
                 onClick={() => !isActive && goTo(i)}
+                style={{ '--depth': absOffset } as React.CSSProperties}
               >
                 <div className={styles.cardImg} style={{ background: c.bg }}>
                   {c.img && (
@@ -153,9 +139,7 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                       src={c.img}
                       alt={c.brand}
                       className={styles.productImg}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none'
-                      }}
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                     />
                   )}
                   <div className={styles.silhouette} />
@@ -172,13 +156,8 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
           })}
         </div>
 
-        {/* Text Content */}
         <div className={styles.content}>
-          <div className={styles.labelRow} key={`label-${animKey}`}>
-            <span className={styles.labelLine} />
-            <span className={styles.label}>{col.label}</span>
-          </div>
-
+          <div className={styles.label} key={`label-${animKey}`}>{col.label}</div>
           <div className={styles.titleBlock} key={`title-${animKey}`}>
             <h2 className={styles.brand}>{col.brand}</h2>
             <h1 className={styles.collection}>
@@ -186,58 +165,35 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
               <span className={styles.line2}>{col.line2}</span>
             </h1>
           </div>
+          <div className={styles.tagPill} key={`tag-${animKey}`}>{col.tag}</div>
 
-          <div className={styles.tagPill} key={`tag-${animKey}`}>
-            {col.tag}
-          </div>
-
-          <Link href={collections.length > 0 && collections[active].id.startsWith('f') ? "/shop" : `/product/${collections[active].id}`} className={styles.cta} key={`cta-${animKey}`}>
+          <Link href={col.id.startsWith('f') ? "/shop" : `/product/${col.id}`} className={styles.cta} key={`cta-${animKey}`}>
             <span>SHOP NOW</span>
-            <span className={styles.ctaArrow}>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </span>
           </Link>
         </div>
 
-        {/* Progress Dots */}
-        {collections.length > 1 && (
-          <div className={styles.dots}>
-            {collections.map((c, i) => (
-              <button
-                key={c.id}
-                className={`${styles.dot} ${i === active ? styles.dotActive : ''}`}
-                onClick={() => goTo(i)}
-                aria-label={`Go to collection ${i + 1}`}
-              >
-                {i === active && (
-                  <span
-                    className={styles.dotProgress}
-                    key={progressKey}
-                    style={{ animationDuration: `${AUTO_PLAY_INTERVAL}ms` }}
-                  />
-                )}
-              </button>
-            ))}
-          </div>
-        )}
+        <div className={styles.dots}>
+          {collections.slice(0, 10).map((c, i) => (
+            <button
+              key={c.id}
+              className={`${styles.dot} ${i === active ? styles.dotActive : ''}`}
+              onClick={() => goTo(i)}
+            >
+              {i === active && <span className={styles.dotProgress} key={progressKey} style={{ animationDuration: `${AUTO_PLAY_INTERVAL}ms` }} />}
+            </button>
+          ))}
+        </div>
 
-        {/* Side Navigation Arrows */}
-        {collections.length > 1 && (
-          <>
-            <button className={`${styles.navBtn} ${styles.navPrev}`} onClick={goPrev} aria-label="Previous">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M12 4L6 10L12 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            <button className={`${styles.navBtn} ${styles.navNext}`} onClick={goNext} aria-label="Next">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M8 4L14 10L8 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-          </>
-        )}
+        <button className={`${styles.navBtn} ${styles.navPrev}`} onClick={goPrev} aria-label="Previous">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+        <button className={`${styles.navBtn} ${styles.navNext}`} onClick={goNext} aria-label="Next">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
       </section>
     </>
   )

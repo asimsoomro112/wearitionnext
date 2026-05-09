@@ -176,10 +176,10 @@ export function Home() {
         const fetchedProducts = productsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         setProducts(fetchedProducts);
 
-        const hq = query(productsRef, where("isPublished", "==", true), where("isFeatured", "==", true), limit(5));
+        const hq = query(productsRef, where("isPublished", "==", true), where("isFeatured", "==", true));
         const heroSnap = await getDocs(hq);
         const fetchedHero = heroSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        setHeroProducts(fetchedHero.length > 0 ? fetchedHero : fetchedProducts.slice(0, 5));
+        setHeroProducts(fetchedHero.length > 0 ? fetchedHero : fetchedProducts);
 
         const settingsSnap = await getDoc(doc(db, 'settings', 'homepage'));
         const dbSections = settingsSnap.exists() && settingsSnap.data().sections ? settingsSnap.data().sections : initialSections;
