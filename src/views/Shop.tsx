@@ -8,17 +8,6 @@ import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { ProductCard } from '../components/shop/ProductCard';
 import { SEO } from '../components/layout/SEO';
 
-const CATEGORIES = [
-  { name: 'All', value: '' },
-  { name: 'Women', value: 'women' },
-  { name: 'Men', value: 'men' },
-  { name: 'Shirts', value: 'shirts' },
-  { name: 'Pants', value: 'pants' },
-  { name: 'Tech-Noir', value: 'tech-noir' },
-  { name: 'Accessories', value: 'accessories' },
-  { name: 'Shoes', value: 'shoes' },
-];
-
 const SORT_OPTIONS = [
   { label: 'Recommended', value: 'recommended' },
   { label: 'Price: Low to High', value: 'price_asc' },
@@ -38,6 +27,7 @@ function ProductSkeleton() {
 
 export function Shop() {
   const [products, setProducts] = useState<any[]>([]);
+  const [categories, setCategories] = useState<{name: string, value: string}[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState('recommended');
   const router = useRouter();
@@ -46,6 +36,31 @@ export function Shop() {
   const searchString = searchParams.get('search')?.toLowerCase() || '';
   const categoryFilter = searchParams.get('category')?.toLowerCase() || '';
   const brandFilter = searchParams.get('brand')?.toLowerCase() || '';
+
+  useEffect(() => {
+    async function fetchSettings() {
+      try {
+        const docRef = doc(db, 'settings', 'store');
+        const snap = await getDoc(docRef);
+        if (snap.exists() && snap.data().collections) {
+          const fetchedCats = snap.data().collections.map((c: string) => ({
+            name: c,
+            value: c.toLowerCase()
+          }));
+          setCategories([{ name: 'All', value: '' }, ...fetchedCats]);
+        } else {
+          // Fallback if no settings exist yet
+          const defaults = ['Men', 'Shirts', 'Pants', 'Tech-Noir', 'Accessories', 'Shoes'].map(c => ({
+            name: c, value: c.toLowerCase()
+          }));
+          setCategories([{ name: 'All', value: '' }, ...defaults]);
+        }
+      } catch (e) {
+        console.error("Error fetching shop settings:", e);
+      }
+    }
+    fetchSettings();
+  }, []);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -124,7 +139,7 @@ export function Shop() {
 
         {/* Category Pills */}
         <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
-          {CATEGORIES.map((cat) => (
+          {categories.map((cat) => (
             <button
               key={cat.name}
               onClick={() => setCategory(cat.value)}

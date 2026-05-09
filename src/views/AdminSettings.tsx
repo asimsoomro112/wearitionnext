@@ -3,13 +3,16 @@ import React, { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { toast } from 'sonner';
-import { Save, Truck, Percent, Info, Plus, Minus } from 'lucide-react';
+import { Save, Truck, Percent, Info, Plus, Minus, LayoutGrid, Trash2, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export function AdminSettings() {
   const [baseShipping, setBaseShipping] = useState<number>(250);
   const [incrementalShipping, setIncrementalShipping] = useState<number>(100);
   const [taxPercentage, setTaxPercentage] = useState<number>(0);
+  const [collections, setCollections] = useState<string[]>(['Men', 'Shirts', 'Pants', 'Tech-Noir', 'Accessories', 'Shoes']);
+  const [newCollection, setNewCollection] = useState('');
+  
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -23,6 +26,7 @@ export function AdminSettings() {
           setBaseShipping(data.baseShipping ?? 250);
           setIncrementalShipping(data.incrementalShipping ?? 100);
           setTaxPercentage(data.taxPercentage ?? 0);
+          if (data.collections) setCollections(data.collections);
         }
       } catch (e) {
         console.error("Settings Load Error:", e);
@@ -40,9 +44,10 @@ export function AdminSettings() {
         baseShipping,
         incrementalShipping,
         taxPercentage,
+        collections,
         updatedAt: new Date().toISOString()
       }, { merge: true });
-      toast.success('Tiered shipping settings saved');
+      toast.success('Configuration saved successfully');
     } catch (e) {
       console.error('Failed to save settings:', e);
       toast.error('Failed to save settings');
@@ -51,14 +56,28 @@ export function AdminSettings() {
     }
   };
 
+  const addCollection = () => {
+    if (!newCollection.trim()) return;
+    if (collections.includes(newCollection.trim())) {
+      toast.error('Collection already exists');
+      return;
+    }
+    setCollections([...collections, newCollection.trim()]);
+    setNewCollection('');
+  };
+
+  const removeCollection = (name: string) => {
+    setCollections(collections.filter(c => c !== name));
+  };
+
   if (loading) return <div className="p-12 text-center text-[#0a0a0a]/60 font-sans tracking-widest uppercase text-[10px]">Loading Maison Settings...</div>;
 
   return (
     <div className="max-w-4xl mx-auto pb-24">
       <div className="flex justify-between items-center mb-10">
         <div>
-          <h1 className="text-3xl font-serif text-[#0a0a0a]">Logistics & Finance</h1>
-          <p className="text-sm text-[#0a0a0a]/50 mt-2 font-sans italic">Define your tiered shipping logic and taxation rules.</p>
+          <h1 className="text-3xl font-serif text-[#0a0a0a]">Logistics & Collections</h1>
+          <p className="text-sm text-[#0a0a0a]/50 mt-2 font-sans italic">Define your tiered shipping, taxation, and visible collections.</p>
         </div>
         <button 
           onClick={handleSave}
@@ -109,15 +128,6 @@ export function AdminSettings() {
               </div>
             </div>
           </div>
-
-          <div className="mt-8 pt-8 border-t border-black/5">
-            <div className="flex gap-3 p-4 bg-blue-50/30 rounded-xl">
-              <Info className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-              <p className="text-[10px] text-blue-600/70 leading-relaxed uppercase tracking-wider font-medium">
-                Example: If Base is 250 and Additional is 100, then 2 items = 250 + 100 = 350.
-              </p>
-            </div>
-          </div>
         </motion.div>
 
         {/* Tax Settings */}
@@ -146,13 +156,63 @@ export function AdminSettings() {
             </div>
           </div>
         </motion.div>
+
+        {/* Collections Management */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-white rounded-2xl border border-black/10 p-8 shadow-sm md:col-span-2"
+        >
+          <div className="flex items-center gap-4 mb-8">
+            <div className="p-3 bg-accent/10 text-accent rounded-xl"><LayoutGrid className="w-6 h-6" /></div>
+            <div>
+              <h3 className="font-serif text-xl">Collection Categories</h3>
+              <p className="text-[10px] uppercase tracking-widest text-black/30 font-bold">Manage visible filters on the shop page</p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-3 mb-8">
+            {collections.map((cat) => (
+              <div 
+                key={cat} 
+                className="flex items-center gap-2 bg-black/[0.03] border border-black/5 px-4 py-2 rounded-full group"
+              >
+                <span className="text-xs font-medium text-black/70">{cat}</span>
+                <button 
+                  onClick={() => removeCollection(cat)}
+                  className="text-black/20 hover:text-red-500 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex gap-4">
+            <input 
+              type="text" 
+              value={newCollection}
+              onChange={(e) => setNewCollection(e.target.value)}
+              placeholder="e.g. Winter Sale"
+              className="flex-grow bg-gray-50 border border-black/5 rounded-xl px-6 py-4 text-sm focus:outline-none focus:border-black/20 transition-all font-sans"
+              onKeyDown={(e) => e.key === 'Enter' && addCollection()}
+            />
+            <button 
+              onClick={addCollection}
+              className="bg-black text-white px-8 rounded-xl hover:bg-accent transition-all text-xs uppercase tracking-widest font-bold"
+            >
+              Add Type
+            </button>
+          </div>
+        </motion.div>
       </div>
 
       {/* Dynamic Preview Box */}
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.2 }}
+        transition={{ delay: 0.3 }}
         className="mt-12 p-10 bg-[#0a0a0a] text-white rounded-[2rem] shadow-2xl overflow-hidden relative"
       >
         <div className="relative z-10">
