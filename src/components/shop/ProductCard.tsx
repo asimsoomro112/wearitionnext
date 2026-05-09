@@ -90,7 +90,6 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
               <span className="bg-emerald-500 text-white text-[9px] uppercase tracking-widest px-3 py-1.5 font-bold">New</span>
             )}
           </div>
-        </div>
 
         {/* Wishlist button */}
         <button 
