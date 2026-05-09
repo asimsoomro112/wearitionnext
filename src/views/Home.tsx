@@ -96,8 +96,8 @@ const HeroCarousel = ({ products }: { products: any[] }) => {
         <div className="absolute bottom-0 w-full h-px bg-gradient-to-r from-transparent via-foreground/5 to-transparent" />
       </div>
 
-      <div className="container mx-auto px-5 md:px-12 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-20 items-center relative z-10 h-full py-16 lg:py-0">
-        <div className="order-2 lg:order-1 flex flex-col items-center lg:items-start text-center lg:text-left h-full lg:justify-center lg:mt-0 mt-[-5vh]">
+      <div className="container mx-auto px-5 md:px-12 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-20 items-center relative z-10 h-full pt-32 pb-16 lg:py-0">
+        <div className="order-2 lg:order-1 flex flex-col items-center lg:items-start text-center lg:text-left h-full lg:justify-center">
           <div className="min-h-[220px] md:min-h-[300px] flex flex-col justify-center w-full">
             <AnimatePresence mode="wait">
               <motion.div
@@ -161,7 +161,7 @@ const HeroCarousel = ({ products }: { products: any[] }) => {
           </div>
         </div>
 
-        <div className="order-1 lg:order-2 flex justify-center items-center h-[35vh] md:h-[45vh] lg:h-full relative preserve-3d">
+        <div className="order-1 lg:order-2 flex justify-center items-center h-[30vh] sm:h-[35vh] md:h-[45vh] lg:h-full relative preserve-3d">
           <div className="relative w-full max-w-[280px] sm:max-w-[340px] lg:max-w-[480px] aspect-[3/4] preserve-3d">
             <AnimatePresence initial={false} custom={direction} mode="popLayout">
               <motion.div
