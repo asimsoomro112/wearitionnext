@@ -96,7 +96,7 @@ const HeroCarousel = ({ products }: { products: any[] }) => {
         <div className="absolute bottom-0 w-full h-px bg-gradient-to-r from-transparent via-foreground/5 to-transparent" />
       </div>
 
-      <div className="container mx-auto px-5 md:px-12 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-20 items-center relative z-10 h-full pt-32 pb-16 lg:py-0">
+      <div className="container mx-auto px-5 md:px-12 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-20 items-start lg:items-center relative z-10 h-auto lg:h-full pt-44 pb-20 lg:py-0">
         <div className="order-2 lg:order-1 flex flex-col items-center lg:items-start text-center lg:text-left h-full lg:justify-center">
           <div className="min-h-[220px] md:min-h-[300px] flex flex-col justify-center w-full">
             <AnimatePresence mode="wait">
