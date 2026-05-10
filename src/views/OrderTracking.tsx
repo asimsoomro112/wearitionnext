@@ -28,6 +28,7 @@ export function OrderTracking() {
   const [hasSearched, setHasSearched] = useState(!!initialId);
   const [order, setOrder] = useState<any>(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   const getOrder = useOrderTrackingStore(state => state.getOrder);
 
@@ -50,11 +51,14 @@ export function OrderTracking() {
       const foundOrder = await getOrder(idToSearch);
       if (foundOrder) {
         setOrder(foundOrder);
+        setError(null);
       } else {
         setOrder(null);
+        setError('Order not found. Please check the ID and try again.');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Order lookup failed:', err);
+      setError(err.message || 'Failed to fetch order details. Please check your connection.');
       setOrder(null);
     } finally {
       setIsSearching(false);
@@ -105,7 +109,7 @@ export function OrderTracking() {
 
           {hasSearched && !order && !isSearching && (
             <div className="mt-8 space-y-2">
-              <p className="text-red-500 text-xs font-sans">Order "{orderId}" not found.</p>
+              <p className="text-red-500 text-xs font-sans">{error || `Order "${orderId}" not found.`}</p>
               <p className="text-foreground/30 text-[10px] uppercase tracking-widest">Please verify the ID from your confirmation email.</p>
             </div>
           )}
