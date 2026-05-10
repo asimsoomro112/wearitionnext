@@ -40,7 +40,7 @@ export function Careers() {
         <div className="bg-accent/5 p-12 text-center border border-accent/10">
           <h2 className="font-serif text-2xl mb-6">Current Opportunities</h2>
           <p className="text-sm text-foreground/60 mb-8">We are currently building our core team. Send your portfolio and CV to</p>
-          <a href="mailto:careers@wearition.com" className="text-accent font-bold hover:underline">careers@wearition.com</a>
+          <a href="mailto:careers@wearition.store" className="text-accent font-bold hover:underline">careers@wearition.store</a>
           <p className="mt-8 text-[10px] uppercase tracking-widest text-foreground/30 font-bold">Open Roles: Design, Marketing, Logistics, Tech</p>
         </div>
       </div>

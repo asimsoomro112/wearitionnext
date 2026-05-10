@@ -1,15 +1,13 @@
-# Wearition — Luxury Fashion House Pakistan
-# https://wearition.com
-
 User-agent: *
 Allow: /
 
-# Block admin and private pages
-Disallow: /admin
-Disallow: /admin/
-Disallow: /checkout
-Disallow: /account
-Disallow: /track-order
+# https://wearition.store
+# Optimized for Next.js
 
-# Sitemap
-Sitemap: https://wearition.com/sitemap.xml
+Disallow: /admin/
+Disallow: /account/
+Disallow: /api/
+Disallow: /checkout/
+Disallow: /order-success/
+
+Sitemap: https://wearition.store/sitemap.xml

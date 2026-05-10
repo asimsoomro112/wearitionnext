@@ -13,7 +13,7 @@ const DEFAULTS = {
   title: 'WEARITION — Luxury Fashion House Pakistan',
   description: 'Premium curated fashion for the modern visionary. Discover luxury menswear & womenswear at WEARITION — Pakistan\'s premier online fashion destination.',
   image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=1200',
-  url: 'https://wearition.com',
+  url: 'https://wearition.store',
 };
 
 export function SEO({ 
@@ -69,7 +69,7 @@ export function SEO({
       image,
       url,
       ...(type !== 'product' && {
-        logo: 'https://wearition.com/logo.png',
+        logo: 'https://wearition.store/logo.png',
         sameAs: [
           'https://instagram.com/wearition',
           'https://tiktok.com/@wearition'

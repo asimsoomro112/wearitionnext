@@ -14,11 +14,11 @@ export const metadata: Metadata = {
     template: "%s | WEARITION",
   },
   description: "Premium luxury fashion from Pakistan. Discover curated collections designed for the modern visionary.",
-  metadataBase: new URL("https://wearition.vercel.app"),
+  metadataBase: new URL("https://wearition.store"),
   openGraph: {
     title: "WEARITION — Wear Your Identity",
     description: "Premium luxury fashion from Pakistan.",
-    url: "https://wearition.vercel.app",
+    url: "https://wearition.store",
     siteName: "WEARITION",
     locale: "en_US",
     type: "website",
