@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, query, onSnapshot, doc, deleteDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
-import { Plus, Edit2, Trash2, X } from 'lucide-react';
+import { Plus, Edit2, Trash2, X, Search } from 'lucide-react';
 import { formatCurrency } from '@/lib/currency';
 import { getOptimizedImage } from '../lib/images';
 import { toast } from 'sonner';
@@ -29,6 +29,7 @@ export function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
   
   // Form state
   const [title, setTitle] = useState('');
@@ -201,14 +202,32 @@ export function AdminProducts() {
     }
   };
 
+  const filteredProducts = products.filter(p => 
+    p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    p.brand?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    p.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="max-w-full relative">
-      <div className="flex items-center justify-between mb-8 pb-6 border-b border-black/10">
-        <h1 className="text-2xl md:text-3xl font-serif text-foreground">Products</h1>
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 pb-6 border-b border-black/10 gap-4">
+        <div className="flex items-center gap-6 flex-1 max-w-xl">
+          <h1 className="text-2xl md:text-3xl font-serif text-foreground whitespace-nowrap">Products</h1>
+          <div className="relative flex-1 group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-black/30 group-focus-within:text-accent transition-colors" />
+            <input 
+              type="text" 
+              placeholder="Search products, brands or categories..." 
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              className="w-full bg-black/5 border border-transparent focus:border-black/10 focus:bg-white px-12 py-3 rounded-xl text-sm outline-none transition-all"
+            />
+          </div>
+        </div>
         <div className="flex gap-4">
           <button 
             onClick={openAddModal}
-            className="flex items-center gap-2 bg-foreground text-background px-6 py-3 text-sm uppercase tracking-wider hover:bg-accent transition-colors rounded-full font-bold shadow-lg"
+            className="flex items-center gap-2 bg-foreground text-background px-8 py-3.5 text-[10px] uppercase tracking-widest hover:bg-accent transition-colors rounded-full font-bold shadow-lg whitespace-nowrap"
           >
             <Plus className="w-4 h-4" />
             Add Product
@@ -229,7 +248,7 @@ export function AdminProducts() {
             </tr>
           </thead>
           <tbody className="divide-y divide-black/5">
-            {products.map((item) => (
+            {filteredProducts.map((item) => (
               <tr key={item.id} className="hover:bg-black/[0.01] transition-colors">
                 <td className="p-6">
                   <div className="flex items-center gap-4">
