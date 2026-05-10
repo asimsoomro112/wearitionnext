@@ -100,7 +100,7 @@ export function Checkout() {
 
   const [baseShipping, setBaseShipping] = useState(250);
   const [incrementalShipping, setIncrementalShipping] = useState(100);
-  const [taxPercent, setTaxPercent] = useState(0);
+  const [taxPercent, setTaxPercent] = useState(4); // Default to 4% as per request
 
   useEffect(() => {
     async function fetchStoreSettings() {
@@ -197,6 +197,7 @@ export function Checkout() {
         })),
         subtotal,
         shipping: shippingCost,
+        tax: taxAmount,
         total,
         shippingAddress: {
           name: `${shipping.firstName} ${shipping.lastName}`,
@@ -430,10 +431,21 @@ export function Checkout() {
                   <span>Subtotal</span><span>{formatCurrency(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-foreground/60">
-                  <span>Shipping & Handling</span><span>{formatCurrency(shippingCost + taxAmount)}</span>
+                  <div className="flex flex-col">
+                    <span>Shipping</span>
+                    <span className="text-[10px] text-foreground/40 font-normal lowercase tracking-normal">Rs. 250 base + Rs. 100 per additional item</span>
+                  </div>
+                  <span>{formatCurrency(shippingCost)}</span>
+                </div>
+                <div className="flex justify-between text-foreground/60">
+                  <div className="flex flex-col">
+                    <span>Govt. Tax (4%)</span>
+                    <span className="text-[10px] text-foreground/40 font-normal lowercase tracking-normal">Calculated on subtotal</span>
+                  </div>
+                  <span>{formatCurrency(taxAmount)}</span>
                 </div>
                 <div className="border-t border-white/10 pt-4 flex justify-between font-bold text-lg text-foreground">
-                  <span>Total</span><span className="text-accent">{formatCurrency(total)}</span>
+                  <span>Total Bill</span><span className="text-accent">{formatCurrency(total)}</span>
                 </div>
               </div>
             </div>

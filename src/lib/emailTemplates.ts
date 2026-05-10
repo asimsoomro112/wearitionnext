@@ -214,6 +214,7 @@ export function orderPlacedEmail(data: {
   items: { title: string; quantity: number; price: number; size?: string; color?: string; image?: string }[];
   subtotal: number;
   shipping: number;
+  tax: number;
   total: number;
   shippingAddress: { name: string; address: string; city: string };
 }): { subject: string; html: string } {
@@ -295,6 +296,10 @@ export function orderPlacedEmail(data: {
         <tr>
           <td style="padding:8px 0;"><p style="color:${BRAND.colors.muted};font-size:12px;margin:0;">Shipping</p></td>
           <td style="padding:8px 0;text-align:right;"><p style="color:${BRAND.colors.text};font-size:12px;margin:0;">Rs. ${Math.round(data.shipping).toLocaleString()}</p></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;"><p style="color:${BRAND.colors.muted};font-size:12px;margin:0;">Govt. Tax (4%)</p></td>
+          <td style="padding:8px 0;text-align:right;"><p style="color:${BRAND.colors.text};font-size:12px;margin:0;">Rs. ${Math.round(data.tax).toLocaleString()}</p></td>
         </tr>
         <tr>
           <td colspan="2" style="padding:8px 0;"><div style="height:1px;background:${BRAND.colors.border};"></div></td>

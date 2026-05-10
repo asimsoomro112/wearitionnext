@@ -9,6 +9,8 @@ export interface Order {
   email: string;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
   date: string;
+  subtotal?: number;
+  tax?: number;
   total: number;
   items: any[];
   shippingDetails?: any;

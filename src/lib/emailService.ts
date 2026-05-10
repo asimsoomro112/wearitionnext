@@ -111,6 +111,7 @@ export async function sendOrderConfirmationEmail(data: {
   items: { title: string; quantity: number; price: number; size?: string; color?: string; image?: string }[];
   subtotal: number;
   shipping: number;
+  tax: number;
   total: number;
   shippingAddress: { name: string; address: string; city: string };
 }): Promise<boolean> {

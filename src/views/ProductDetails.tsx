@@ -285,7 +285,14 @@ export function ProductDetails() {
               </div>
               <div className="flex items-center gap-3 text-foreground/80">
                 <Truck className="w-5 h-5 text-blue-400" />
-                <span className="text-xs tracking-wider">Nationwide Delivery (Rs. 250)</span>
+                <div className="flex flex-col">
+                  <span className="text-xs tracking-wider">Nationwide Delivery (Rs. 250)</span>
+                  <span className="text-[10px] text-foreground/40 font-normal">+ Rs. 100 for each additional item</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 text-foreground/80">
+                <AlertCircle className="w-5 h-5 text-accent" />
+                <span className="text-xs tracking-wider">4% Government Tax applied to total bill</span>
               </div>
               <div className="flex items-center gap-3 text-foreground/80">
                 <ShieldCheck className="w-5 h-5 text-accent" />
