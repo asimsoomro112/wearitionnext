@@ -45,19 +45,25 @@ export function Editorial() {
       <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
         <motion.div 
           style={{ scale }}
-          className="absolute inset-0 z-0"
+          className="absolute inset-0 z-0 overflow-hidden"
         >
           {products.length > 0 ? (
-            <img 
-              src={getOptimizedImage(products[0].images?.[0] || "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2000")} 
-              alt="Editorial Hero" 
-              className="w-full h-full object-cover grayscale brightness-[0.3]"
-              loading="eager"
-            />
+            <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-1 w-[120%] h-[120%] -translate-x-[10%] -translate-y-[10%] opacity-40 brightness-[0.4] grayscale">
+              {[...products, ...products, ...products].slice(0, 48).map((product, idx) => (
+                <div key={`hero-bg-${idx}`} className="aspect-[3/4] bg-background-secondary overflow-hidden">
+                  <img 
+                    src={getOptimizedImage(product.images?.[0])} 
+                    alt="" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+            </div>
           ) : (
             <div className="w-full h-full bg-background-secondary animate-pulse" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/20 to-background"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background"></div>
+          <div className="absolute inset-0 bg-black/40"></div>
         </motion.div>
 
         <motion.div 
