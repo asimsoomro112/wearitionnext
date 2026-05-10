@@ -138,7 +138,7 @@ export function Checkout() {
 
     setIsProcessing(true);
 
-    const orderId = 'WR-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    const orderId = 'WR-' + Math.random().toString(36).slice(2, 8).toUpperCase();
 
     const orderData = {
       orderId,
