@@ -171,19 +171,21 @@ export function Home() {
 
       try {
         const productsRef = collection(db, 'products');
-        const q = query(productsRef, where("isPublished", "==", true));
-        const productsSnap = await getDocs(q);
+        
+        // Execute all queries in parallel
+        const [productsSnap, heroSnap, settingsSnap] = await Promise.all([
+          getDocs(query(productsRef, where("isPublished", "==", true))),
+          getDocs(query(productsRef, where("isPublished", "==", true), where("isFeatured", "==", true))),
+          getDoc(doc(db, 'settings', 'homepage'))
+        ]);
+
         const fetchedProducts = productsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         setProducts(fetchedProducts);
 
-        const hq = query(productsRef, where("isPublished", "==", true), where("isFeatured", "==", true));
-        const heroSnap = await getDocs(hq);
         const fetchedHero = heroSnap.docs.map(d => ({ id: d.id, ...d.data() }));
         setHeroProducts(fetchedHero.length > 0 ? fetchedHero : fetchedProducts);
 
-        const settingsSnap = await getDoc(doc(db, 'settings', 'homepage'));
         const dbSections = settingsSnap.exists() && settingsSnap.data().sections ? settingsSnap.data().sections : initialSections;
-        
         setSections(dbSections);
       } catch (e: any) {
         setSections(initialSections);

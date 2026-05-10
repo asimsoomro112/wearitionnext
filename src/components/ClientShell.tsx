@@ -29,7 +29,7 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
         setIsAdmin(false);
       }
       setLoading(false);
-      setTimeout(() => setAppLoading(false), 1500);
+      setAppLoading(false);
     });
     return () => unsubscribe();
   }, [setUser, setIsAdmin, setLoading]);
