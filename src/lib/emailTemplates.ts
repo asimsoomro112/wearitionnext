@@ -7,8 +7,8 @@
 const BRAND = {
   name: 'WEARITION',
   tagline: 'Modern Luxury. Timeless Craft.',
-  logo: 'https://wearition.vercel.app/logo.png', 
-  website: 'https://wearition.vercel.app',
+  logo: 'https://wearition.store/logo.png', 
+  website: 'https://wearition.store',
   instagram: 'https://instagram.com/wearition',
   whatsapp: '923000000000', 
   supportEmail: 'wearition.80@gmail.com',
