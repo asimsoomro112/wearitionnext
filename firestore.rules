@@ -8,6 +8,7 @@ service cloud.firestore {
         (request.auth.token.email == 'asimsoomro195@gmail.com' || 
          request.auth.token.email == 'asimsoomro112@gmail.com' || 
          request.auth.token.email == 'admin@wearition.store' ||
+         request.auth.token.email == 'admin@wearition.com' ||
          request.auth.uid == 'ruPbxf2c0RZD85CTmW9Aa2iMul83'); 
     }
 
