@@ -23,12 +23,17 @@ export function Navbar() {
       try {
         const q = query(collection(db, "products"), where("isPublished", "==", true));
         const snap = await getDocs(q);
-        const brands = new Set<string>();
+        const brandMap = new Map<string, string>(); // Normalized key -> Original casing
         snap.docs.forEach(doc => {
           const b = doc.data().brand;
-          if (b) brands.add(b);
+          if (b) {
+            const normalized = b.trim().toLowerCase();
+            if (!brandMap.has(normalized)) {
+              brandMap.set(normalized, b.trim()); // Store the first one we find as display name
+            }
+          }
         });
-        setDynamicBrands(Array.from(brands).sort());
+        setDynamicBrands(Array.from(brandMap.values()).sort());
       } catch (e) {
         console.error("Error fetching brands for navbar", e);
       }

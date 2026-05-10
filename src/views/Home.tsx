@@ -149,9 +149,19 @@ export function Home() {
 
   const brandSections = useMemo(() => {
     if (products.length === 0) return [];
-    const brands = Array.from(new Set(products.map(p => p.brand).filter(Boolean)));
-    return brands.map(brand => ({
-      id: `brand-${brand}`,
+    
+    const brandMap = new Map<string, string>(); // Normalized -> Display
+    products.forEach(p => {
+      if (p.brand) {
+        const normalized = p.brand.trim().toLowerCase();
+        if (!brandMap.has(normalized)) {
+          brandMap.set(normalized, p.brand.trim());
+        }
+      }
+    });
+
+    return Array.from(brandMap.values()).sort().map(brand => ({
+      id: `brand-${brand.toLowerCase().replace(/\s+/g, '-')}`,
       type: 'products_scroll',
       title: `${brand} Collection`,
       productQueryType: 'brand',
@@ -240,7 +250,9 @@ export function Home() {
       case 'products_scroll':
         let filteredProducts = [...products];
         if (section.productQueryType === 'brand' && section.brandValue) {
-          filteredProducts = filteredProducts.filter(p => p.brand === section.brandValue);
+          filteredProducts = filteredProducts.filter(p => 
+            p.brand?.trim().toLowerCase() === section.brandValue?.trim().toLowerCase()
+          );
         } else if (section.productQueryType === 'sale') {
           filteredProducts = filteredProducts.filter(p => p.isOnSale && p.salePrice);
         } else if (section.productQueryType === 'category' && section.categoryValue) {
