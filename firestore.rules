@@ -28,10 +28,9 @@ service cloud.firestore {
     }
 
     // Orders: Anyone can read if they have the specific orderId (for tracking)
-    // but only owner or admin can see full details (emails, etc.) - Actually, for simplicity and tracking:
     match /orders/{orderId} {
-      allow read: if true; // Public tracking requires read access by orderId query
-      allow create: if true; // Allow guest orders
+      allow get, list: if true; 
+      allow create: if true; 
       allow update, delete: if isAdmin();
     }
 
