@@ -80,30 +80,33 @@ export function Editorial() {
       </section>
 
       {/* Infinite Scrolling Product Marquee */}
-      <section className="py-24 border-y border-white/5 bg-background-secondary/20 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-background to-transparent z-10" />
-        <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-background to-transparent z-10" />
+      <section className="py-12 md:py-24 border-y border-white/5 bg-background-secondary/10 relative overflow-hidden min-h-[300px] flex items-center">
+        <div className="absolute top-0 left-0 w-20 md:w-32 h-full bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-20 md:w-32 h-full bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
         
-        <div className="flex whitespace-nowrap animate-marquee hover:pause-marquee">
-          {[...products, ...products].map((product, idx) => (
-            <Link 
-              key={`${product.id}-${idx}`}
-              href={`/product/${product.id}`}
-              className="inline-block mx-4 md:mx-8 group"
-            >
-              <div className="w-48 md:w-64 aspect-[3/4] overflow-hidden rounded-sm relative mb-4">
-                <img 
-                  src={getOptimizedImage(product.images?.[0])} 
-                  alt={product.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60" />
-              </div>
-              <h3 className="text-[10px] uppercase tracking-widest text-foreground font-bold group-hover:text-accent transition-colors">{product.title}</h3>
-              <p className="text-[9px] text-foreground/40 uppercase tracking-widest mt-1">Rs. {product.price?.toLocaleString()}</p>
-            </Link>
-          ))}
-        </div>
+        {products.length > 0 && (
+          <div className="flex whitespace-nowrap animate-marquee hover:pause-marquee">
+            {[...products, ...products, ...products].map((product, idx) => (
+              <Link 
+                key={`${product.id}-${idx}`}
+                href={`/product/${product.id}`}
+                className="inline-block mx-4 md:mx-8 group"
+              >
+                <div className="w-40 md:w-64 aspect-[3/4] overflow-hidden rounded-sm relative mb-4 bg-foreground/5">
+                  <img 
+                    src={getOptimizedImage(product.images?.[0])} 
+                    alt={product.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
+                </div>
+                <h3 className="text-[9px] md:text-[10px] uppercase tracking-widest text-foreground font-bold group-hover:text-accent transition-colors">{product.title}</h3>
+                <p className="text-[8px] md:text-[9px] text-foreground/40 uppercase tracking-widest mt-1">Rs. {product.price?.toLocaleString()}</p>
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Dynamic Grid Section */}
@@ -124,10 +127,10 @@ export function Editorial() {
           {products.slice(0, 9).map((product, idx) => (
             <motion.div
               key={product.id}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1, duration: 0.8 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ delay: idx * 0.05, duration: 0.5 }}
               className={`relative group cursor-pointer ${idx % 3 === 1 ? 'lg:translate-y-20' : ''}`}
             >
               <Link href={`/product/${product.id}`}>
@@ -135,9 +138,9 @@ export function Editorial() {
                   <img 
                     src={getOptimizedImage(product.images?.[0])} 
                     alt={product.title}
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
+                    className="w-full h-full object-cover md:grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent md:opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
                     <p className="text-[10px] text-accent font-bold uppercase tracking-widest mb-2">View Detail</p>
                     <h3 className="text-white text-2xl font-serif uppercase leading-none">{product.title}</h3>
                   </div>
