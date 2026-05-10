@@ -9,7 +9,9 @@ const BRAND = {
   tagline: 'Modern Luxury. Timeless Craft.',
   logo: 'https://wearition.store/logo.png', 
   website: 'https://wearition.store',
-  instagram: 'https://instagram.com/wearition',
+  instagram: 'https://www.instagram.com/_wearition?igsh=eG5obHgydGc3a2Vr',
+  facebook: 'https://www.facebook.com/profile.php?id=61589494648557',
+  tiktok: 'https://www.tiktok.com/@wearition3?_r=1&_t=ZS-96Byntwejln',
   whatsapp: '923000000000', 
   supportEmail: 'wearition.80@gmail.com',
   colors: {
@@ -74,9 +76,9 @@ function emailWrapper(content: string, preheader: string = ''): string {
               <p style="color:${BRAND.colors.muted};font-size:11px;letter-spacing:2px;text-transform:uppercase;margin:0 0 16px;">${BRAND.tagline}</p>
               <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto 20px;">
                 <tr>
-                  <td style="padding:0 12px;"><a href="${BRAND.website}/shop" style="color:${BRAND.colors.muted};font-size:10px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;">Shop</a></td>
-                  <td style="padding:0 12px;"><a href="${BRAND.instagram}" style="color:${BRAND.colors.muted};font-size:10px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;">Instagram</a></td>
-                  <td style="padding:0 12px;"><a href="https://wa.me/${BRAND.whatsapp}" style="color:${BRAND.colors.muted};font-size:10px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;">WhatsApp</a></td>
+                  <td style="padding:0 8px;"><a href="${BRAND.instagram}" style="color:${BRAND.colors.muted};font-size:9px;letter-spacing:1px;text-transform:uppercase;text-decoration:none;">Instagram</a></td>
+                  <td style="padding:0 8px;"><a href="${BRAND.facebook}" style="color:${BRAND.colors.muted};font-size:9px;letter-spacing:1px;text-transform:uppercase;text-decoration:none;">Facebook</a></td>
+                  <td style="padding:0 8px;"><a href="${BRAND.tiktok}" style="color:${BRAND.colors.muted};font-size:9px;letter-spacing:1px;text-transform:uppercase;text-decoration:none;">TikTok</a></td>
                 </tr>
               </table>
               <p style="color:${BRAND.colors.muted};font-size:10px;margin:0;">

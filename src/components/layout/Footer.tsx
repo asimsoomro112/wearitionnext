@@ -37,13 +37,13 @@ export function Footer() {
         <p>&copy; 2026 Wearition. All rights reserved.</p>
         <div className="flex gap-8 mt-6 md:mt-0">
           <MagneticButton strength={0.3} as="div">
-            <a href="https://instagram.com/wearition" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors uppercase">Instagram</a>
+            <a href="https://www.instagram.com/_wearition?igsh=eG5obHgydGc3a2Vr" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors uppercase">Instagram</a>
           </MagneticButton>
           <MagneticButton strength={0.3} as="div">
-            <a href="https://tiktok.com/@wearition" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors uppercase">TikTok</a>
+            <a href="https://www.facebook.com/profile.php?id=61589494648557" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors uppercase">Facebook</a>
           </MagneticButton>
           <MagneticButton strength={0.3} as="div">
-            <a href="https://pinterest.com/wearition" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors uppercase">Pinterest</a>
+            <a href="https://www.tiktok.com/@wearition3?_r=1&_t=ZS-96Byntwejln" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors uppercase">TikTok</a>
           </MagneticButton>
         </div>
       </div>

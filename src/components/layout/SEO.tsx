@@ -71,8 +71,9 @@ export function SEO({
       ...(type !== 'product' && {
         logo: 'https://wearition.store/logo.png',
         sameAs: [
-          'https://instagram.com/wearition',
-          'https://tiktok.com/@wearition'
+          'https://www.instagram.com/_wearition?igsh=eG5obHgydGc3a2Vr',
+          'https://www.facebook.com/profile.php?id=61589494648557',
+          'https://www.tiktok.com/@wearition3?_r=1&_t=ZS-96Byntwejln'
         ]
       })
     });
