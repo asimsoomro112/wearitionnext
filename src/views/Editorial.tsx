@@ -48,9 +48,9 @@ export function Editorial() {
           className="absolute inset-0 z-0 overflow-hidden"
         >
           {products.length > 0 ? (
-            <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-1 w-[120%] h-[120%] -translate-x-[10%] -translate-y-[10%] opacity-40 brightness-[0.4] grayscale">
-              {[...products, ...products, ...products].slice(0, 48).map((product, idx) => (
-                <div key={`hero-bg-${idx}`} className="aspect-[3/4] bg-background-secondary overflow-hidden">
+            <div className="grid grid-cols-6 md:grid-cols-10 lg:grid-cols-14 gap-0.5 w-[140%] h-[140%] -translate-x-[20%] -translate-y-[20%] opacity-50 brightness-[0.5] grayscale">
+              {[...products, ...products, ...products, ...products].slice(0, 84).map((product, idx) => (
+                <div key={`hero-bg-${idx}`} className="aspect-[3/4] bg-foreground/5 overflow-hidden">
                   <img 
                     src={getOptimizedImage(product.images?.[0])} 
                     alt="" 
