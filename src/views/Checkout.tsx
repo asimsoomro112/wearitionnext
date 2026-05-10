@@ -12,7 +12,7 @@ import { useOrderTrackingStore } from '../store/orderTrackingStore';
 import { useAuthStore } from '../store/authStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SEO } from '../components/layout/SEO';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, collection, query, where, getDocs, limit } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { LogIn, User, ShoppingBag, ArrowRight } from 'lucide-react';
 
@@ -37,8 +37,36 @@ export function Checkout() {
     firstName: '', lastName: '', address: '', city: '', zip: '', phone: ''
   });
   const [showGuestForm, setShowGuestForm] = useState(false);
+  const [isEmailRegistered, setIsEmailRegistered] = useState(false);
+  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
   const addOrder = useOrderTrackingStore(state => state.addOrder);
   const { user } = useAuthStore();
+
+  // Check if email is registered
+  useEffect(() => {
+    if (user || !email || !email.includes('@') || !email.includes('.')) {
+      setIsEmailRegistered(false);
+      return;
+    }
+
+    const checkEmail = async () => {
+      setIsCheckingEmail(true);
+      try {
+        // We query by email field in our users collection
+        const q = query(collection(db, 'users'), where('email', '==', email.toLowerCase()), limit(1));
+        const snap = await getDocs(q);
+        setIsEmailRegistered(!snap.empty);
+      } catch (e) {
+        // If rules block us, we just don't show the warning
+        console.warn("Email check skipped:", e);
+      } finally {
+        setIsCheckingEmail(false);
+      }
+    };
+
+    const timeout = setTimeout(checkEmail, 800);
+    return () => clearTimeout(timeout);
+  }, [email, user]);
 
   // Auto-fill and Load saved data
   useEffect(() => {
@@ -265,6 +293,23 @@ export function Checkout() {
                         <div>
                           <label className={labelClass}>Email Address *</label>
                           <input value={email} onChange={e => setEmail(e.target.value)} required type="email" className={inputClass} placeholder="your@email.com" />
+                          
+                          <AnimatePresence>
+                            {isEmailRegistered && (
+                              <motion.div 
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="mt-3 p-3 bg-accent/10 border border-accent/20 rounded-lg flex items-center gap-3 overflow-hidden"
+                              >
+                                <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+                                <div className="flex-1">
+                                  <p className="text-[11px] text-accent font-bold uppercase tracking-widest">Account Registered</p>
+                                  <p className="text-[10px] text-foreground/60 leading-relaxed">This email is already registered. <Link href="/account" className="text-foreground font-bold hover:underline">Sign in</Link> for a faster checkout.</p>
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                         </div>
                         <div>
                           <label className={labelClass}>Phone Number</label>
