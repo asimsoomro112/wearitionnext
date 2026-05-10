@@ -17,16 +17,30 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://wearition.store"),
   openGraph: {
     title: "WEARITION — Wear Your Identity",
-    description: "Premium luxury fashion from Pakistan.",
+    description: "Premium luxury fashion from Pakistan. Curated collections from elite designers.",
     url: "https://wearition.store",
     siteName: "WEARITION",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "WEARITION Luxury Fashion",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "WEARITION — Wear Your Identity",
     description: "Premium luxury fashion from Pakistan.",
+    images: ["/opengraph-image.png"],
+  },
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
   },
   robots: {
     index: true,
