@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, updateDoc, doc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, updateDoc, doc, getDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
 
 export interface Order {
   id?: string;
@@ -44,28 +44,30 @@ export const useOrderTrackingStore = create<OrderTrackingState>()(
         }));
       },
       getOrder: async (orderId) => {
-        // Try searching by custom orderId (WR-XXXX)
-        const q = query(
-          collection(db, 'orders'), 
-          where('orderId', '==', orderId.toUpperCase())
-        );
-        const querySnapshot = await getDocs(q);
-        
-        if (!querySnapshot.empty) {
-          const doc = querySnapshot.docs[0];
-          return { id: doc.id, ...doc.data() } as Order;
-        }
+        if (!orderId) return undefined;
+        const cleanId = orderId.trim().toUpperCase();
 
-        // Fallback: Try searching by Firestore Document ID directly
         try {
+          // 1. Try direct document ID lookup first (if it's a Firestore ID)
           const docRef = doc(db, 'orders', orderId);
-          const docSnap = await getDocs(query(collection(db, 'orders'), where('__name__', '==', orderId)));
-          if (!docSnap.empty) {
-            const d = docSnap.docs[0];
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            return { id: docSnap.id, ...docSnap.data() } as Order;
+          }
+
+          // 2. Search by custom orderId field (WR-XXXX)
+          const q = query(
+            collection(db, 'orders'), 
+            where('orderId', '==', cleanId)
+          );
+          const querySnapshot = await getDocs(q);
+          
+          if (!querySnapshot.empty) {
+            const d = querySnapshot.docs[0];
             return { id: d.id, ...d.data() } as Order;
           }
         } catch (e) {
-          // Ignore if docId format is invalid
+          console.error("Order lookup error:", e);
         }
 
         return undefined;
