@@ -152,6 +152,7 @@ export async function sendEmailNotification(
       items: [],
       subtotal: 0,
       shipping: 0,
+      tax: 0,
       total: 0,
       shippingAddress: { name: '', address: '', city: '' },
     });
