@@ -64,8 +64,8 @@ export function Editorial() {
           style={{ opacity }}
           className="relative z-10 text-center px-6"
         >
-          <span className="text-accent uppercase tracking-[0.6em] text-[10px] mb-8 block font-bold">New Season Arrivals</span>
-          <TextReveal as="h1" className="font-serif text-6xl md:text-8xl lg:text-[12rem] text-white uppercase tracking-tighter leading-none mb-8 text-center drop-shadow-2xl">
+          <span className="text-accent uppercase tracking-[0.4em] text-[10px] mb-6 block font-bold">New Season Arrivals</span>
+          <TextReveal as="h1" className="font-serif text-5xl md:text-8xl lg:text-[12rem] text-white uppercase tracking-tighter leading-[0.9] mb-8 text-center drop-shadow-2xl">
             Identity
           </TextReveal>
           <p className="text-white/60 font-sans max-w-xl mx-auto text-xs md:text-sm leading-relaxed uppercase tracking-[0.3em] font-light">
@@ -89,9 +89,9 @@ export function Editorial() {
             <Link 
               key={`${product.id}-${idx}`}
               href={`/product/${product.id}`}
-              className="inline-block mx-8 group"
+              className="inline-block mx-4 md:mx-8 group"
             >
-              <div className="w-64 aspect-[3/4] overflow-hidden rounded-sm relative mb-4">
+              <div className="w-48 md:w-64 aspect-[3/4] overflow-hidden rounded-sm relative mb-4">
                 <img 
                   src={getOptimizedImage(product.images?.[0])} 
                   alt={product.title}
@@ -152,7 +152,7 @@ export function Editorial() {
       <section className="py-40 bg-foreground/5 border-y border-white/5">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <span className="text-accent text-3xl font-serif mb-8 block font-italic">"</span>
-          <h2 className="font-serif text-3xl md:text-5xl text-foreground leading-snug mb-12 italic">
+          <h2 className="font-serif text-2xl md:text-5xl text-foreground leading-snug mb-12 italic">
             "Fashion is not just what you wear, it's the narrative you choose to tell the world about who you are."
           </h2>
           <div className="w-12 h-px bg-accent mx-auto mb-6"></div>
@@ -167,8 +167,8 @@ export function Editorial() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
         >
-          <span className="text-[10px] uppercase tracking-[0.5em] text-accent block mb-8 font-bold">Join the Vision</span>
-          <TextReveal as="h3" className="font-serif text-5xl md:text-8xl text-foreground mb-16 uppercase tracking-tighter text-center">
+          <span className="text-[10px] uppercase tracking-[0.5em] text-accent block mb-6 font-bold">Join the Vision</span>
+          <TextReveal as="h3" className="font-serif text-4xl md:text-8xl text-foreground mb-12 uppercase tracking-tighter text-center">
             Your Journey Starts Here
           </TextReveal>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
