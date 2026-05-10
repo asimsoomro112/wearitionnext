@@ -28,12 +28,17 @@ export function Brands() {
       try {
         const q = query(collection(db, "products"), where("isPublished", "==", true));
         const snap = await getDocs(q);
-        const brands = new Set<string>();
+        const brandMap = new Map<string, string>();
         snap.docs.forEach(doc => {
           const b = doc.data().brand;
-          if (b) brands.add(b);
+          if (b) {
+            const normalized = b.trim().toLowerCase();
+            if (!brandMap.has(normalized)) {
+              brandMap.set(normalized, b.trim());
+            }
+          }
         });
-        setDynamicBrands(Array.from(brands).sort());
+        setDynamicBrands(Array.from(brandMap.values()).sort());
       } catch (e) {
         console.error("Error fetching brands", e);
       } finally {
@@ -63,7 +68,10 @@ export function Brands() {
         const allQ = query(collection(db, "products"), where("isPublished", "==", true));
         const snap = await getDocs(allQ);
         const fetched = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        const filtered = fetched.filter((p: any) => p.brand?.toLowerCase() === selectedBrand.toLowerCase());
+        const normalizedSelected = selectedBrand.trim().toLowerCase();
+        const filtered = fetched.filter((p: any) => 
+          p.brand?.trim().toLowerCase() === normalizedSelected
+        );
         setProducts(filtered);
       } catch (e) {
         console.error("Error fetching brand products", e);
