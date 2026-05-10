@@ -19,9 +19,11 @@ service cloud.firestore {
     }
 
     // Products: Publicly readable if published, admin writable
+    // Customers are allowed to update ONLY the 'stock' field during checkout
     match /products/{productId} {
       allow read: if (resource != null && resource.data.isPublished == true) || isAdmin();
-      allow write: if isAdmin();
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stock']);
     }
 
     // Users: Only owner or admin
@@ -29,11 +31,14 @@ service cloud.firestore {
       allow read, write: if isSignedIn() && (request.auth.uid == userId || isAdmin());
     }
 
-    // Orders: Anyone can read if they have the specific orderId (for tracking)
+    // Orders: Only the order owner (by email or userId) can read their own order.
+    // Admins can read/update all. Anyone can create (for guest checkout).
     match /orders/{orderId} {
-      allow get, list: if true; 
+      allow get: if true;
+      allow list: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
       allow create: if true; 
-      allow update, delete: if isAdmin();
+      allow update: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']) && request.resource.data.status == 'cancelled');
+      allow delete: if isAdmin();
     }
 
     // Newsletter

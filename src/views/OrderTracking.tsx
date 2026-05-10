@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useOrderTrackingStore } from '../store/orderTrackingStore';
+import { sendOrderStatusEmail } from '@/lib/emailService';
 import { formatCurrency } from '@/lib/currency';
 import { 
   Package, 
@@ -14,10 +15,12 @@ import {
   MessageSquare, 
   RefreshCcw,
   Clock,
-  Box
+  Box,
+  XCircle
 } from 'lucide-react';
 import { SEO } from '../components/layout/SEO';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 
 export function OrderTracking() {
   const searchParams = useSearchParams();
@@ -30,7 +33,35 @@ export function OrderTracking() {
   const [isSearching, setIsSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  const getOrder = useOrderTrackingStore(state => state.getOrder);
+  const { getOrder, updateOrderStatus } = useOrderTrackingStore();
+
+  const handleCancelOrder = async () => {
+    if (!order || order.status !== 'pending') return;
+    if (window.confirm("Are you sure you want to cancel this order? This action cannot be undone.")) {
+      setIsSearching(true);
+      try {
+        await updateOrderStatus(order.id, 'cancelled');
+        // Refresh local state to reflect cancellation
+        const updatedOrder = await getOrder(order.orderId);
+        if (updatedOrder) {
+          setOrder(updatedOrder);
+          // Send cancellation email
+          sendOrderStatusEmail({
+            email: updatedOrder.email,
+            name: updatedOrder.shippingAddress?.name?.split(' ')[0] || 'Customer',
+            orderId: updatedOrder.orderId,
+            status: 'cancelled',
+          }).catch(console.error);
+        }
+        toast.success("Your order has been cancelled successfully.");
+      } catch (error) {
+        console.error("Cancellation error:", error);
+        toast.error("Failed to cancel order. Please try again or contact support.");
+      } finally {
+        setIsSearching(false);
+      }
+    }
+  };
 
   useEffect(() => {
     const urlId = searchParams.get('id');
@@ -139,8 +170,8 @@ export function OrderTracking() {
               {new Date(order.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
             </p>
           </div>
-          <div className="bg-accent/10 border border-accent/20 px-6 py-2 rounded-full">
-            <span className="text-accent text-[10px] uppercase tracking-[0.2em] font-bold">
+          <div className={`border px-6 py-2 rounded-full ${order.status === 'cancelled' ? 'bg-red-500/10 border-red-500/20' : 'bg-accent/10 border-accent/20'}`}>
+            <span className={`${order.status === 'cancelled' ? 'text-red-500' : 'text-accent'} text-[10px] uppercase tracking-[0.2em] font-bold`}>
               {order.status}
             </span>
           </div>
@@ -155,43 +186,53 @@ export function OrderTracking() {
                 <h2 className="font-serif text-2xl uppercase tracking-wider">Order Tracking</h2>
               </div>
 
-              <div className="relative space-y-12">
-                {/* Vertical Line */}
-                <div className="absolute left-[23px] top-4 bottom-4 w-0.5 bg-foreground/5" />
+              {order.status === 'cancelled' ? (
+                <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-8 text-center flex flex-col items-center">
+                  <XCircle className="w-12 h-12 text-red-500 mb-4" />
+                  <h3 className="font-serif text-2xl text-red-500 mb-2">Order Cancelled</h3>
+                  <p className="text-foreground/60 text-sm font-sans max-w-md mx-auto">
+                    This order has been successfully cancelled. The inventory has been restored. If you wish to purchase these items again, you can reorder them below.
+                  </p>
+                </div>
+              ) : (
+                <div className="relative space-y-12">
+                  {/* Vertical Line */}
+                  <div className="absolute left-[23px] top-4 bottom-4 w-0.5 bg-foreground/5" />
 
-                {statusSteps.map((step, idx) => {
-                  const isActive = idx <= currentStatusIdx;
-                  const Icon = step.icon;
-                  
-                  return (
-                    <div key={idx} className="flex gap-8 relative">
-                      <div className={`relative z-10 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 ${
-                        isActive ? 'bg-accent text-background shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)]' : 'bg-background border border-white/10 text-foreground/20'
-                      }`}>
-                        {isActive ? <CheckCircle className="w-6 h-6" /> : <span className="text-sm font-bold font-mono">{idx + 1}</span>}
-                      </div>
-                      
-                      <div className="flex-1 pt-1">
-                        <div className="flex justify-between items-start mb-1">
-                          <h3 className={`text-sm font-bold uppercase tracking-widest ${isActive ? 'text-foreground' : 'text-foreground/30'}`}>
-                            {step.label}
-                          </h3>
-                          {isActive && (
-                            <span className="text-[10px] text-foreground/40 font-mono">
-                              {idx === 0 ? new Date(order.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-                            </span>
-                          )}
+                  {statusSteps.map((step, idx) => {
+                    const isActive = idx <= currentStatusIdx;
+                    const Icon = step.icon;
+                    
+                    return (
+                      <div key={idx} className="flex gap-8 relative">
+                        <div className={`relative z-10 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 ${
+                          isActive ? 'bg-accent text-background shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)]' : 'bg-background border border-white/10 text-foreground/20'
+                        }`}>
+                          {isActive ? <CheckCircle className="w-6 h-6" /> : <span className="text-sm font-bold font-mono">{idx + 1}</span>}
                         </div>
-                        <p className={`text-xs font-sans leading-relaxed ${isActive ? 'text-foreground/60' : 'text-foreground/20'}`}>
-                          {step.status === 'shipped' && order.trackingNumber 
-                            ? `Order shipped via ${order.courierName || 'Courier'}. Tracking: ${order.trackingNumber}`
-                            : step.desc}
-                        </p>
+                        
+                        <div className="flex-1 pt-1">
+                          <div className="flex justify-between items-start mb-1">
+                            <h3 className={`text-sm font-bold uppercase tracking-widest ${isActive ? 'text-foreground' : 'text-foreground/30'}`}>
+                              {step.label}
+                            </h3>
+                            {isActive && (
+                              <span className="text-[10px] text-foreground/40 font-mono">
+                                {idx === 0 ? new Date(order.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                              </span>
+                            )}
+                          </div>
+                          <p className={`text-xs font-sans leading-relaxed ${isActive ? 'text-foreground/60' : 'text-foreground/20'}`}>
+                            {step.status === 'shipped' && order.trackingNumber 
+                              ? `Order shipped via ${order.courierName || 'Courier'}. Tracking: ${order.trackingNumber}`
+                              : step.desc}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Bottom: Items List */}
@@ -272,6 +313,16 @@ export function OrderTracking() {
                 <MessageSquare className="w-4 h-4 text-accent" />
                 Contact Support
               </button>
+              {order.status === 'pending' && (
+                <button 
+                  onClick={handleCancelOrder}
+                  disabled={isSearching}
+                  className="w-full flex items-center justify-center gap-3 border border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-500/50 py-4 rounded-xl transition-all text-[10px] uppercase tracking-widest font-bold disabled:opacity-50"
+                >
+                  <XCircle className="w-4 h-4" />
+                  {isSearching ? 'Processing...' : 'Cancel Order'}
+                </button>
+              )}
               <Link 
                 href="/shop"
                 className="w-full flex items-center justify-center gap-3 border border-white/10 hover:bg-white/5 py-4 rounded-xl transition-all text-[10px] uppercase tracking-widest font-bold"

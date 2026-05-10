@@ -125,7 +125,7 @@ export async function sendOrderStatusEmail(data: {
   email: string;
   name: string;
   orderId: string;
-  status: 'processing' | 'shipped' | 'delivered';
+  status: 'processing' | 'shipped' | 'delivered' | 'cancelled';
   trackingNumber?: string;
   courierName?: string;
   estimatedDelivery?: string;

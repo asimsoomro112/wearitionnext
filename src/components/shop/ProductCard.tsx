@@ -73,23 +73,22 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
               </motion.span>
             </div>
           </div>
-        </PerspectiveContainer>
-
-          {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-2">
+          {/* Badges moved inside PerspectiveContainer */}
+          <div className="absolute top-3 left-3 flex flex-col gap-2 z-20 pointer-events-none">
             {product.isOnSale && product.salePrice && (
-              <span className="bg-red-500 text-white text-[9px] uppercase tracking-widest px-3 py-1.5 font-bold">Sale</span>
+              <span className="bg-red-500 text-white text-[9px] uppercase tracking-widest px-3 py-1.5 font-bold pointer-events-auto">Sale</span>
             )}
             {isLowStock && (
-              <span className="bg-accent text-black text-[9px] uppercase tracking-widest px-3 py-1.5 font-bold animate-pulse">Only {product.stock} Left</span>
+              <span className="bg-accent text-black text-[9px] uppercase tracking-widest px-3 py-1.5 font-bold animate-pulse pointer-events-auto">Only {product.stock} Left</span>
             )}
             {isOutOfStock && (
-              <span className="bg-foreground/80 text-background text-[9px] uppercase tracking-widest px-3 py-1.5 font-bold">Sold Out</span>
+              <span className="bg-foreground/80 text-background text-[9px] uppercase tracking-widest px-3 py-1.5 font-bold pointer-events-auto">Sold Out</span>
             )}
             {product.isNew && (
-              <span className="bg-emerald-500 text-white text-[9px] uppercase tracking-widest px-3 py-1.5 font-bold">New</span>
+              <span className="bg-emerald-500 text-white text-[9px] uppercase tracking-widest px-3 py-1.5 font-bold pointer-events-auto">New</span>
             )}
           </div>
+        </PerspectiveContainer>
 
         {/* Wishlist button */}
         <button 

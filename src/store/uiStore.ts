@@ -14,6 +14,7 @@ interface UIState {
   toggleDarkMode: () => void;
   toggleSearch: () => void;
   closeSearch: () => void;
+  initTheme: () => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -30,13 +31,20 @@ export const useUIStore = create<UIState>((set) => ({
   toggleSearch: () => set((state) => ({ isSearchOpen: !state.isSearchOpen })),
   closeSearch: () => set({ isSearchOpen: false }),
   toggleDarkMode: () => set((state) => {
-    const nextMatch = !state.isDarkMode;
-    if (nextMatch) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    } else {
-      document.documentElement.setAttribute('data-theme', 'light');
+    const nextMode = !state.isDarkMode;
+    if (typeof window !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', nextMode ? 'dark' : 'light');
+      localStorage.setItem('wearition-theme', nextMode ? 'dark' : 'light');
     }
-    return { isDarkMode: nextMatch };
+    return { isDarkMode: nextMode };
+  }),
+  initTheme: () => set(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('wearition-theme');
+      const isDark = saved ? saved === 'dark' : true; // default to dark
+      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      return { isDarkMode: isDark };
+    }
+    return { isDarkMode: true };
   }),
 }));
-

@@ -14,7 +14,7 @@ import { SEO } from '../components/layout/SEO';
 import { TextReveal } from '../components/layout/TextReveal';
 import { MagneticButton } from '../components/layout/MagneticButton';
 import { getOptimizedImage } from '../lib/images';
-import { ShoppingBag, Heart, MessageSquare, ShieldCheck, Truck, RotateCcw, ChevronRight } from 'lucide-react';
+import { Eye, ChevronDown, ChevronUp, AlertCircle, ShoppingBag, Truck, ShieldCheck, Banknote, Share2 } from "lucide-react";
 import { WearitionSpinner } from '../components/layout/WearitionSpinner';
 
 export function ProductDetails() {
@@ -25,6 +25,7 @@ export function ProductDetails() {
   
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [selectedColor, setSelectedColor] = useState<string>('');
+  const [quantity, setQuantity] = useState<number>(1);
   const addItem = useCartStore(state => state.addItem);
   const openCart = useUIStore(state => state.openCart);
   const { wishlistIds, toggleWishlist } = useWishlistStore();
@@ -73,13 +74,14 @@ export function ProductDetails() {
       title: product.title,
       price: product.price,
       image: product.images?.[0] || '',
-      quantity: 1,
+      quantity: quantity,
       size: selectedSize || undefined,
       color: selectedColor || undefined
     });
     triggerHaptic('success');
-    toast.success(`${product.title} added to your bag`);
+    toast.success(`${quantity}x ${product.title} added to your bag`);
     openCart();
+    setQuantity(1); // reset after adding
   };
 
   const handleWishlistToggle = () => {
@@ -90,6 +92,26 @@ export function ProductDetails() {
       toast.success(`${product.title} added to your wishlist`);
     } else {
       toast(`${product.title} removed from your wishlist`);
+    }
+  };
+
+  const handleShare = async () => {
+    if (!product) return;
+    triggerHaptic('light');
+    const shareData = {
+      title: product.title,
+      text: `Check out ${product.title} at WEARITION.`,
+      url: window.location.href,
+    };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        toast.success("Link copied to clipboard!");
+      }
+    } catch (err) {
+      console.log('Error sharing:', err);
     }
   };
 
@@ -207,6 +229,28 @@ export function ProductDetails() {
                     </div>
                  </div>
                )}
+
+               {/* Quantity Selector */}
+               {!isOutOfStock && (
+                 <div>
+                    <div className="flex justify-between items-center mb-6">
+                       <span className="uppercase text-xs tracking-[0.2em] text-foreground">Quantity</span>
+                    </div>
+                    <div className="flex items-center border border-white/10 w-fit rounded-full overflow-hidden">
+                       <button 
+                         onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                         className="px-5 py-3 hover:bg-white/5 transition-colors text-foreground/60 hover:text-foreground"
+                         disabled={quantity <= 1}
+                       >-</button>
+                       <span className="px-6 py-3 font-mono text-sm">{quantity}</span>
+                       <button 
+                         onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
+                         className="px-5 py-3 hover:bg-white/5 transition-colors text-foreground/60 hover:text-foreground"
+                         disabled={quantity >= product.stock}
+                       >+</button>
+                    </div>
+                 </div>
+               )}
             </div>
 
             <MagneticButton 
@@ -217,12 +261,37 @@ export function ProductDetails() {
             </MagneticButton>
 
 
-            <button 
-              onClick={handleWishlistToggle}
-              className="w-full border border-foreground/30 text-foreground py-6 uppercase text-xs tracking-[0.2em] hover:bg-foreground hover:text-background transition-colors duration-300 mb-16 rounded-full"
-            >
-              {isWished ? 'Remove from Wishlist' : 'Add to Wishlist'}
-            </button>
+            <div className="flex gap-4 mb-8">
+              <button 
+                onClick={handleWishlistToggle}
+                className="flex-1 border border-foreground/30 text-foreground py-6 uppercase text-xs tracking-[0.2em] hover:bg-foreground hover:text-background transition-colors duration-300 rounded-full"
+              >
+                {isWished ? 'Remove from Wishlist' : 'Add to Wishlist'}
+              </button>
+              <button 
+                onClick={handleShare}
+                className="w-16 flex items-center justify-center border border-foreground/30 text-foreground hover:bg-white/5 transition-colors duration-300 rounded-full"
+                aria-label="Share Product"
+              >
+                <Share2 className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Trust Badges (Conversion Boosters) */}
+            <div className="flex flex-col gap-3 mb-16 p-4 rounded-xl bg-foreground/5 border border-white/5">
+              <div className="flex items-center gap-3 text-foreground/80">
+                <Banknote className="w-5 h-5 text-emerald-400" />
+                <span className="text-xs uppercase tracking-widest font-bold">Cash on Delivery Available</span>
+              </div>
+              <div className="flex items-center gap-3 text-foreground/80">
+                <Truck className="w-5 h-5 text-blue-400" />
+                <span className="text-xs tracking-wider">Nationwide Delivery (Rs. 250)</span>
+              </div>
+              <div className="flex items-center gap-3 text-foreground/80">
+                <ShieldCheck className="w-5 h-5 text-accent" />
+                <span className="text-xs tracking-wider">100% Authentic Luxury Brands</span>
+              </div>
+            </div>
 
             {/* Accordions simulate */}
             <div className="divide-y divide-white/10 border-t border-white/10">
@@ -231,14 +300,14 @@ export function ProductDetails() {
                      Details & Care
                      <span className="transition-transform duration-300 group-open:rotate-180 text-lg font-light">+</span>
                   </summary>
-                  <p className="mt-6 text-foreground/60 text-sm leading-relaxed font-sans">Dry clean only. Handle with care. Made in Italy.</p>
+                  <p className="mt-6 text-foreground/60 text-sm leading-relaxed font-sans">Premium quality fabric. Handle with care. Refer to the product label for specific washing instructions. Sourced from Pakistan's finest fashion houses.</p>
                </details>
                <details className="group py-6 cursor-pointer">
                   <summary className="flex justify-between items-center uppercase text-xs tracking-[0.2em] font-medium text-foreground list-none">
                      Shipping & Returns
                      <span className="transition-transform duration-300 group-open:rotate-180 text-lg font-light">+</span>
                   </summary>
-                  <p className="mt-6 text-foreground/60 text-sm leading-relaxed font-sans">Complimentary express shipping and free returns within 14 days.</p>
+                  <p className="mt-6 text-foreground/60 text-sm leading-relaxed font-sans">Nationwide delivery across Pakistan via TCS, Leopards & M&P. Standard shipping Rs. 250. Cash on Delivery available. Easy returns within 3 days of delivery.</p>
                </details>
             </div>
           </motion.div>

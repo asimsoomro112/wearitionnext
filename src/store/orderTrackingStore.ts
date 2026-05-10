@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, updateDoc, doc, setDoc, getDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, updateDoc, doc, setDoc, getDoc, getDocs, query, where, serverTimestamp, increment, writeBatch } from 'firebase/firestore';
 
 export interface Order {
   id?: string;
@@ -30,16 +30,57 @@ export const useOrderTrackingStore = create<OrderTrackingState>()(
       orders: [],
       addOrder: async (order) => {
         const orderRef = doc(db, 'orders', order.orderId);
-        await setDoc(orderRef, {
+        
+        // Use a batch to ensure order is saved AND stock is decremented atomically
+        const batch = writeBatch(db);
+        
+        batch.set(orderRef, {
           ...order,
           createdAt: serverTimestamp()
         });
+
+        // Decrement stock for each item in the order
+        if (order.items && order.items.length > 0) {
+          order.items.forEach(item => {
+            if (item.id) {
+              const productRef = doc(db, 'products', item.id);
+              batch.update(productRef, {
+                stock: increment(-item.quantity)
+              });
+            }
+          });
+        }
+
+        await batch.commit();
+
         set((state) => ({ orders: [...state.orders, { ...order, id: order.orderId }] }));
         return order.orderId;
       },
       updateOrderStatus: async (id, status) => {
         const orderRef = doc(db, 'orders', id);
-        await updateDoc(orderRef, { status });
+        
+        if (status === 'cancelled') {
+          const docSnap = await getDoc(orderRef);
+          if (docSnap.exists()) {
+            const orderData = docSnap.data();
+            if (orderData.status !== 'cancelled') {
+              const batch = writeBatch(db);
+              batch.update(orderRef, { status });
+              
+              if (orderData.items && orderData.items.length > 0) {
+                orderData.items.forEach((item: any) => {
+                  if (item.id) {
+                    batch.update(doc(db, 'products', item.id), { stock: increment(item.quantity) });
+                  }
+                });
+              }
+              await batch.commit();
+            }
+          }
+        } else {
+          await updateDoc(orderRef, { status });
+        }
+
         set((state) => ({
           orders: state.orders.map(o => o.id === id ? { ...o, status } : o)
         }));

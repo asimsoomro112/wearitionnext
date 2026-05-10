@@ -340,7 +340,7 @@ export function orderPlacedEmail(data: {
 export function orderStatusEmail(data: {
   name: string;
   orderId: string;
-  status: 'processing' | 'shipped' | 'delivered';
+  status: 'processing' | 'shipped' | 'delivered' | 'cancelled';
   trackingNumber?: string;
   courierName?: string;
   estimatedDelivery?: string;
@@ -370,6 +370,14 @@ export function orderStatusEmail(data: {
       description: 'Your WEARITION package has been delivered. We hope you love every piece.',
       subject: `Order Delivered — ${data.orderId}`,
       preheader: `Your ${BRAND.name} order has been delivered!`,
+    },
+    cancelled: {
+      icon: '✕',
+      label: 'Order Cancelled',
+      headline: 'Your order has been cancelled',
+      description: 'Your order has been successfully cancelled and inventory has been restored. If you have already made a payment, please contact our concierge for refund details.',
+      subject: `Order Cancelled — ${data.orderId}`,
+      preheader: `Your ${BRAND.name} order has been cancelled.`,
     }
   };
 
@@ -435,6 +443,7 @@ export function orderStatusEmail(data: {
   ${trackingSection}
 
   <!-- PROGRESS BAR -->
+  ${data.status !== 'cancelled' ? `
   <tr>
     <td style="padding:32px 48px;" class="mobile-padding">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
@@ -449,6 +458,7 @@ export function orderStatusEmail(data: {
       </table>
     </td>
   </tr>
+  ` : ''}
 
   ${data.status === 'delivered' ? `
   <tr>

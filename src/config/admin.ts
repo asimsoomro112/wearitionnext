@@ -3,7 +3,7 @@ export const ADMIN_EMAILS = [
   'asimsoomro112@gmail.com',
   'admin@wearition.store',
   'admin@wearition.com'
-];
+].map(email => email.toLowerCase());
 
 export const isAdminEmail = (email: string | null | undefined) => {
   if (!email) return false;

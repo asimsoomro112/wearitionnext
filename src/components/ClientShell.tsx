@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useAuthStore } from "@/store/authStore";
+import { useUIStore } from "@/store/uiStore";
 import { isAdminEmail } from "@/config/admin";
 import { AnimatePresence, motion } from "framer-motion";
 import { Toaster } from "sonner";
@@ -18,9 +19,13 @@ import { LoadingScreen } from "@/components/layout/LoadingScreen";
 
 export function ClientShell({ children }: { children: React.ReactNode }) {
   const { setUser, setIsAdmin, setLoading } = useAuthStore();
+  const { initTheme } = useUIStore();
   const [appLoading, setAppLoading] = useState(true);
 
   useEffect(() => {
+    // Restore saved theme preference
+    initTheme();
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       if (user) {
@@ -32,7 +37,7 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
       setAppLoading(false);
     });
     return () => unsubscribe();
-  }, [setUser, setIsAdmin, setLoading]);
+  }, [setUser, setIsAdmin, setLoading, initTheme]);
 
   return (
     <>

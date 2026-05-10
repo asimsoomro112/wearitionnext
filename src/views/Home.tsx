@@ -6,8 +6,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from 'next/link';
 import { formatCurrency } from '@/lib/currency';
 import { db } from '@/lib/firebase';
-import { collection, doc, getDoc, getDocs, query, where, limit } from "firebase/firestore";
-import heroImg from "@/1.png";
+import { collection, doc, getDoc, getDocs, setDoc, query, where, limit, serverTimestamp } from "firebase/firestore";
+import { toast } from 'sonner';
 import { BrandStory } from "../components/layout/BrandStory";
 import { SEO } from "../components/layout/SEO";
 import { TextReveal } from "../components/layout/TextReveal";
@@ -64,7 +64,7 @@ const BrandsMarquee = () => {
 };
 
 // ─── HORIZONTAL SCROLLER ──────────────────────────────────────────────────────
-const HorizontalScroller = ({ title, products, sectionClass, scrollClass, isSale = false }: any) => {
+const HorizontalScroller = ({ title, products, sectionClass, isSale = false }: any) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -87,6 +87,7 @@ const HorizontalScroller = ({ title, products, sectionClass, scrollClass, isSale
               start: "center center", 
               end: () => `+=${scrollWidth}`,
               invalidateOnRefresh: true,
+              refreshPriority: 1, // Ensure pins calculate before child triggers
             }
           });
         }, scrollRef);
@@ -110,14 +111,16 @@ const HorizontalScroller = ({ title, products, sectionClass, scrollClass, isSale
         </div>
       </div>
       <div className="relative w-full overflow-x-auto lg:overflow-hidden z-10 pl-6 lg:pl-[max(1.5rem,calc((100vw-1440px)/2))] hide-scrollbar touch-auto">
-        <div ref={containerRef} className={`flex gap-6 md:gap-10 items-center w-max pb-8 pr-[10vw] ${scrollClass}`}>
+        <div ref={containerRef} className={`flex gap-6 md:gap-10 items-center w-max pb-8 pr-[10vw]`}>
           {products.map((product: any, i: number) => (
             <Link href={`/product/${product.id}`} key={i} className="product-card w-[220px] sm:w-[260px] md:w-[350px] group cursor-pointer flex-shrink-0 block">
                <div className="relative aspect-[3/4] overflow-hidden mb-4 md:mb-6 bg-background-secondary/20 shadow-xl parallax-container group/img rounded-lg">
-                 <img src={product.images?.[0] || product.image} alt={product.name} onError={onImgError} className="parallax-img absolute top-[-10%] left-0 w-full h-[120%] object-cover transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover/img:scale-[1.02]" style={{ willChange: "transform" }}/>
-                 {product.images && product.images.length > 1 && (
-                   <img src={product.images[1]} alt={`${product.name} alternate`} onError={onImgError} className="parallax-img absolute top-[-10%] left-0 w-full h-[120%] object-cover opacity-0 group-hover/img:opacity-100 transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover/img:scale-[1.02]" style={{ willChange: "transform" }}/>
-                 )}
+                 <div className="parallax-img absolute top-[-10%] left-0 w-full h-[120%]" style={{ willChange: "transform" }}>
+                   <img src={product.images?.[0] || product.image} alt={product.name} onError={onImgError} className="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover/img:scale-[1.05]"/>
+                   {product.images && product.images.length > 1 && (
+                     <img src={product.images[1]} alt={`${product.name} alternate`} onError={onImgError} className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover/img:opacity-100 transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover/img:scale-[1.05]"/>
+                   )}
+                 </div>
                </div>
                <div className="flex justify-between items-start text-foreground">
                  <div>
@@ -142,6 +145,8 @@ export function Home() {
   const [heroProducts, setHeroProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterSubmitting, setNewsletterSubmitting] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -223,6 +228,7 @@ export function Home() {
       parallaxContainers.forEach((container: any) => {
         const img = container.querySelector(".parallax-img");
         if (img) {
+          const pinnedParent = container.closest('section');
           gsap.to(img, {
             yPercent: 15,
             ease: "none",
@@ -231,10 +237,18 @@ export function Home() {
               start: "top bottom", 
               end: "bottom top", 
               scrub: 1,
+              // If it's inside a pinned section, GSAP needs to know to subtract the pin offset
+              pinnedContainer: pinnedParent && window.innerWidth > 1024 ? pinnedParent : undefined
             },
           });
         }
       });
+
+      // Force recalculation of all triggers after everything renders
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 500);
+      
     }, containerRef);
     return () => ctx.revert();
   }, [loading, finalSections, isMounted]);
@@ -294,12 +308,14 @@ export function Home() {
         return (
           <section key={section.id || index} className="artisanship-section relative z-10 w-full py-20 md:py-36 px-6 md:px-12 bg-background-secondary overflow-hidden">
             <div className="absolute inset-0 z-0 opacity-[0.05]">
-              <img src="https://images.unsplash.com/photo-1590670845026-d66cc515bcb3?q=80&w=2000" alt="" className="w-full h-full object-cover" />
+              {/* Rich eastern fabric texture */}
+              <img src="https://images.unsplash.com/photo-1605007493699-af65834f8a00?q=80&w=2000" alt="" className="w-full h-full object-cover" />
             </div>
             <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row items-center gap-16 lg:gap-24 relative z-10">
               <div className="w-full lg:w-1/2">
                 <div className="relative aspect-[4/5] overflow-hidden shadow-2xl parallax-container rounded-xl">
-                  <img src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=1000" alt="Bespoke Clothing" className="parallax-img absolute top-[-10%] left-0 w-full h-[120%] object-cover" />
+                  {/* Detailed eastern tailoring/embroidery */}
+                  <img src="https://images.unsplash.com/photo-1612423284934-2850a4ea6b0f?q=80&w=1000" alt="Bespoke Clothing" className="parallax-img absolute top-[-10%] left-0 w-full h-[120%] object-cover" />
                   <div className="absolute inset-0 bg-black/10" />
                 </div>
               </div>
@@ -315,14 +331,33 @@ export function Home() {
         return (
           <section key={section.id || index} className="newsletter-section relative z-10 w-full py-24 md:py-40 px-6 flex items-center justify-center overflow-hidden bg-background">
             <div className="absolute inset-0 z-0 opacity-15">
-              <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=2000" alt="" className="w-full h-full object-cover grayscale blur-sm" />
+              {/* Premium silk/velvet texture */}
+              <img src="https://images.unsplash.com/photo-1584227443196-857e600570b1?q=80&w=2000" alt="" className="w-full h-full object-cover grayscale blur-sm" />
               <div className="absolute inset-0 bg-background/85"></div>
             </div>
             <div className="max-w-xl w-full text-center relative z-10">
               <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl uppercase tracking-widest text-foreground mb-6">Join the Community</h2>
-              <form className="flex flex-col sm:flex-row border-b border-border-color pb-3 relative">
-                <input type="email" placeholder="Enter your email address" className="bg-transparent border-none outline-none text-foreground flex-grow font-sans placeholder-foreground/30 px-2 py-2" required />
-                <button type="submit" className="uppercase text-[9px] tracking-[0.2em] text-foreground hover:text-accent ml-4 font-medium mt-4 sm:mt-0">Subscribe</button>
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                if (!newsletterEmail || newsletterSubmitting) return;
+                setNewsletterSubmitting(true);
+                try {
+                  const emailKey = newsletterEmail.toLowerCase().replace(/[^a-z0-9@.]/g, '_');
+                  await setDoc(doc(db, 'subscribers', emailKey), {
+                    email: newsletterEmail.toLowerCase(),
+                    subscribedAt: serverTimestamp(),
+                  });
+                  toast.success('Welcome to the WEARITION community!');
+                  setNewsletterEmail('');
+                } catch (err) {
+                  console.error('Newsletter subscription error:', err);
+                  toast.error('Failed to subscribe. Please try again.');
+                } finally {
+                  setNewsletterSubmitting(false);
+                }
+              }} className="flex flex-col sm:flex-row border-b border-border-color pb-3 relative">
+                <input type="email" placeholder="Enter your email address" value={newsletterEmail} onChange={(e) => setNewsletterEmail(e.target.value)} className="bg-transparent border-none outline-none text-foreground flex-grow font-sans placeholder-foreground/30 px-2 py-2" required />
+                <button type="submit" disabled={newsletterSubmitting} className="uppercase text-[9px] tracking-[0.2em] text-foreground hover:text-accent ml-4 font-medium mt-4 sm:mt-0 disabled:opacity-50">{newsletterSubmitting ? 'Subscribing...' : 'Subscribe'}</button>
               </form>
             </div>
           </section>

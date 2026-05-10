@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, query, onSnapshot, orderBy, doc, updateDoc } from 'firebase/firestore';
+import { collection, query, onSnapshot, orderBy, doc, updateDoc, writeBatch, increment } from 'firebase/firestore';
 import { formatCurrency } from '@/lib/currency';
 import { sendOrderStatusEmail } from '@/lib/emailService';
 import { toast } from 'sonner';
@@ -51,11 +51,31 @@ export function AdminOrders() {
     }
 
     try {
-      await updateDoc(doc(db, 'orders', docId), { status: newStatus });
+      const order = orders.find(o => o.id === docId);
+
+      // Handle Cancellation Inventory Restore
+      if (newStatus === 'cancelled') {
+        if (order && order.status !== 'cancelled') {
+          const batch = writeBatch(db);
+          batch.update(doc(db, 'orders', docId), { status: newStatus });
+          // Restore stock
+          if (order.items && order.items.length > 0) {
+            order.items.forEach((item: any) => {
+              if (item.id) {
+                batch.update(doc(db, 'products', item.id), { stock: increment(item.quantity) });
+              }
+            });
+          }
+          await batch.commit();
+        }
+      } else {
+        await updateDoc(doc(db, 'orders', docId), { status: newStatus });
+      }
+
       toast.success(`Order ${orderId} status updated to ${newStatus}`);
       
       // Send rich branded status email (skip for pending — no change)
-      if (newStatus !== 'pending') {
+      if (newStatus !== 'pending' && newStatus !== 'cancelled') {
         const order = orders.find(o => o.id === docId);
         sendOrderStatusEmail({
           email,
@@ -168,6 +188,7 @@ export function AdminOrders() {
                     <option value="processing">Processing</option>
                     <option value="shipped">Shipped</option>
                     <option value="delivered">Delivered</option>
+                    <option value="cancelled">Cancelled</option>
                   </select>
                 </td>
               </tr>

@@ -16,6 +16,7 @@
   --bg-secondary: #0A0A0A;
   --fg: #FDFDFD;
   --accent: #D4AF37;
+  --accent-rgb: 212, 175, 55;
   --border-color: rgba(255, 255, 255, 0.05);
   --glass-bg: rgba(0, 0, 0, 0.4);
   --glass-border: rgba(255, 255, 255, 0.05);
@@ -26,6 +27,7 @@
   --bg-secondary: #F5F5F5;
   --fg: #0A0A0A;
   --accent: #B8860B;
+  --accent-rgb: 184, 134, 11;
   --border-color: rgba(0, 0, 0, 0.05);
   --glass-bg: rgba(255, 255, 255, 0.4);
   --glass-border: rgba(0, 0, 0, 0.05);

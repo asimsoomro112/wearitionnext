@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/opengraph-image.png",
+        url: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=1200",
         width: 1200,
         height: 630,
         alt: "WEARITION Luxury Fashion",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "WEARITION — Wear Your Identity",
     description: "Premium luxury fashion from Pakistan.",
-    images: ["/opengraph-image.png"],
+    images: ["https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=1200"],
   },
   icons: {
     icon: "/icon.png",
