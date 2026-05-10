@@ -35,7 +35,7 @@ export function SearchOverlay() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closeSearch}
-            className="fixed inset-0 bg-black/60 backdrop-blur-xl z-[150] flex flex-col items-center pt-[15vh] md:pt-[20vh] px-6"
+            className="fixed inset-0 bg-black/60 backdrop-blur-xl z-[500] flex flex-col items-center pt-[15vh] md:pt-[20vh] px-6"
           >
             <button 
               onClick={closeSearch} 

@@ -25,7 +25,7 @@ export function CartDrawer() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             onClick={closeCart}
-            className="fixed inset-0 bg-background-secondary/60 backdrop-blur-sm z-[150]"
+            className="fixed inset-0 bg-background-secondary/60 backdrop-blur-sm z-[500]"
           />
 
           {/* Drawer */}
@@ -34,7 +34,7 @@ export function CartDrawer() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-full md:w-[480px] bg-background border-l border-white/10 z-[150] flex flex-col pt-6 pb-8 text-foreground"
+            className="fixed top-0 right-0 h-full w-full md:w-[480px] bg-background border-l border-white/10 z-[500] flex flex-col pt-6 pb-8 text-foreground"
           >
             <div className="px-8 flex justify-between items-center mb-10 mt-4">
               <h2 className="font-serif tracking-widest uppercase text-2xl text-foreground">Your Bag</h2>

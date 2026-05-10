@@ -22,7 +22,7 @@ export function MobileMenu() {
           animate={{ y: 0 }}
           exit={{ y: '100%' }}
           transition={{ type: "spring", damping: 30, stiffness: 300 }}
-          className="fixed inset-0 z-[200] liquid-glass flex flex-col pt-24 px-10 pb-12 rounded-t-[3rem]"
+          className="fixed inset-0 z-[500] liquid-glass flex flex-col pt-24 px-10 pb-12 rounded-t-[3rem]"
         >
           <button 
             onClick={handleClose} 

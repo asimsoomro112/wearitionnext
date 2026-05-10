@@ -123,7 +123,7 @@ export function AIStyleAssistant() {
       {/* Floating Trigger Button */}
       <motion.button
         onClick={() => { setIsOpen(true); triggerHaptic('light'); }}
-        className="fixed bottom-24 right-6 z-40 w-14 h-14 rounded-full liquid-glass flex items-center justify-center shadow-2xl border border-accent/30 text-accent"
+        className="fixed bottom-24 right-6 z-[200] w-14 h-14 rounded-full liquid-glass flex items-center justify-center shadow-2xl border border-accent/30 text-accent"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         title="Style Assistant"
@@ -140,7 +140,7 @@ export function AIStyleAssistant() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="fixed bottom-24 right-6 z-50 w-[calc(100vw-3rem)] max-w-[380px] rounded-2xl overflow-hidden shadow-2xl"
+            className="fixed bottom-24 right-6 z-[210] w-[calc(100vw-3rem)] max-w-[380px] rounded-2xl overflow-hidden shadow-2xl"
             style={{ background: 'rgba(5,5,5,0.95)', backdropFilter: 'blur(30px)', border: '1px solid rgba(212,175,55,0.2)' }}
           >
             {/* Header */}

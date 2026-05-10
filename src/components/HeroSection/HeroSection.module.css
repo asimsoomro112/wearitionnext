@@ -265,7 +265,7 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 200; /* Ensure on top */
+  z-index: 100; /* Above cards (max 80) but below global overlays (150+) */
   background: var(--foreground);
   color: var(--background);
   border: none;
