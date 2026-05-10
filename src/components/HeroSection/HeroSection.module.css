@@ -14,6 +14,7 @@
   align-items: center;
   font-family: 'Jost', sans-serif;
   background-color: var(--background);
+  touch-action: pan-y;
 }
 
 @media (min-width: 1024px) {
@@ -80,6 +81,7 @@
   transform: translateX(180%) translateZ(-1200px) rotateY(-80deg);
   pointer-events: none;
   background: var(--background-secondary);
+  touch-action: pan-y;
 }
 
 @media (min-width: 1024px) {

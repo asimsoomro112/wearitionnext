@@ -225,3 +225,15 @@ body {
     transform: scale(0.65);
   }
 }
+
+/* Mobile Scroll Optimization */
+img {
+  touch-action: pan-y;
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.perspective-container {
+  touch-action: pan-y;
+}

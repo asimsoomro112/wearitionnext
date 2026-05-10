@@ -138,6 +138,7 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                     <img
                       src={c.img}
                       alt={c.brand}
+                      draggable="false"
                       className={styles.productImg}
                       onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                     />
