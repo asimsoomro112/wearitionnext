@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, updateDoc, doc, getDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, updateDoc, doc, setDoc, getDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
 
 export interface Order {
   id?: string;
@@ -29,12 +29,13 @@ export const useOrderTrackingStore = create<OrderTrackingState>()(
     (set, get) => ({
       orders: [],
       addOrder: async (order) => {
-        const docRef = await addDoc(collection(db, 'orders'), {
+        const orderRef = doc(db, 'orders', order.orderId);
+        await setDoc(orderRef, {
           ...order,
           createdAt: serverTimestamp()
         });
-        set((state) => ({ orders: [...state.orders, { ...order, id: docRef.id }] }));
-        return docRef.id;
+        set((state) => ({ orders: [...state.orders, { ...order, id: order.orderId }] }));
+        return order.orderId;
       },
       updateOrderStatus: async (id, status) => {
         const orderRef = doc(db, 'orders', id);
@@ -45,20 +46,21 @@ export const useOrderTrackingStore = create<OrderTrackingState>()(
       },
       getOrder: async (orderId) => {
         if (!orderId) return undefined;
-        const cleanId = orderId.trim().toUpperCase();
+        const cleanId = orderId.trim();
+        const upperId = cleanId.toUpperCase();
 
         try {
-          // 1. Try direct document ID lookup first (if it's a Firestore ID)
-          const docRef = doc(db, 'orders', orderId);
+          // 1. Try direct document ID lookup
+          const docRef = doc(db, 'orders', cleanId);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
             return { id: docSnap.id, ...docSnap.data() } as Order;
           }
 
-          // 2. Search by custom orderId field (WR-XXXX)
+          // 2. Search by custom orderId field (try both cases just in case)
           const q = query(
             collection(db, 'orders'), 
-            where('orderId', '==', cleanId)
+            where('orderId', 'in', [cleanId, upperId])
           );
           const querySnapshot = await getDocs(q);
           
@@ -68,6 +70,7 @@ export const useOrderTrackingStore = create<OrderTrackingState>()(
           }
         } catch (e) {
           console.error("Order lookup error:", e);
+          throw e; // Throw so UI can catch it
         }
 
         return undefined;
