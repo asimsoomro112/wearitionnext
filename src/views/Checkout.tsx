@@ -10,10 +10,11 @@ import { getOptimizedImage } from '../lib/images';
 import { sendOrderConfirmationEmail } from '@/lib/emailService';
 import { useOrderTrackingStore } from '../store/orderTrackingStore';
 import { useAuthStore } from '../store/authStore';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { SEO } from '../components/layout/SEO';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { LogIn, User, ShoppingBag, ArrowRight } from 'lucide-react';
 
 interface ShippingAddress {
   firstName: string;
@@ -35,25 +36,39 @@ export function Checkout() {
   const [shipping, setShipping] = useState<ShippingAddress>({
     firstName: '', lastName: '', address: '', city: '', zip: '', phone: ''
   });
+  const [showGuestForm, setShowGuestForm] = useState(false);
   const addOrder = useOrderTrackingStore(state => state.addOrder);
   const { user } = useAuthStore();
 
-  // Auto-fill user data
-  useState(() => {
-    if (user) {
-      setEmail(user.email || '');
-      // Try to load saved address from user's meta if we have it
-      // For now, we'll just check if displayName exists to split it
-      if (user.displayName) {
-        const parts = user.displayName.split(' ');
-        setShipping(prev => ({
-          ...prev,
-          firstName: parts[0] || '',
-          lastName: parts.slice(1).join(' ') || ''
-        }));
+  // Auto-fill and Load saved data
+  useEffect(() => {
+    async function loadUserData() {
+      if (user) {
+        setEmail(user.email || '');
+        setShowGuestForm(true); // Auto show form for logged in users
+        try {
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            if (userData.savedAddress) {
+              setShipping(userData.savedAddress);
+              if (userData.savedAddress.email) setEmail(userData.savedAddress.email);
+            } else if (user.displayName) {
+              const parts = user.displayName.split(' ');
+              setShipping(prev => ({
+                ...prev,
+                firstName: parts[0] || '',
+                lastName: parts.slice(1).join(' ') || ''
+              }));
+            }
+          }
+        } catch (e) {
+          console.error("Error loading user data:", e);
+        }
       }
     }
-  });
+    loadUserData();
+  }, [user]);
 
   const [baseShipping, setBaseShipping] = useState(250);
   const [incrementalShipping, setIncrementalShipping] = useState(100);
@@ -92,11 +107,6 @@ export function Checkout() {
     if (!shipping.firstName || !shipping.address || !shipping.city) {
       toast.error('Please fill in your shipping address'); return;
     }
-    if (!user) {
-      toast.error('Please sign in to place an order');
-      router.push('/account');
-      return;
-    }
 
     setIsProcessing(true);
 
@@ -105,7 +115,7 @@ export function Checkout() {
     const orderData = {
       orderId,
       email: email.toLowerCase(),
-      userId: user.uid,
+      userId: user?.uid || 'guest',
       status: 'pending' as const,
       date: new Date().toISOString(),
       subtotal,
@@ -207,105 +217,147 @@ export function Checkout() {
         </motion.header>
 
         <div className="flex flex-col lg:flex-row gap-12">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="w-full lg:w-2/3">
-            <form onSubmit={handleCheckout} className="space-y-6">
-              {/* Contact Info */}
-              <section className="bg-foreground/5 p-8 rounded-xl border border-white/5">
-                <h2 className="text-xs uppercase tracking-widest mb-6 font-bold text-foreground">Contact Information</h2>
-                <div className="space-y-4">
-                  <div>
-                    <label className={labelClass}>Email Address *</label>
-                    <input value={email} onChange={e => setEmail(e.target.value)} required type="email" className={inputClass} placeholder="your@email.com" />
-                  </div>
-                  <div>
-                    <label className={labelClass}>Phone Number</label>
-                    <input value={shipping.phone} onChange={handleShippingChange('phone')} type="tel" className={inputClass} placeholder="+92 300 0000000" />
-                  </div>
-                </div>
-              </section>
-
-              {/* Shipping Address */}
-              <section className="bg-foreground/5 p-8 rounded-xl border border-white/5">
-                <h2 className="text-xs uppercase tracking-widest mb-6 font-bold text-foreground">Shipping Address</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className={labelClass}>First Name *</label>
-                    <input value={shipping.firstName} onChange={handleShippingChange('firstName')} required type="text" className={inputClass} placeholder="Muhammad" />
-                  </div>
-                  <div>
-                    <label className={labelClass}>Last Name *</label>
-                    <input value={shipping.lastName} onChange={handleShippingChange('lastName')} required type="text" className={inputClass} placeholder="Ali" />
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className={labelClass}>Street Address *</label>
-                    <input value={shipping.address} onChange={handleShippingChange('address')} required type="text" className={inputClass} placeholder="123 Street, Block B" />
-                  </div>
-                  <div>
-                    <label className={labelClass}>City *</label>
-                    <input value={shipping.city} onChange={handleShippingChange('city')} required type="text" className={inputClass} placeholder="Karachi" />
-                  </div>
-                  <div>
-                    <label className={labelClass}>Postal Code</label>
-                    <input value={shipping.zip} onChange={handleShippingChange('zip')} type="text" className={inputClass} placeholder="75500" />
-                  </div>
+          <div className="w-full lg:w-2/3">
+            <AnimatePresence mode="wait">
+              {!user && !showGuestForm ? (
+                <motion.div 
+                  key="choice"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="bg-foreground/5 p-12 rounded-2xl border border-white/5 text-center"
+                >
+                  <User className="w-12 h-12 text-accent mx-auto mb-6 opacity-50" />
+                  <h2 className="font-serif text-2xl mb-4">How would you like to proceed?</h2>
+                  <p className="text-foreground/40 text-sm mb-10 max-w-sm mx-auto">Sign in to track your orders and use saved addresses, or proceed as a guest.</p>
                   
-                  {user && (
-                    <div className="md:col-span-2 flex items-center gap-3 mt-2">
-                      <input 
-                        type="checkbox" 
-                        id="saveAddress" 
-                        checked={saveAddress} 
-                        onChange={(e) => setSaveAddress(e.target.checked)}
-                        className="w-4 h-4 accent-accent"
-                      />
-                      <label htmlFor="saveAddress" className="text-xs text-foreground/60 cursor-pointer">Save this address for future orders</label>
-                    </div>
-                  )}
-                </div>
-              </section>
-
-              {/* Payment */}
-              <section className="bg-foreground/5 p-8 rounded-xl border border-white/5">
-                <h2 className="text-xs uppercase tracking-widest mb-6 font-bold text-foreground">Payment Method</h2>
-                <div className="space-y-3">
-                  {[
-                    { value: 'cod', label: 'Cash on Delivery (COD)', desc: 'Pay when your order arrives' },
-                    { value: 'easypaisa', label: 'EasyPaisa', desc: 'Mobile wallet payment' },
-                    { value: 'jazzcash', label: 'JazzCash', desc: 'Mobile wallet payment' },
-                    { value: 'bank', label: 'Bank Transfer', desc: 'Direct bank payment' },
-                  ].map(opt => (
-                    <label key={opt.value} className={`flex items-center gap-4 cursor-pointer p-4 rounded-lg border transition-all ${paymentMethod === opt.value ? 'border-accent/40 bg-accent/5' : 'border-white/5 hover:border-white/10'}`}>
-                      <input type="radio" name="payment" value={opt.value} checked={paymentMethod === opt.value} onChange={() => setPaymentMethod(opt.value)} className="accent-accent" />
-                      <div>
-                        <p className="text-sm font-medium text-foreground">{opt.label}</p>
-                        <p className="text-[10px] text-foreground/40">{opt.desc}</p>
-                      </div>
-                    </label>
-                  ))}
-                </div>
-                {paymentMethod !== 'cod' && (
-                  <div className="mt-4 p-4 border border-accent/10 bg-accent/5 rounded-lg text-xs text-foreground/60 font-sans">
-                    Payment instructions will be sent to <b className="text-foreground">{email || 'your email'}</b> after placing your order.
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Link href="/account" className="flex-1 max-w-[240px] bg-foreground text-background py-4 px-8 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-accent transition-all flex items-center justify-center gap-2">
+                      <LogIn className="w-4 h-4" />
+                      Sign In / Sign Up
+                    </Link>
+                    <button 
+                      onClick={() => setShowGuestForm(true)}
+                      className="flex-1 max-w-[240px] border border-white/10 text-foreground py-4 px-8 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-all flex items-center justify-center gap-2"
+                    >
+                      Checkout as Guest
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
                   </div>
-                )}
-              </section>
+                </motion.div>
+              ) : (
+                <motion.div 
+                  key="form"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-6"
+                >
+                  <form onSubmit={handleCheckout} className="space-y-6">
+                    {/* Contact Info */}
+                    <section className="bg-foreground/5 p-8 rounded-xl border border-white/5">
+                      <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-xs uppercase tracking-widest font-bold text-foreground">Contact Information</h2>
+                        {!user && (
+                          <button onClick={() => setShowGuestForm(false)} className="text-[10px] uppercase tracking-widest text-accent hover:underline">Change Method</button>
+                        )}
+                      </div>
+                      <div className="space-y-4">
+                        <div>
+                          <label className={labelClass}>Email Address *</label>
+                          <input value={email} onChange={e => setEmail(e.target.value)} required type="email" className={inputClass} placeholder="your@email.com" />
+                        </div>
+                        <div>
+                          <label className={labelClass}>Phone Number</label>
+                          <input value={shipping.phone} onChange={handleShippingChange('phone')} type="tel" className={inputClass} placeholder="+92 300 0000000" />
+                        </div>
+                      </div>
+                    </section>
 
-              <button
-                type="submit"
-                disabled={isProcessing}
-                className="w-full bg-foreground text-background py-5 uppercase text-xs tracking-[0.3em] font-bold hover:bg-accent transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-3 rounded-full"
-              >
-                {isProcessing ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
-                    Processing Order...
-                  </>
-                ) : (
-                  `Place Order · ${formatCurrency(total)}`
-                )}
-              </button>
-            </form>
-          </motion.div>
+                    {/* Shipping Address */}
+                    <section className="bg-foreground/5 p-8 rounded-xl border border-white/5">
+                      <h2 className="text-xs uppercase tracking-widest mb-6 font-bold text-foreground">Shipping Address</h2>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className={labelClass}>First Name *</label>
+                          <input value={shipping.firstName} onChange={handleShippingChange('firstName')} required type="text" className={inputClass} placeholder="Muhammad" />
+                        </div>
+                        <div>
+                          <label className={labelClass}>Last Name *</label>
+                          <input value={shipping.lastName} onChange={handleShippingChange('lastName')} required type="text" className={inputClass} placeholder="Ali" />
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className={labelClass}>Street Address *</label>
+                          <input value={shipping.address} onChange={handleShippingChange('address')} required type="text" className={inputClass} placeholder="123 Street, Block B" />
+                        </div>
+                        <div>
+                          <label className={labelClass}>City *</label>
+                          <input value={shipping.city} onChange={handleShippingChange('city')} required type="text" className={inputClass} placeholder="Karachi" />
+                        </div>
+                        <div>
+                          <label className={labelClass}>Postal Code</label>
+                          <input value={shipping.zip} onChange={handleShippingChange('zip')} type="text" className={inputClass} placeholder="75500" />
+                        </div>
+                        
+                        {user && (
+                          <div className="md:col-span-2 flex items-center gap-3 mt-2">
+                            <input 
+                              type="checkbox" 
+                              id="saveAddress" 
+                              checked={saveAddress} 
+                              onChange={(e) => setSaveAddress(e.target.checked)}
+                              className="w-4 h-4 accent-accent"
+                            />
+                            <label htmlFor="saveAddress" className="text-xs text-foreground/60 cursor-pointer">Save this address for future orders</label>
+                          </div>
+                        )}
+                      </div>
+                    </section>
+
+                    {/* Payment */}
+                    <section className="bg-foreground/5 p-8 rounded-xl border border-white/5">
+                      <h2 className="text-xs uppercase tracking-widest mb-6 font-bold text-foreground">Payment Method</h2>
+                      <div className="space-y-3">
+                        {[
+                          { value: 'cod', label: 'Cash on Delivery (COD)', desc: 'Pay when your order arrives' },
+                          { value: 'easypaisa', label: 'EasyPaisa', desc: 'Mobile wallet payment' },
+                          { value: 'jazzcash', label: 'JazzCash', desc: 'Mobile wallet payment' },
+                          { value: 'bank', label: 'Bank Transfer', desc: 'Direct bank payment' },
+                        ].map(opt => (
+                          <label key={opt.value} className={`flex items-center gap-4 cursor-pointer p-4 rounded-lg border transition-all ${paymentMethod === opt.value ? 'border-accent/40 bg-accent/5' : 'border-white/5 hover:border-white/10'}`}>
+                            <input type="radio" name="payment" value={opt.value} checked={paymentMethod === opt.value} onChange={() => setPaymentMethod(opt.value)} className="accent-accent" />
+                            <div>
+                              <p className="text-sm font-medium text-foreground">{opt.label}</p>
+                              <p className="text-[10px] text-foreground/40">{opt.desc}</p>
+                            </div>
+                          </label>
+                        ))}
+                      </div>
+                      {paymentMethod !== 'cod' && (
+                        <div className="mt-4 p-4 border border-accent/10 bg-accent/5 rounded-lg text-xs text-foreground/60 font-sans">
+                          Payment instructions will be sent to <b className="text-foreground">{email || 'your email'}</b> after placing your order.
+                        </div>
+                      )}
+                    </section>
+
+                    <button
+                      type="submit"
+                      disabled={isProcessing}
+                      className="w-full bg-foreground text-background py-5 uppercase text-xs tracking-[0.3em] font-bold hover:bg-accent transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-3 rounded-full"
+                    >
+                      {isProcessing ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
+                          Processing Order...
+                        </>
+                      ) : (
+                        `Place Order · ${formatCurrency(total)}`
+                      )}
+                    </button>
+                  </form>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           {/* Order Summary */}
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="w-full lg:w-1/3">
