@@ -12,6 +12,7 @@ export interface Order {
   total: number;
   items: any[];
   shippingDetails?: any;
+  shippingAddress?: { name: string; address: string; city: string; zip?: string; phone?: string };
   paymentMethod?: string;
   createdAt?: any;
 }
