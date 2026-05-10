@@ -12,7 +12,7 @@ interface SEOProps {
 const DEFAULTS = {
   title: 'WEARITION — Luxury Fashion House Pakistan',
   description: 'Premium curated fashion for the modern visionary. Discover luxury menswear & womenswear at WEARITION — Pakistan\'s premier online fashion destination.',
-  image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=1200',
+  image: 'https://wearition.store/logo.png',
   url: 'https://wearition.store',
 };
 
