@@ -59,7 +59,7 @@ export function Navbar() {
     >
       <div className="flex items-center gap-6">
         <Link href="/shop" className="hidden md:block uppercase text-xs tracking-widest md:hover:opacity-70 transition-opacity">Shop</Link>
-        <Link href="/shop" className="hidden md:block uppercase text-xs tracking-widest md:hover:opacity-70 transition-opacity">Collections</Link>
+        <Link href="/editorial" className="hidden md:block uppercase text-xs tracking-widest md:hover:opacity-70 transition-opacity">Collections</Link>
         
         <div className="relative hidden md:block">
           <button 

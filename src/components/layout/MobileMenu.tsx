@@ -41,6 +41,10 @@ export function MobileMenu() {
               <span className="text-xl opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all">→</span>
             </Link>
             <Link href="/shop" onClick={handleClose} className="hover:text-accent transition-colors flex items-center justify-between group text-foreground">
+              <span>Shop All</span>
+              <span className="text-xl opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all">→</span>
+            </Link>
+            <Link href="/editorial" onClick={handleClose} className="hover:text-accent transition-colors flex items-center justify-between group text-foreground">
               <span>Collections</span>
               <span className="text-xl opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all">→</span>
             </Link>
