@@ -58,8 +58,8 @@ function emailWrapper(content: string, preheader: string = ''): string {
           <tr>
             <td style="padding:60px 40px 40px;text-align:center;">
               <a href="${BRAND.website}" style="text-decoration:none;">
-                <h1 style="color:#000000;font-size:32px;margin:0;letter-spacing:6px;font-weight:300;">${BRAND.name}</h1>
-                <p style="color:#D4AF37;font-size:10px;letter-spacing:4px;text-transform:uppercase;margin:8px 0 0;">${BRAND.tagline}</p>
+                <img src="${BRAND.logo}" alt="${BRAND.name}" width="200" style="max-width:200px;height:auto;display:block;margin:0 auto;" />
+                <p style="color:#D4AF37;font-size:10px;letter-spacing:4px;text-transform:uppercase;margin:16px 0 0;">${BRAND.tagline}</p>
               </a>
             </td>
           </tr>
