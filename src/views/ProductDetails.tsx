@@ -1,7 +1,7 @@
 "use client";
 import { useParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { useCartStore } from '../store/cartStore';
@@ -315,7 +315,14 @@ export function ProductDetails() {
       if (!id) return;
       try {
         const snap = await getDoc(doc(db, "products", id));
-        if (snap.exists()) setProduct({ id: snap.id, ...snap.data() });
+        if (snap.exists()) {
+          const data = snap.id ? { id: snap.id, ...snap.data() } as any : null;
+          setProduct(data);
+          // Default to first color if available
+          if (data?.colors?.length > 0) {
+            setSelectedColor(data.colors[0]);
+          }
+        }
       } catch (e) {
         console.error(e);
       } finally {
@@ -332,9 +339,14 @@ export function ProductDetails() {
   const avgRating = 4.8;
   const reviewCount = 47;
 
-  const displayImages = (selectedColor && product?.colorImages?.[selectedColor]?.length > 0)
-    ? product.colorImages[selectedColor]
-    : product?.images ?? [];
+  // Filter images strictly based on color if available
+  const displayImages = useMemo(() => {
+    if (!product) return [];
+    if (selectedColor && product.colorImages?.[selectedColor]?.length > 0) {
+      return product.colorImages[selectedColor];
+    }
+    return product.images || [];
+  }, [product, selectedColor]);
 
   // ─── Handlers ──────────────────────────────────────────────────────────────
   const handleAddToCart = useCallback(() => {
