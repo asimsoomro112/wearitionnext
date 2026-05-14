@@ -7,6 +7,11 @@ import { adminAuth } from '@/lib/firebase-admin';
  */
 export async function POST(req: Request) {
   try {
+    if (!adminAuth) {
+      console.error('Firebase Admin Auth not initialized. Check environment variables.');
+      return NextResponse.json({ error: 'Auth service unavailable' }, { status: 503 });
+    }
+
     const { email, newPassword } = await req.json();
 
     if (!email || !newPassword) {
@@ -21,7 +26,7 @@ export async function POST(req: Request) {
       password: newPassword,
     });
 
-    // 3. Revoke all refresh tokens (log out from everywhere for security)
+    // 3. Revoke all refresh tokens
     await adminAuth.revokeRefreshTokens(userRecord.uid);
 
     return NextResponse.json({ success: true, message: 'Password updated successfully' });
