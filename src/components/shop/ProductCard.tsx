@@ -106,7 +106,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         <div className="flex flex-col items-start mt-4 px-1">
           <p className="text-[10px] uppercase tracking-[0.2em] text-foreground/40 mb-1">{product.category || 'Collection'}</p>
           <h3 className="font-sans font-medium text-sm tracking-wide mb-1.5 text-foreground group-hover:text-accent transition-colors duration-300">{product.title}</h3>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 mb-3">
             {product.isOnSale && product.salePrice ? (
               <>
                 <p className="text-accent text-sm font-semibold">{formatCurrency(product.salePrice)}</p>
@@ -116,8 +116,71 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
               <p className="text-foreground/60 text-sm font-sans">{formatCurrency(product.price)}</p>
             )}
           </div>
+
+          {/* Color Swatches */}
+          {product.colors && product.colors.length > 0 && (
+            <div className="flex items-center gap-2 mt-1">
+              {product.colors.map((color: string) => (
+                <div 
+                  key={color}
+                  className="w-3 h-3 rounded-full border border-white/20 shadow-sm"
+                  style={{ backgroundColor: getColorHex(color) }}
+                  title={color}
+                />
+              ))}
+              {product.colors.length > 5 && (
+                <span className="text-[9px] text-white/30 ml-1">+{product.colors.length - 5}</span>
+              )}
+            </div>
+          )}
         </div>
       </Link>
     </motion.div>
   );
 }
+
+// Helper to convert common color names to hex codes
+const getColorHex = (colorName: string) => {
+  const colors: Record<string, string> = {
+    'black': '#000000',
+    'white': '#ffffff',
+    'red': '#ff0000',
+    'blue': '#0000ff',
+    'green': '#00ff00',
+    'navy': '#000080',
+    'gold': '#D4AF37',
+    'maroon': '#800000',
+    'grey': '#808080',
+    'silver': '#C0C0C0',
+    'purple': '#800080',
+    'pink': '#FFC0CB',
+    'emerald': '#50C878',
+    'brown': '#8B4513',
+    'cream': '#FFFDD0',
+    'beige': '#F5F5DC',
+    'khaki': '#F0E68C',
+    'peach': '#FFDAB9',
+    'teal': '#008080',
+    'lavender': '#E6E6FA',
+    'orange': '#FFA500',
+    'yellow': '#FFFF00',
+    'cyan': '#00FFFF',
+    'magenta': '#FF00FF',
+    'olive': '#808000',
+    'lime': '#00FF00',
+    'mustard': '#FFDB58',
+    'charcoal': '#36454F',
+    'burgundy': '#800020',
+    'indigo': '#4B0082',
+    'crimson': '#DC143C',
+    'turquoise': '#40E0D0',
+    'tan': '#D2B48C',
+    'rust': '#B7410E',
+    'olive green': '#556B2F',
+    'rose gold': '#B76E79',
+    'noir': '#000000',
+    'luxury red': '#b91c1c',
+    'emerald green': '#065f46'
+  };
+  return colors[colorName.toLowerCase()] || '#888888';
+};
