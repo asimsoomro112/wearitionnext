@@ -122,18 +122,48 @@ const HorizontalScroller = ({ title, products, sectionClass, isSale = false }: a
                    )}
                  </div>
                </div>
-               <div className="flex justify-between items-start text-foreground">
-                 <div>
-                   <h3 className="font-serif text-[11px] sm:text-sm tracking-wide uppercase mb-1 truncate max-w-[200px]">{product.title || product.name}</h3>
-                   <p className="opacity-70 text-xs sm:text-sm font-sans">{formatCurrency(product.price)}</p>
-                 </div>
-               </div>
+                <div className="flex justify-between items-start text-foreground">
+                  <div>
+                    <h3 className="font-serif text-[11px] sm:text-sm tracking-wide uppercase mb-1 truncate max-w-[200px]">{product.title || product.name}</h3>
+                    <div className="flex items-center gap-3 mb-2">
+                      <p className="opacity-70 text-xs sm:text-sm font-sans">{formatCurrency(product.price)}</p>
+                    </div>
+                    {/* Color Swatches */}
+                    {product.colors && product.colors.length > 0 && (
+                      <div className="flex items-center gap-1.5 mt-2">
+                        {product.colors.slice(0, 5).map((color: string) => (
+                          <div 
+                            key={color}
+                            className="w-2.5 h-2.5 rounded-full border border-white/10 shadow-sm"
+                            style={{ backgroundColor: getColorHex(color) }}
+                          />
+                        ))}
+                        {product.colors.length > 5 && (
+                          <span className="text-[8px] text-white/30 ml-1">+{product.colors.length - 5}</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
             </Link>
           ))}
         </div>
       </div>
     </section>
   );
+};
+
+// Helper to convert common color names to hex codes
+const getColorHex = (colorName: string) => {
+  const colors: Record<string, string> = {
+    'black': '#000000', 'white': '#ffffff', 'red': '#ff0000', 'blue': '#0000ff',
+    'green': '#00ff00', 'navy': '#000080', 'gold': '#D4AF37', 'maroon': '#800000',
+    'grey': '#808080', 'silver': '#C0C0C0', 'purple': '#800080', 'pink': '#FFC0CB',
+    'emerald': '#50C878', 'brown': '#8B4513', 'cream': '#FFFDD0', 'beige': '#F5F5DC',
+    'khaki': '#F0E68C', 'peach': '#FFDAB9', 'teal': '#008080', 'lavender': '#E6E6FA',
+    'mustard': '#FFDB58', 'charcoal': '#36454F', 'burgundy': '#800020', 'noir': '#000000'
+  };
+  return colors[colorName.toLowerCase()] || '#888888';
 };
 
 import { PerspectiveContainer } from '../components/layout/PerspectiveContainer';
