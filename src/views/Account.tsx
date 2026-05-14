@@ -715,5 +715,3 @@ export function Account() {
     </div>
   );
 }
-  );
-}
