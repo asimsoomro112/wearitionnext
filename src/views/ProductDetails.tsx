@@ -538,21 +538,21 @@ export function ProductDetails() {
                 onClick={() => setActiveTab('reviews')}>
                 <StarRating rating={Math.round(avgRating)} />
                 <span className="text-amber-400 text-xs font-bold">{avgRating}</span>
-                <span className="text-white/30 text-xs">·</span>
-                <span className="text-white/50 text-xs underline underline-offset-2 
-                                group-hover:text-white transition-colors">
+                <span className="text-foreground/30 text-xs">·</span>
+                <span className="text-foreground/50 text-xs underline underline-offset-2 
+                                group-hover:text-foreground transition-colors">
                   {reviewCount} verified reviews
                 </span>
               </div>
 
               {/* ── Price Block ───────────────────────────────────────── */}
               <div className="flex items-baseline gap-4 mb-6">
-                <p className="text-3xl text-white font-bold tracking-tight">
+                <p className="text-3xl text-foreground font-bold tracking-tight">
                   {formatCurrency(product.price)}
                 </p>
                 {product.originalPrice && product.originalPrice > product.price && (
                   <>
-                    <p className="text-white/30 line-through text-lg">
+                    <p className="text-foreground/30 line-through text-lg">
                       {formatCurrency(product.originalPrice)}
                     </p>
                     <span className="text-emerald-400 text-xs font-bold bg-emerald-500/10 
@@ -570,9 +570,9 @@ export function ProductDetails() {
                     <span className="text-[10px] uppercase tracking-widest text-red-400 font-bold">
                       Selling Fast — {product.stock} items left
                     </span>
-                    <span className="text-[10px] text-white/30">{product.stock}/{product.stock + 12} sold</span>
+                    <span className="text-[10px] text-foreground/30">{product.stock}/{product.stock + 12} sold</span>
                   </div>
-                  <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-foreground/10 rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${((12) / (product.stock + 12)) * 100}%` }}
@@ -591,14 +591,14 @@ export function ProductDetails() {
               )}
 
               {/* ── Selector Area ─────────────────────────────────────── */}
-              <div className="flex flex-col gap-6 mb-8 border-y border-white/8 py-8">
+              <div className="flex flex-col gap-6 mb-8 border-y border-foreground/8 py-8">
 
                 {/* Color */}
                 {product.colors?.length > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-[10px] uppercase tracking-[0.2em] text-white/70 font-medium">
-                        Color: <span className="text-white font-bold">{selectedColor || 'Select'}</span>
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-foreground/70 font-medium">
+                        Color: <span className="text-foreground font-bold">{selectedColor || 'Select'}</span>
                       </span>
                     </div>
                     <div className="flex gap-2.5 flex-wrap">
@@ -610,7 +610,7 @@ export function ProductDetails() {
                                      tracking-widest font-bold transition-all duration-200 ${
                                        selectedColor === color
                                          ? 'border-accent bg-accent/15 text-accent shadow-[0_0_12px_rgba(var(--accent-rgb),0.3)]'
-                                         : 'border-white/10 text-white/40 hover:border-white/30 hover:text-white/70'
+                                         : 'border-foreground/10 text-foreground/40 hover:border-foreground/30 hover:text-foreground/70'
                                      }`}
                         >
                           {color}
@@ -624,8 +624,8 @@ export function ProductDetails() {
                 {!product.isUnstitched && (
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-[10px] uppercase tracking-[0.2em] text-white/70 font-medium">
-                        Size: <span className="text-white font-bold">{selectedSize || 'Select'}</span>
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-foreground/70 font-medium">
+                        Size: <span className="text-foreground font-bold">{selectedSize || 'Select'}</span>
                       </span>
                       <button
                         onClick={() => setSizeGuideOpen(true)}
@@ -645,8 +645,8 @@ export function ProductDetails() {
                             className={`w-12 h-12 rounded-xl border font-bold text-sm
                                        transition-all duration-200 ${
                                          selectedSize === size
-                                           ? 'border-white bg-white text-black'
-                                           : 'border-white/15 text-white/60 hover:border-white/40 hover:text-white'
+                                           ? 'border-foreground bg-foreground text-background'
+                                           : 'border-foreground/15 text-foreground/60 hover:border-foreground/40 hover:text-foreground'
                                        }`}
                           >
                             {size}
@@ -654,7 +654,7 @@ export function ProductDetails() {
                         ))}
                     </div>
                     {!selectedSize && !product.isUnstitched && (
-                      <p className="text-[10px] text-white/30 mt-2 flex items-center gap-1">
+                      <p className="text-[10px] text-foreground/30 mt-2 flex items-center gap-1">
                         <AlertCircle className="w-3 h-3" /> Select a size to continue
                       </p>
                     )}
@@ -664,23 +664,23 @@ export function ProductDetails() {
                 {/* Quantity */}
                 {!isOutOfStock && (
                   <div className="flex items-center gap-4">
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-white/70 font-medium">Qty</span>
-                    <div className="flex items-center border border-white/10 rounded-full overflow-hidden">
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-foreground/70 font-medium">Qty</span>
+                    <div className="flex items-center border border-foreground/10 rounded-full overflow-hidden">
                       <button
                         onClick={() => setQuantity(q => Math.max(1, q - 1))}
                         disabled={quantity <= 1}
-                        className="w-10 h-10 flex items-center justify-center text-white/60 
-                                   hover:text-white hover:bg-white/5 transition-all disabled:opacity-30 
+                        className="w-10 h-10 flex items-center justify-center text-foreground/60 
+                                   hover:text-foreground hover:bg-foreground/5 transition-all disabled:opacity-30 
                                    text-lg font-light"
                       >
                         −
                       </button>
-                      <span className="w-10 text-center text-sm font-mono text-white">{quantity}</span>
+                      <span className="w-10 text-center text-sm font-mono text-foreground">{quantity}</span>
                       <button
                         onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
                         disabled={quantity >= product.stock}
-                        className="w-10 h-10 flex items-center justify-center text-white/60 
-                                   hover:text-white hover:bg-white/5 transition-all disabled:opacity-30 
+                        className="w-10 h-10 flex items-center justify-center text-foreground/60 
+                                   hover:text-foreground hover:bg-foreground/5 transition-all disabled:opacity-30 
                                    text-lg font-light"
                       >
                         +
@@ -697,8 +697,8 @@ export function ProductDetails() {
                            tracking-[0.2em] overflow-hidden transition-all duration-300 mb-3
                            group ${
                              isOutOfStock
-                               ? 'bg-white/10 text-white/30 cursor-not-allowed'
-                               : 'bg-white text-black hover:shadow-[0_0_40px_rgba(255,255,255,0.15)]'
+                               ? 'bg-foreground/10 text-foreground/30 cursor-not-allowed'
+                               : 'bg-foreground text-background hover:shadow-[0_0_40px_rgba(var(--foreground-rgb),0.15)]'
                            }`}
               >
                 {!isOutOfStock && (
@@ -721,7 +721,7 @@ export function ProductDetails() {
                              transition-all duration-300 ${
                                isWished
                                  ? 'border-red-500/50 bg-red-500/10 text-red-400'
-                                 : 'border-white/15 text-white/60 hover:border-white/30 hover:text-white'
+                                 : 'border-foreground/15 text-foreground/60 hover:border-foreground/30 hover:text-foreground'
                              }`}
                 >
                   <Heart className={`w-3.5 h-3.5 ${isWished ? 'fill-red-400' : ''}`} />
@@ -729,8 +729,8 @@ export function ProductDetails() {
                 </button>
                 <button
                   onClick={handleShare}
-                  className="px-5 py-4 rounded-full border border-white/15 text-white/60 
-                             hover:border-white/30 hover:text-white transition-all duration-300 
+                  className="px-5 py-4 rounded-full border border-foreground/15 text-foreground/60 
+                             hover:border-foreground/30 hover:text-foreground transition-all duration-300 
                              flex items-center justify-center"
                   aria-label="Share"
                 >
@@ -747,24 +747,24 @@ export function ProductDetails() {
                   { icon: <ShieldCheck className="w-4 h-4 text-accent" />, label: '100% Authentic', sub: 'Verified brands' },
                 ].map(({ icon, label, sub }) => (
                   <div key={label}
-                    className="flex items-center gap-3 bg-white/[0.03] border border-white/[0.06] 
-                               rounded-xl p-3 hover:border-white/10 transition-colors"
+                    className="flex items-center gap-3 bg-foreground/[0.03] border border-foreground/[0.06] 
+                               rounded-xl p-3 hover:border-foreground/10 transition-colors"
                   >
                     {icon}
                     <div>
-                      <p className="text-[10px] text-white font-semibold">{label}</p>
-                      <p className="text-[9px] text-white/35">{sub}</p>
+                      <p className="text-[10px] text-foreground font-semibold">{label}</p>
+                      <p className="text-[9px] text-foreground/35">{sub}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
               {/* ── Delivery Estimator ────────────────────────────────── */}
-              <div className="flex items-center gap-3 bg-white/[0.03] border border-white/[0.06] 
+              <div className="flex items-center gap-3 bg-foreground/[0.03] border border-foreground/[0.06] 
                              rounded-xl p-4 mb-8">
-                <Clock className="w-4 h-4 text-white/40 flex-shrink-0" />
+                <Clock className="w-4 h-4 text-foreground/40 flex-shrink-0" />
                 <div>
-                  <p className="text-xs text-white font-medium">
+                  <p className="text-xs text-foreground font-medium">
                     Order now → Delivers by{' '}
                     <span className="text-accent">
                       {new Date(Date.now() + 3 * 86400000).toLocaleDateString('en-PK', {
@@ -772,15 +772,15 @@ export function ProductDetails() {
                       })}
                     </span>
                   </p>
-                  <p className="text-[10px] text-white/35 mt-0.5">
+                  <p className="text-[10px] text-foreground/35 mt-0.5">
                     via TCS / Leopards / M&P
                   </p>
                 </div>
               </div>
 
               {/* ── Tabs: Description / Reviews / Care ────────────────── */}
-              <div className="border-t border-white/8">
-                <div className="flex gap-0 border-b border-white/8 mb-6 mt-4">
+              <div className="border-t border-foreground/10">
+                <div className="flex gap-0 border-b border-foreground/10 mb-6 mt-4">
                   {(['description', 'reviews', 'care'] as const).map(tab => (
                     <button
                       key={tab}
@@ -788,8 +788,8 @@ export function ProductDetails() {
                       className={`flex-1 pb-3 text-[10px] uppercase tracking-widest font-bold 
                                  transition-all duration-200 relative ${
                                    activeTab === tab
-                                     ? 'text-white'
-                                     : 'text-white/30 hover:text-white/60'
+                                     ? 'text-foreground'
+                                     : 'text-foreground/30 hover:text-foreground/60'
                                  }`}
                     >
                       {tab === 'reviews' ? `Reviews (${reviewCount})` : tab}
@@ -810,7 +810,7 @@ export function ProductDetails() {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -8 }}
-                      className="text-white/55 text-sm leading-relaxed font-sans mb-6"
+                      className="text-foreground/55 text-sm leading-relaxed font-sans mb-6"
                     >
                       {product.description || 'Premium quality piece from WEARITION\'s curated collection. Sourced from Pakistan\'s finest fashion houses.'}
                     </motion.div>
@@ -825,26 +825,26 @@ export function ProductDetails() {
                       className="flex flex-col gap-5 mb-6"
                     >
                       {/* Average rating summary */}
-                      <div className="flex items-center gap-5 bg-white/[0.03] rounded-xl p-4 
-                                     border border-white/[0.06]">
+                      <div className="flex items-center gap-5 bg-foreground/[0.03] rounded-xl p-4 
+                                     border border-foreground/[0.06]">
                         <div className="text-center">
-                          <p className="text-4xl font-bold text-white">{avgRating}</p>
+                          <p className="text-4xl font-bold text-foreground">{avgRating}</p>
                           <StarRating rating={5} size="sm" />
-                          <p className="text-[10px] text-white/30 mt-1">{reviewCount} reviews</p>
+                          <p className="text-[10px] text-foreground/30 mt-1">{reviewCount} reviews</p>
                         </div>
                         <div className="flex-1 flex flex-col gap-1.5">
                           {[5, 4, 3, 2, 1].map(star => {
                             const pct = star === 5 ? 72 : star === 4 ? 20 : star === 3 ? 5 : 2;
                             return (
                               <div key={star} className="flex items-center gap-2">
-                                <span className="text-[9px] text-white/30 w-3">{star}</span>
-                                <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                <span className="text-[9px] text-foreground/30 w-3">{star}</span>
+                                <div className="flex-1 h-1.5 bg-foreground/10 rounded-full overflow-hidden">
                                   <div
                                     className="h-full bg-amber-400 rounded-full"
                                     style={{ width: `${pct}%` }}
                                   />
                                 </div>
-                                <span className="text-[9px] text-white/30 w-6">{pct}%</span>
+                                <span className="text-[9px] text-foreground/30 w-6">{pct}%</span>
                               </div>
                             );
                           })}
@@ -852,7 +852,7 @@ export function ProductDetails() {
                       </div>
                       {/* Individual reviews */}
                       {MOCK_REVIEWS.map((rev, i) => (
-                        <div key={i} className="flex flex-col gap-2 pb-4 border-b border-white/5 last:border-0">
+                        <div key={i} className="flex flex-col gap-2 pb-4 border-b border-foreground/5 last:border-0">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <div className="w-7 h-7 rounded-full bg-accent/20 flex items-center 
@@ -860,7 +860,7 @@ export function ProductDetails() {
                                 {rev.name[0]}
                               </div>
                               <div>
-                                <span className="text-xs text-white font-semibold">{rev.name}</span>
+                                <span className="text-xs text-foreground font-semibold">{rev.name}</span>
                                 {rev.verified && (
                                   <span className="ml-1.5 text-[9px] text-emerald-400 flex items-center gap-0.5 inline-flex">
                                     <CheckCircle2 className="w-3 h-3" /> Verified
@@ -868,10 +868,10 @@ export function ProductDetails() {
                                 )}
                               </div>
                             </div>
-                            <span className="text-[9px] text-white/25">{rev.date} · {rev.location}</span>
+                            <span className="text-[9px] text-foreground/25">{rev.date} · {rev.location}</span>
                           </div>
                           <StarRating rating={rev.rating} size="sm" />
-                          <p className="text-[12px] text-white/55 leading-relaxed">{rev.comment}</p>
+                          <p className="text-[12px] text-foreground/55 leading-relaxed">{rev.comment}</p>
                         </div>
                       ))}
                     </motion.div>
@@ -891,11 +891,11 @@ export function ProductDetails() {
                         { icon: '☀️', title: 'Drying', detail: 'Dry in shade, avoid direct sunlight' },
                         { icon: '🔥', title: 'Ironing', detail: 'Low heat, iron inside out' },
                       ].map(({ icon, title, detail }) => (
-                        <div key={title} className="flex items-center gap-3 py-3 border-b border-white/5 last:border-0">
+                        <div key={title} className="flex items-center gap-3 py-3 border-b border-foreground/5 last:border-0">
                           <span className="text-lg">{icon}</span>
                           <div>
-                            <p className="text-xs text-white font-semibold">{title}</p>
-                            <p className="text-[11px] text-white/40">{detail}</p>
+                            <p className="text-xs text-foreground font-semibold">{title}</p>
+                            <p className="text-[11px] text-foreground/40">{detail}</p>
                           </div>
                         </div>
                       ))}
@@ -905,7 +905,7 @@ export function ProductDetails() {
               </div>
 
               {/* ── UGC Social Proof Strip ────────────────────────────── */}
-              <div className="flex items-center gap-3 bg-white/[0.03] border border-white/[0.06] 
+              <div className="flex items-center gap-3 bg-foreground/[0.03] border border-foreground/[0.06] 
                              rounded-xl p-4 mb-4">
                 <div className="flex -space-x-2">
                   {['A', 'F', 'S', 'Z'].map((l, i) => (
@@ -918,13 +918,13 @@ export function ProductDetails() {
                     </div>
                   ))}
                 </div>
-                <p className="text-[11px] text-white/60">
-                  <span className="text-white font-semibold">289 customers</span> bought this in the last 30 days
+                <p className="text-[11px] text-foreground/60">
+                  <span className="text-foreground font-semibold">289 customers</span> bought this in the last 30 days
                 </p>
               </div>
 
               {/* ── Tax Note ─────────────────────────────────────────── */}
-              <p className="text-[10px] text-white/25 text-center mb-4">
+              <p className="text-[10px] text-foreground/25 text-center mb-4">
                 4% Government Tax applied at checkout · Prices in PKR
               </p>
 
