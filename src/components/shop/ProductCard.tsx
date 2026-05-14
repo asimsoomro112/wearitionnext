@@ -96,10 +96,10 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           className={`absolute top-4 right-4 z-10 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 md:hover:scale-110 backdrop-blur-sm ${
             isWished 
               ? 'bg-accent/20 border border-accent/30' 
-              : 'bg-black/20 border border-white/20 opacity-100 md:opacity-0 md:group-hover:opacity-100'
+              : 'bg-foreground/20 border border-foreground/10 opacity-100 md:opacity-0 md:group-hover:opacity-100'
           }`}
         >
-          <Heart className={`w-4 h-4 ${isWished ? 'fill-accent text-accent' : 'text-white'}`} strokeWidth={1.5} />
+          <Heart className={`w-4 h-4 ${isWished ? 'fill-accent text-accent' : 'text-foreground'}`} strokeWidth={1.5} />
         </button>
 
         {/* Product Info */}
@@ -129,7 +129,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
                 />
               ))}
               {product.colors.length > 5 && (
-                <span className="text-[9px] text-white/30 ml-1">+{product.colors.length - 5}</span>
+                <span className="text-[9px] text-foreground/30 ml-1">+{product.colors.length - 5}</span>
               )}
             </div>
           )}

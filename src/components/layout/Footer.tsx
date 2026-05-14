@@ -4,7 +4,7 @@ import { MagneticButton } from './MagneticButton';
 
 export function Footer() {
   return (
-    <footer className="px-6 md:px-12 py-24 border-t border-white/5 mt-auto bg-background-secondary">
+    <footer className="px-6 md:px-12 py-24 border-t border-foreground/5 mt-auto bg-background-secondary">
       <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 md:gap-8">
         <div className="col-span-1 md:col-span-2">
           <div className="mb-8 opacity-90 transition-all inline-block">
@@ -33,7 +33,7 @@ export function Footer() {
           </ul>
         </div>
       </div>
-      <div className="max-w-[1440px] mx-auto mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between text-[10px] uppercase font-medium tracking-[0.2em] text-foreground/40">
+      <div className="max-w-[1440px] mx-auto mt-24 pt-8 border-t border-foreground/5 flex flex-col md:flex-row items-center justify-between text-[10px] uppercase font-medium tracking-[0.2em] text-foreground/40">
         <p>&copy; 2026 Wearition. All rights reserved.</p>
         <div className="flex gap-8 mt-6 md:mt-0">
           <MagneticButton strength={0.3} as="div">

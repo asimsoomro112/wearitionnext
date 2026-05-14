@@ -77,7 +77,7 @@ export function Navbar() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
                 onMouseLeave={() => setShowBrands(false)}
-                className="absolute top-full left-0 mt-4 p-6 bg-background/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl grid grid-cols-2 gap-x-12 gap-y-3 min-w-[400px]"
+                className="absolute top-full left-0 mt-4 p-6 bg-background/95 backdrop-blur-xl border border-foreground/10 rounded-xl shadow-2xl grid grid-cols-2 gap-x-12 gap-y-3 min-w-[400px]"
               >
                 {dynamicBrands.length > 0 ? (
                   dynamicBrands.map(brand => (

@@ -34,7 +34,7 @@ export function CartDrawer() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-full md:w-[480px] bg-background border-l border-white/10 z-[500] flex flex-col pt-6 pb-8 text-foreground"
+            className="fixed top-0 right-0 h-full w-full md:w-[480px] bg-background border-l border-foreground/10 z-[500] flex flex-col pt-6 pb-8 text-foreground"
           >
             <div className="px-8 flex justify-between items-center mb-10 mt-4">
               <h2 className="font-serif tracking-widest uppercase text-2xl text-foreground">Your Bag</h2>
@@ -57,7 +57,7 @@ export function CartDrawer() {
                 </div>
               ) : (
                 items.map((item) => (
-                  <div key={`${item.id}-${item.size}-${item.color}`} className="flex gap-6 border-b border-white/5 pb-8 mb-4">
+                  <div key={`${item.id}-${item.size}-${item.color}`} className="flex gap-6 border-b border-foreground/5 pb-8 mb-4">
                     <div className="w-28 h-36 bg-background-secondary overflow-hidden">
                       <img src={getOptimizedImage(item.image)} alt={item.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                     </div>
@@ -104,7 +104,7 @@ export function CartDrawer() {
             </div>
 
             {items.length > 0 && (
-              <div className="px-8 mt-auto pt-8 pb-24 md:pb-8 border-t border-white/10 bg-background">
+              <div className="px-8 mt-auto pt-8 pb-24 md:pb-8 border-t border-foreground/10 bg-background">
                 <div className="flex justify-between items-end mb-6">
                   <span className="uppercase text-xs tracking-[0.2em] text-foreground/60">Subtotal</span>
                   <span className="font-sans text-xl">{formatCurrency(subtotal)}</span>

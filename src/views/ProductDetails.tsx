@@ -93,17 +93,17 @@ function PurchaseNotification() {
           initial={{ opacity: 0, x: -40, y: 0 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -40 }}
-          className="fixed bottom-24 left-4 z-50 bg-[#111] border border-white/10 
+          className="fixed bottom-24 left-4 z-50 bg-background border border-foreground/10 
                      rounded-xl px-4 py-3 flex items-center gap-3 shadow-2xl max-w-[260px]"
         >
           <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
             <ShoppingBag className="w-4 h-4 text-accent" />
           </div>
           <div>
-            <p className="text-[11px] text-white font-semibold">
+            <p className="text-[11px] text-foreground font-semibold">
               Someone from <span className="text-accent">{notifications[current].city}</span>
             </p>
-            <p className="text-[10px] text-white/50">{notifications[current].item} · {notifications[current].time}</p>
+            <p className="text-[10px] text-foreground/50">{notifications[current].item} · {notifications[current].time}</p>
           </div>
         </motion.div>
       )}
@@ -175,7 +175,7 @@ function StarRating({ rating, size = 'sm' }: { rating: number; size?: 'sm' | 'md
       {[1, 2, 3, 4, 5].map(i => (
         <Star
           key={i}
-          className={`${s} ${i <= rating ? 'text-amber-400 fill-amber-400' : 'text-white/20'}`}
+          className={`${s} ${i <= rating ? 'text-amber-400 fill-amber-400' : 'text-foreground/20'}`}
         />
       ))}
     </div>
@@ -196,39 +196,39 @@ function SizeGuideModal({ onClose }: { onClose: () => void }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center px-4"
+      className="fixed inset-0 z-[100] bg-background/80 flex items-center justify-center px-4"
       onClick={onClose}
     >
       <motion.div
         initial={{ y: 40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 40, opacity: 0 }}
-        className="bg-[#0e0e0e] border border-white/10 rounded-2xl p-8 max-w-md w-full"
+        className="bg-background border border-foreground/10 rounded-2xl p-8 max-w-md w-full"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-white font-serif text-xl">Size Guide</h3>
-          <button onClick={onClose}><X className="w-5 h-5 text-white/40 hover:text-white" /></button>
+          <h3 className="text-foreground font-serif text-xl">Size Guide</h3>
+          <button onClick={onClose}><X className="w-5 h-5 text-foreground/40 hover:text-foreground" /></button>
         </div>
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-white/10">
+            <tr className="border-b border-foreground/10">
               {['Size', 'Chest', 'Waist', 'Hips'].map(h => (
-                <th key={h} className="pb-3 text-left text-[10px] uppercase tracking-widest text-white/40 font-medium">{h}</th>
+                <th key={h} className="pb-3 text-left text-[10px] uppercase tracking-widest text-foreground/40 font-medium">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {sizes.map(row => (
-              <tr key={row.size} className="border-b border-white/5">
+              <tr key={row.size} className="border-b border-foreground/5">
                 {[row.size, row.chest, row.waist, row.hips].map((cell, i) => (
-                  <td key={i} className={`py-3 ${i === 0 ? 'text-accent font-bold' : 'text-white/70'}`}>{cell}</td>
+                  <td key={i} className={`py-3 ${i === 0 ? 'text-accent font-bold' : 'text-foreground/70'}`}>{cell}</td>
                 ))}
               </tr>
             ))}
           </tbody>
         </table>
-        <p className="text-[11px] text-white/30 mt-4">All measurements are in inches. If between sizes, size up.</p>
+        <p className="text-[11px] text-foreground/30 mt-4">All measurements are in inches. If between sizes, size up.</p>
       </motion.div>
     </motion.div>
   );
@@ -243,13 +243,13 @@ function StickyMobileCTA({
       initial={{ y: 100 }}
       animate={{ y: 0 }}
       transition={{ delay: 1, type: 'spring', stiffness: 300, damping: 30 }}
-      className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-[#0a0a0a]/95 
-                 backdrop-blur-2xl border-t border-white/10 px-6 py-5 
+      className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-background/95 
+                 backdrop-blur-2xl border-t border-foreground/10 px-6 py-5 
                  flex flex-col items-center gap-3 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]"
     >
       <div className="flex items-center gap-3 text-[10px] uppercase tracking-widest font-bold">
-        <span className="text-white/40 truncate max-w-[150px]">{product.title}</span>
-        <span className="text-white/20">|</span>
+        <span className="text-foreground/40 truncate max-w-[150px]">{product.title}</span>
+        <span className="text-foreground/20">|</span>
         <span className="text-accent">{formatCurrency(product.price)}</span>
       </div>
       
@@ -260,8 +260,8 @@ function StickyMobileCTA({
           className={`flex-1 py-4 rounded-full text-[10px] font-bold uppercase tracking-[0.15em]
                      transition-all duration-300 border ${
                        isOutOfStock
-                         ? 'border-white/10 text-white/30 cursor-not-allowed'
-                         : 'border-white/20 text-white active:scale-95'
+                         ? 'border-foreground/10 text-foreground/30 cursor-not-allowed'
+                         : 'border-foreground/20 text-foreground active:scale-95'
                      }`}
         >
           {isOutOfStock ? 'Sold' : 'Add to Bag'}
@@ -272,7 +272,7 @@ function StickyMobileCTA({
           className={`flex-[1.5] py-4 rounded-full text-[10px] font-bold uppercase tracking-[0.15em]
                      transition-all duration-300 ${
                        isOutOfStock
-                         ? 'bg-white/10 text-white/30 cursor-not-allowed'
+                         ? 'bg-foreground/10 text-foreground/30 cursor-not-allowed'
                          : 'bg-accent text-black active:scale-95 shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)]'
                      }`}
         >
@@ -912,7 +912,7 @@ export function ProductDetails() {
                     <div key={i}
                       className="w-7 h-7 rounded-full border-2 border-background 
                                  bg-gradient-to-br from-accent/40 to-accent/10 
-                                 flex items-center justify-center text-[9px] font-bold text-white"
+                                 flex items-center justify-center text-[9px] font-bold text-foreground"
                     >
                       {l}
                     </div>
