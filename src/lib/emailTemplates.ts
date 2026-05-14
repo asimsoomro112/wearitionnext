@@ -184,6 +184,7 @@ export function verificationOTPEmail(data: { name: string; code: string }): { su
  */
 export function orderPlacedEmail(data: {
   name: string;
+  email: string;
   orderId: string;
   items: { title: string; quantity: number; price: number; size?: string; color?: string; image?: string }[];
   subtotal: number;
@@ -267,7 +268,7 @@ export function orderPlacedEmail(data: {
       </p>
       
       <div style="text-align:center;margin-top:48px;">
-        <a href="${BRAND.website}/track-order?id=${data.orderId}" style="background:${BRAND.colors.accent};color:#000000;padding:18px 40px;text-decoration:none;font-size:11px;font-weight:bold;letter-spacing:3px;display:inline-block;border-radius:2px;">TRACK ORDER</a>
+        <a href="${BRAND.website}/track-order?id=${data.orderId}&email=${data.email}" style="background:${BRAND.colors.accent};color:#000000;padding:18px 40px;text-decoration:none;font-size:11px;font-weight:bold;letter-spacing:3px;display:inline-block;border-radius:2px;">TRACK ORDER</a>
       </div>
     </td>
   </tr>`;
@@ -283,6 +284,7 @@ export function orderPlacedEmail(data: {
  */
 export function orderStatusEmail(data: {
   name: string;
+  email: string;
   orderId: string;
   status: 'processing' | 'shipped' | 'delivered' | 'cancelled';
   trackingNumber?: string;
@@ -335,7 +337,7 @@ export function orderStatusEmail(data: {
 
   <tr>
     <td style="padding:0 40px 48px;text-align:center;">
-      <a href="${BRAND.website}/track-order?id=${data.orderId}" style="background:${BRAND.colors.accent};color:#000000;padding:18px 40px;text-decoration:none;font-size:11px;font-weight:bold;letter-spacing:3px;display:inline-block;border-radius:2px;">VIEW ORDER STATUS</a>
+      <a href="${BRAND.website}/track-order?id=${data.orderId}&email=${data.email}" style="background:${BRAND.colors.accent};color:#000000;padding:18px 40px;text-decoration:none;font-size:11px;font-weight:bold;letter-spacing:3px;display:inline-block;border-radius:2px;">VIEW ORDER STATUS</a>
     </td>
   </tr>`;
 
