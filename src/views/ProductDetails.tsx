@@ -488,22 +488,6 @@ export function ProductDetails() {
                     </span>
                   </div>
                 </div>
-                {/* First image badge */}
-                {idx === 0 && isLowStock && (
-                  <div className="absolute top-5 left-5">
-                    <motion.div
-                      animate={{ scale: [1, 1.05, 1] }}
-                      transition={{ repeat: Infinity, duration: 2 }}
-                      className="flex items-center gap-1.5 bg-red-500 text-white 
-                                 px-3 py-1.5 rounded-full"
-                    >
-                      <Flame className="w-3 h-3" />
-                      <span className="text-[9px] font-bold uppercase tracking-wider">
-                        Only {product.stock} Left
-                      </span>
-                    </motion.div>
-                  </div>
-                )}
               </motion.div>
             )) : (
               <div className="w-full aspect-[3/4] bg-foreground/5 flex items-center justify-center 
