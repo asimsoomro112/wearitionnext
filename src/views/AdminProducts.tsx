@@ -133,6 +133,21 @@ export function AdminProducts() {
           createdAt: serverTimestamp(),
         });
         toast.success('Product created successfully');
+
+        // --- AUTOMATIC SYNC TO PRELOVED MARKETPLACE ---
+        try {
+          fetch('/api/sync-preloved', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(productData)
+          }).then(res => res.json()).then(syncData => {
+            if (syncData.success) {
+              toast.info('Synced to Preloved Marketplace as PENDING');
+            }
+          }).catch(e => console.error('Sync failed:', e));
+        } catch (syncErr) {
+          console.error('Sync process error:', syncErr);
+        }
       }
       resetForm();
       setIsModalOpen(false);
