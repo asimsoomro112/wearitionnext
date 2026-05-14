@@ -21,7 +21,13 @@
  * 4. Copy the 16-character password → paste in .env as GMAIL_APP_PASSWORD
  */
 
-import { welcomeEmail, orderPlacedEmail, orderStatusEmail } from './emailTemplates';
+import { 
+  welcomeEmail, 
+  orderPlacedEmail, 
+  orderStatusEmail, 
+  verificationOTPEmail, 
+  passwordResetOTPEmail 
+} from './emailTemplates';
 
 // ──────────────── CORE SEND FUNCTION ────────────────
 
@@ -98,6 +104,22 @@ async function sendEmail(toEmail: string, subject: string, htmlContent: string):
  */
 export async function sendWelcomeEmail(data: { name: string; email: string }): Promise<boolean> {
   const { subject, html } = welcomeEmail(data);
+  return sendEmail(data.email, subject, html);
+}
+
+/**
+ * Send OTP verification email for new signups
+ */
+export async function sendVerificationOTPEmail(data: { name: string; email: string; code: string }): Promise<boolean> {
+  const { subject, html } = verificationOTPEmail(data);
+  return sendEmail(data.email, subject, html);
+}
+
+/**
+ * Send OTP for password reset
+ */
+export async function sendPasswordResetOTPEmail(data: { email: string; code: string }): Promise<boolean> {
+  const { subject, html } = passwordResetOTPEmail(data);
   return sendEmail(data.email, subject, html);
 }
 

@@ -1,7 +1,6 @@
 /**
- * WEARITION — Luxury Email Templates
- * Professional HTML email templates for all customer lifecycle events.
- * Designed to match the storefront's luxury aesthetic.
+ * WEARITION — Ultimate Luxury Email Templates
+ * Refined, high-contrast, and minimalist design for elite customer experience.
  */
 
 const BRAND = {
@@ -15,13 +14,13 @@ const BRAND = {
   whatsapp: '923000000000', 
   supportEmail: 'wearition.80@gmail.com',
   colors: {
-    bg: '#0A0A0A',
-    card: '#0f0f0f',
+    bg: '#ffffff',
+    card: '#ffffff',
     accent: '#D4AF37', // Premium Gold
-    text: '#ffffff',
-    muted: '#666666',
+    text: '#000000',
+    muted: '#888888',
     white: '#FFFFFF',
-    border: '#1a1a1a',
+    border: '#f0f0f0',
   }
 };
 
@@ -34,36 +33,33 @@ function emailWrapper(content: string, preheader: string = ''): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>${BRAND.name}</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap');
     
-    body { margin: 0; padding: 0; background-color: ${BRAND.colors.bg}; font-family: 'Inter', Arial, sans-serif; -webkit-font-smoothing: antialiased; }
-    .email-container { max-width: 640px; margin: 0 auto; background-color: ${BRAND.colors.card}; }
-    .preheader { display: none !important; visibility: hidden; opacity: 0; color: transparent; height: 0; width: 0; }
-    h1, h2, h3 { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-weight: 400; }
-    p, td, span, a { font-family: 'Inter', Arial, sans-serif; }
-    a { color: ${BRAND.colors.accent}; text-decoration: none; }
+    body { margin: 0; padding: 0; background-color: #f8f8f8; font-family: 'Inter', Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+    .email-container { max-width: 600px; margin: 40px auto; background-color: #ffffff; border: 1px solid #eeeeee; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+    h1, h2, h3 { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-weight: 400; letter-spacing: 1px; }
+    .otp-box { background: #000000; color: #D4AF37; font-size: 32px; letter-spacing: 8px; font-weight: bold; padding: 24px; text-align: center; border-radius: 4px; margin: 32px 0; font-family: 'Inter', monospace; }
     @media only screen and (max-width: 600px) {
-      .email-container { width: 100% !important; }
-      .mobile-padding { padding-left: 24px !important; padding-right: 24px !important; }
+      .email-container { width: 100% !important; margin: 0 !important; }
+      .padding-mobile { padding: 40px 24px !important; }
     }
   </style>
 </head>
-<body style="margin:0;padding:0;background-color:${BRAND.colors.bg};">
-  <span class="preheader">${preheader}</span>
+<body style="margin:0;padding:0;">
+  <div style="display: none; max-height: 0px; overflow: hidden;">${preheader}</div>
   
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${BRAND.colors.bg};padding:40px 20px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8f8f8;padding:20px;">
     <tr>
       <td align="center">
-        <table class="email-container" role="presentation" width="640" cellpadding="0" cellspacing="0" style="background-color:${BRAND.colors.card};border-radius:2px;overflow:hidden;">
+        <table class="email-container" role="presentation" width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;">
           
-          <!-- HEADER with Logo -->
+          <!-- BRAND HEADER -->
           <tr>
-            <td style="padding:60px 48px 40px;text-align:center;" class="mobile-padding">
-              <a href="${BRAND.website}" target="_blank">
-                <img src="${BRAND.logo}" alt="${BRAND.name}" width="220" style="max-width:220px;height:auto;filter:brightness(1.2);" />
+            <td style="padding:60px 40px 40px;text-align:center;">
+              <a href="${BRAND.website}" style="text-decoration:none;">
+                <h1 style="color:#000000;font-size:32px;margin:0;letter-spacing:6px;font-weight:300;">${BRAND.name}</h1>
+                <p style="color:#D4AF37;font-size:10px;letter-spacing:4px;text-transform:uppercase;margin:8px 0 0;">${BRAND.tagline}</p>
               </a>
             </td>
           </tr>
@@ -72,18 +68,18 @@ function emailWrapper(content: string, preheader: string = ''): string {
           
           <!-- FOOTER -->
           <tr>
-            <td style="padding:32px 48px;border-top:1px solid ${BRAND.colors.border};text-align:center;" class="mobile-padding">
-              <p style="color:${BRAND.colors.muted};font-size:11px;letter-spacing:2px;text-transform:uppercase;margin:0 0 16px;">${BRAND.tagline}</p>
-              <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto 20px;">
+            <td style="padding:60px 40px;background-color:#000000;text-align:center;">
+              <p style="color:#D4AF37;font-size:9px;letter-spacing:4px;text-transform:uppercase;margin:0 0 24px;">Connect with the Maison</p>
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto 32px;">
                 <tr>
-                  <td style="padding:0 8px;"><a href="${BRAND.instagram}" style="color:${BRAND.colors.muted};font-size:9px;letter-spacing:1px;text-transform:uppercase;text-decoration:none;">Instagram</a></td>
-                  <td style="padding:0 8px;"><a href="${BRAND.facebook}" style="color:${BRAND.colors.muted};font-size:9px;letter-spacing:1px;text-transform:uppercase;text-decoration:none;">Facebook</a></td>
-                  <td style="padding:0 8px;"><a href="${BRAND.tiktok}" style="color:${BRAND.colors.muted};font-size:9px;letter-spacing:1px;text-transform:uppercase;text-decoration:none;">TikTok</a></td>
+                  <td style="padding:0 12px;"><a href="${BRAND.instagram}" style="color:#ffffff;font-size:10px;text-decoration:none;letter-spacing:1px;">INSTAGRAM</a></td>
+                  <td style="padding:0 12px;"><a href="${BRAND.facebook}" style="color:#ffffff;font-size:10px;text-decoration:none;letter-spacing:1px;">FACEBOOK</a></td>
+                  <td style="padding:0 12px;"><a href="${BRAND.tiktok}" style="color:#ffffff;font-size:10px;text-decoration:none;letter-spacing:1px;">TIKTOK</a></td>
                 </tr>
               </table>
-              <p style="color:${BRAND.colors.muted};font-size:10px;margin:0;">
-                &copy; ${new Date().getFullYear()} ${BRAND.name}. All Rights Reserved.<br/>
-                <a href="${BRAND.website}" style="color:${BRAND.colors.muted};">${BRAND.website.replace('https://', '')}</a>
+              <p style="color:#555555;font-size:10px;line-height:1.8;">
+                &copy; ${new Date().getFullYear()} ${BRAND.name} LUXURY RETAIL GROUP.<br/>
+                This is a private notification for verified members only.
               </p>
             </td>
           </tr>
@@ -96,117 +92,94 @@ function emailWrapper(content: string, preheader: string = ''): string {
 </html>`;
 }
 
-function goldDivider(): string {
-  return `
-  <tr>
-    <td style="padding:0 48px;" class="mobile-padding">
-      <div style="height:1px;background:linear-gradient(90deg, transparent, ${BRAND.colors.accent}, transparent);"></div>
-    </td>
-  </tr>`;
-}
-
-function ctaButton(text: string, url: string): string {
-  return `
-  <table role="presentation" cellpadding="0" cellspacing="0" style="margin:32px auto;">
-    <tr>
-      <td style="background-color:${BRAND.colors.accent};padding:16px 48px;border-radius:1px;">
-        <a href="${url}" style="color:${BRAND.colors.bg};font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;text-decoration:none;font-family:'Inter',Arial,sans-serif;">${text}</a>
-      </td>
-    </tr>
-  </table>`;
-}
-
-// ──────────────── EMAIL TEMPLATES ────────────────
+// ──────────────── TEMPLATES ────────────────
 
 /**
- * Welcome email sent after user registration
+ * OTP Verification Template
  */
-export function welcomeEmail(data: { name: string; email: string }): { subject: string; html: string } {
+export function verificationOTPEmail(data: { name: string; code: string }): { subject: string; html: string } {
   const content = `
-  <!-- HERO -->
   <tr>
-    <td style="padding:56px 48px 24px;text-align:center;" class="mobile-padding">
-      <p style="color:${BRAND.colors.accent};font-size:10px;letter-spacing:4px;text-transform:uppercase;margin:0 0 16px;font-weight:600;">Welcome to the Maison</p>
-      <h1 style="color:${BRAND.colors.text};font-size:36px;margin:0 0 8px;font-weight:300;letter-spacing:1px;">Hello, ${data.name || 'there'}</h1>
-    </td>
-  </tr>
-  
-  ${goldDivider()}
-
-  <tr>
-    <td style="padding:32px 48px;" class="mobile-padding">
-      <p style="color:${BRAND.colors.text};font-size:14px;line-height:1.8;margin:0 0 24px;text-align:center;">
-        Your account has been created successfully. You are now part of an exclusive community that appreciates modern luxury and timeless craftsmanship.
+    <td style="padding:40px 60px;" class="padding-mobile">
+      <h2 style="color:#000000;font-size:36px;margin:0 0 24px;text-align:center;">Verify Your Account</h2>
+      <p style="color:#555555;font-size:14px;line-height:1.8;text-align:center;margin-bottom:32px;">
+        Welcome to the inner circle of WEARITION. To complete your registration and unlock exclusive access, please use the following verification code:
       </p>
-      <p style="color:${BRAND.colors.muted};font-size:13px;line-height:1.7;margin:0 0 8px;text-align:center;">
-        As a member, you'll enjoy:
+      
+      <div class="otp-box">${data.code}</div>
+      
+      <p style="color:#999999;font-size:11px;text-align:center;margin-top:32px;">
+        This code is valid for 10 minutes. If you did not request this, please ignore this email.
       </p>
-    </td>
-  </tr>
-
-  <!-- BENEFITS -->
-  <tr>
-    <td style="padding:0 48px 32px;" class="mobile-padding">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-          <td style="padding:16px 20px;border:1px solid ${BRAND.colors.border};border-radius:2px;margin-bottom:8px;">
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-              <tr>
-                <td width="40" style="color:${BRAND.colors.accent};font-size:20px;vertical-align:top;padding-top:2px;">◇</td>
-                <td>
-                  <p style="color:${BRAND.colors.text};font-size:13px;font-weight:500;margin:0 0 4px;">Early Access</p>
-                  <p style="color:${BRAND.colors.muted};font-size:11px;margin:0;line-height:1.5;">Be the first to explore new collections and limited drops.</p>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr><td style="height:8px;"></td></tr>
-        <tr>
-          <td style="padding:16px 20px;border:1px solid ${BRAND.colors.border};border-radius:2px;">
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-              <tr>
-                <td width="40" style="color:${BRAND.colors.accent};font-size:20px;vertical-align:top;padding-top:2px;">◇</td>
-                <td>
-                  <p style="color:${BRAND.colors.text};font-size:13px;font-weight:500;margin:0 0 4px;">Wishlist & Order Tracking</p>
-                  <p style="color:${BRAND.colors.muted};font-size:11px;margin:0;line-height:1.5;">Save your favourites and track every order in real time.</p>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr><td style="height:8px;"></td></tr>
-        <tr>
-          <td style="padding:16px 20px;border:1px solid ${BRAND.colors.border};border-radius:2px;">
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-              <tr>
-                <td width="40" style="color:${BRAND.colors.accent};font-size:20px;vertical-align:top;padding-top:2px;">◇</td>
-                <td>
-                  <p style="color:${BRAND.colors.text};font-size:13px;font-weight:500;margin:0 0 4px;">Concierge Support</p>
-                  <p style="color:${BRAND.colors.muted};font-size:11px;margin:0;line-height:1.5;">Reach us anytime via WhatsApp for personalized styling advice.</p>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-
-  <tr>
-    <td style="padding:0 48px 48px;text-align:center;" class="mobile-padding">
-      ${ctaButton('Explore Collections', `${BRAND.website}/shop`)}
     </td>
   </tr>`;
 
   return {
-    subject: `Welcome to ${BRAND.name} — Your Account is Ready`,
-    html: emailWrapper(content, `Welcome to ${BRAND.name}! Your luxury journey begins now.`)
+    subject: `${data.code} is your verification code | ${BRAND.name}`,
+    html: emailWrapper(content, `Verify your WEARITION account with code ${data.code}`)
   };
 }
 
 /**
- * Order placed/confirmed email
+ * Password Reset OTP Template
+ */
+export function passwordResetOTPEmail(data: { name?: string; code: string }): { subject: string; html: string } {
+  const content = `
+  <tr>
+    <td style="padding:40px 60px;" class="padding-mobile">
+      <h2 style="color:#000000;font-size:36px;margin:0 0 24px;text-align:center;">Reset Password</h2>
+      <p style="color:#555555;font-size:14px;line-height:1.8;text-align:center;margin-bottom:32px;">
+        A password reset request was made for your account. Please use the following code to securely reset your credentials:
+      </p>
+      
+      <div class="otp-box">${data.code}</div>
+      
+      <p style="color:#999999;font-size:11px;text-align:center;margin-top:32px;">
+        For security reasons, this code will expire in 10 minutes. 
+      </p>
+    </td>
+  </tr>`;
+
+  return {
+    subject: `${data.code} is your password reset code | ${BRAND.name}`,
+    html: emailWrapper(content, `Reset your password with code ${data.code}`)
+  };
+}
+
+/**
+ * Welcome Email (Upgraded)
+ */
+export function welcomeEmail(data: { name: string; email: string }): { subject: string; html: string } {
+  const content = `
+  <tr>
+    <td style="padding:0 0 40px;text-align:center;">
+      <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop" width="100%" style="width:100%;height:auto;" />
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:40px 60px;" class="padding-mobile">
+      <h2 style="color:#000000;font-size:40px;margin:0 0 16px;text-align:center;">Welcome to the Maison</h2>
+      <p style="color:#D4AF37;font-size:11px;letter-spacing:4px;text-transform:uppercase;text-align:center;margin-bottom:32px;font-weight:600;">The Journey Begins</p>
+      
+      <p style="color:#555555;font-size:14px;line-height:2;text-align:center;">
+        Hello ${data.name},<br/><br/>
+        We are honored to welcome you to WEARITION. You now have access to a world of modern luxury and unparalleled craftsmanship. Your account is fully verified and ready for your first selection.
+      </p>
+
+      <div style="text-align:center;margin:48px 0;">
+        <a href="${BRAND.website}/shop" style="background:#000000;color:#ffffff;padding:18px 40px;text-decoration:none;font-size:11px;letter-spacing:4px;font-weight:bold;border-radius:2px;">EXPLORE COLLECTIONS</a>
+      </div>
+    </td>
+  </tr>`;
+
+  return {
+    subject: `Welcome to the Maison ${BRAND.name}`,
+    html: emailWrapper(content, `Welcome to WEARITION. Your journey into luxury fashion begins here.`)
+  };
+}
+
+/**
+ * Order Confirmation (Upgraded)
  */
 export function orderPlacedEmail(data: {
   name: string;
@@ -221,22 +194,16 @@ export function orderPlacedEmail(data: {
 
   const itemsHtml = data.items.map(item => `
     <tr>
-      <td style="padding:16px 0;border-bottom:1px solid ${BRAND.colors.border};">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      <td style="padding:24px 0;border-bottom:1px solid #f5f5f5;">
+        <table width="100%" cellpadding="0" cellspacing="0">
           <tr>
-            <td width="72" style="vertical-align:top;">
-              <div style="width:64px;height:80px;background:${BRAND.colors.border};border-radius:2px;overflow:hidden;">
-                ${item.image ? `<img src="${item.image}" alt="${item.title}" width="64" style="width:64px;height:80px;object-fit:cover;" />` : ''}
-              </div>
+            <td width="80"><img src="${item.image}" width="80" style="width:80px;height:auto;border-radius:2px;" /></td>
+            <td style="padding-left:20px;">
+              <p style="margin:0;font-size:13px;font-weight:600;color:#000000;">${item.title.toUpperCase()}</p>
+              <p style="margin:6px 0 0;font-size:11px;color:#888888;letter-spacing:1px;">QTY: ${item.quantity} ${item.size ? `· SIZE ${item.size}` : ''}</p>
             </td>
-            <td style="vertical-align:top;padding-left:16px;">
-              <p style="color:${BRAND.colors.text};font-size:13px;font-weight:500;margin:0 0 6px;">${item.title}</p>
-              <p style="color:${BRAND.colors.muted};font-size:11px;margin:0;">
-                Qty: ${item.quantity}${item.size ? ` · Size: ${item.size}` : ''}${item.color ? ` · ${item.color}` : ''}
-              </p>
-            </td>
-            <td style="vertical-align:top;text-align:right;">
-              <p style="color:${BRAND.colors.text};font-size:13px;font-weight:500;margin:0;">Rs. ${Math.round(item.price * item.quantity).toLocaleString()}</p>
+            <td align="right">
+              <p style="margin:0;font-size:13px;font-weight:600;color:#000000;">Rs. ${Math.round(item.price * item.quantity).toLocaleString()}</p>
             </td>
           </tr>
         </table>
@@ -245,104 +212,51 @@ export function orderPlacedEmail(data: {
 
   const content = `
   <tr>
-    <td style="padding:56px 48px 24px;text-align:center;" class="mobile-padding">
-      <div style="width:64px;height:64px;border-radius:50%;border:2px solid ${BRAND.colors.accent};margin:0 auto 24px;display:flex;align-items:center;justify-content:center;">
-        <span style="font-size:28px;">✓</span>
+    <td style="padding:40px 60px;" class="padding-mobile">
+      <p style="color:#D4AF37;font-size:10px;letter-spacing:4px;text-transform:uppercase;text-align:center;margin-bottom:12px;font-weight:600;">Confirmation</p>
+      <h2 style="color:#000000;font-size:36px;margin:0 0 32px;text-align:center;">Your order is being prepared</h2>
+      
+      <div style="background:#fcfcfc;padding:24px;border:1px solid #f0f0f0;margin-bottom:40px;text-align:center;">
+        <p style="margin:0 0 4px;font-size:10px;color:#888888;letter-spacing:2px;">ORDER NUMBER</p>
+        <p style="margin:0;font-size:24px;font-weight:300;color:#000000;letter-spacing:4px;">${data.orderId}</p>
       </div>
-      <p style="color:${BRAND.colors.accent};font-size:10px;letter-spacing:4px;text-transform:uppercase;margin:0 0 12px;font-weight:600;">Order Confirmed</p>
-      <h1 style="color:${BRAND.colors.text};font-size:32px;margin:0 0 8px;font-weight:300;">Thank you, ${data.name}</h1>
-      <p style="color:${BRAND.colors.muted};font-size:13px;margin:0;">Your order has been received and is being prepared.</p>
-    </td>
-  </tr>
-  
-  ${goldDivider()}
 
-  <!-- ORDER ID -->
-  <tr>
-    <td style="padding:32px 48px 16px;" class="mobile-padding">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BRAND.colors.bg};border-radius:2px;padding:20px 24px;">
-        <tr>
-          <td>
-            <p style="color:${BRAND.colors.muted};font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:0 0 6px;">Order Number</p>
-            <p style="color:${BRAND.colors.accent};font-size:22px;font-weight:600;margin:0;letter-spacing:2px;font-family:'Inter',monospace;">${data.orderId}</p>
-          </td>
-          <td style="text-align:right;vertical-align:bottom;">
-            <p style="color:${BRAND.colors.muted};font-size:10px;letter-spacing:2px;text-transform:uppercase;margin:0;">Status</p>
-            <p style="color:${BRAND.colors.text};font-size:12px;font-weight:600;margin:4px 0 0;letter-spacing:1px;">CONFIRMED</p>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-
-  <!-- ITEMS -->
-  <tr>
-    <td style="padding:16px 48px;" class="mobile-padding">
-      <p style="color:${BRAND.colors.muted};font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:0 0 16px;font-weight:600;">Items Ordered</p>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      <table width="100%" cellpadding="0" cellspacing="0">
         ${itemsHtml}
-      </table>
-    </td>
-  </tr>
-
-  <!-- TOTALS -->
-  <tr>
-    <td style="padding:16px 48px 32px;" class="mobile-padding">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
         <tr>
-          <td style="padding:8px 0;"><p style="color:${BRAND.colors.muted};font-size:12px;margin:0;">Subtotal</p></td>
-          <td style="padding:8px 0;text-align:right;"><p style="color:${BRAND.colors.text};font-size:12px;margin:0;">Rs. ${Math.round(data.subtotal).toLocaleString()}</p></td>
-        </tr>
-        <tr>
-          <td style="padding:8px 0;"><p style="color:${BRAND.colors.muted};font-size:12px;margin:0;">Shipping</p></td>
-          <td style="padding:8px 0;text-align:right;"><p style="color:${BRAND.colors.text};font-size:12px;margin:0;">Rs. ${Math.round(data.shipping).toLocaleString()}</p></td>
-        </tr>
-        <tr>
-          <td style="padding:8px 0;"><p style="color:${BRAND.colors.muted};font-size:12px;margin:0;">Govt. Tax (4%)</p></td>
-          <td style="padding:8px 0;text-align:right;"><p style="color:${BRAND.colors.text};font-size:12px;margin:0;">Rs. ${Math.round(data.tax).toLocaleString()}</p></td>
-        </tr>
-        <tr>
-          <td colspan="2" style="padding:8px 0;"><div style="height:1px;background:${BRAND.colors.border};"></div></td>
-        </tr>
-        <tr>
-          <td style="padding:12px 0;"><p style="color:${BRAND.colors.text};font-size:14px;font-weight:600;margin:0;">Total</p></td>
-          <td style="padding:12px 0;text-align:right;"><p style="color:${BRAND.colors.accent};font-size:18px;font-weight:600;margin:0;">Rs. ${Math.round(data.total).toLocaleString()}</p></td>
+          <td colspan="3" style="padding-top:32px;">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="font-size:12px;color:#888888;padding-bottom:8px;">Subtotal</td>
+                <td align="right" style="font-size:12px;color:#000000;padding-bottom:8px;">Rs. ${Math.round(data.subtotal).toLocaleString()}</td>
+              </tr>
+              <tr>
+                <td style="font-size:12px;color:#888888;padding-bottom:8px;">Shipping</td>
+                <td align="right" style="font-size:12px;color:#000000;padding-bottom:8px;">Rs. ${Math.round(data.shipping).toLocaleString()}</td>
+              </tr>
+              <tr>
+                <td style="font-size:12px;color:#888888;padding-bottom:16px;">Tax</td>
+                <td align="right" style="font-size:12px;color:#000000;padding-bottom:16px;">Rs. ${Math.round(data.tax).toLocaleString()}</td>
+              </tr>
+              <tr style="border-top:1px solid #000000;">
+                <td style="font-size:14px;font-weight:bold;color:#000000;padding-top:16px;">Total</td>
+                <td align="right" style="font-size:18px;font-weight:bold;color:#D4AF37;padding-top:16px;">Rs. ${Math.round(data.total).toLocaleString()}</td>
+              </tr>
+            </table>
+          </td>
         </tr>
       </table>
-    </td>
-  </tr>
-
-  ${goldDivider()}
-
-  <!-- SHIPPING ADDRESS -->
-  <tr>
-    <td style="padding:24px 48px;" class="mobile-padding">
-      <p style="color:${BRAND.colors.muted};font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:0 0 12px;font-weight:600;">Shipping To</p>
-      <p style="color:${BRAND.colors.text};font-size:13px;line-height:1.7;margin:0;">
-        ${data.shippingAddress.name}<br/>
-        ${data.shippingAddress.address}<br/>
-        ${data.shippingAddress.city}
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td style="padding:8px 48px 48px;text-align:center;" class="mobile-padding">
-      ${ctaButton('Track Your Order', `${BRAND.website}/track-order?id=${data.orderId}`)}
-      <p style="color:${BRAND.colors.muted};font-size:11px;margin:16px 0 0;">
-        Questions? <a href="https://wa.me/${BRAND.whatsapp}" style="color:${BRAND.colors.accent};">Chat with us on WhatsApp</a>
-      </p>
     </td>
   </tr>`;
 
   return {
-    subject: `Order Confirmed — ${data.orderId} | ${BRAND.name}`,
-    html: emailWrapper(content, `Your ${BRAND.name} order ${data.orderId} has been confirmed.`)
+    subject: `Confirmed: Order ${data.orderId} | ${BRAND.name}`,
+    html: emailWrapper(content, `Your order ${data.orderId} from ${BRAND.name} has been confirmed.`)
   };
 }
 
 /**
- * Order status update email (processing, shipped, delivered)
+ * Order Status Update
  */
 export function orderStatusEmail(data: {
   name: string;
@@ -353,140 +267,43 @@ export function orderStatusEmail(data: {
   estimatedDelivery?: string;
 }): { subject: string; html: string } {
   
-  const statusConfig = {
-    processing: {
-      icon: '⚙',
-      label: 'Being Prepared',
-      headline: 'Your order is being crafted',
-      description: 'Our team is carefully preparing your items with the attention to detail you expect from WEARITION.',
-      subject: `Order Processing — ${data.orderId}`,
-      preheader: `Your ${BRAND.name} order is being prepared with care.`,
-    },
-    shipped: {
-      icon: '🚚',
-      label: 'On Its Way',
-      headline: 'Your order is on its way',
-      description: 'Your package has been dispatched and is en route to you. Track its journey below.',
-      subject: `Order Shipped — ${data.orderId}`,
-      preheader: `Your ${BRAND.name} order has been shipped!`,
-    },
-    delivered: {
-      icon: '✦',
-      label: 'Delivered',
-      headline: 'Your order has arrived',
-      description: 'Your WEARITION package has been delivered. We hope you love every piece.',
-      subject: `Order Delivered — ${data.orderId}`,
-      preheader: `Your ${BRAND.name} order has been delivered!`,
-    },
-    cancelled: {
-      icon: '✕',
-      label: 'Order Cancelled',
-      headline: 'Your order has been cancelled',
-      description: 'Your order has been successfully cancelled and inventory has been restored. If you have already made a payment, please contact our concierge for refund details.',
-      subject: `Order Cancelled — ${data.orderId}`,
-      preheader: `Your ${BRAND.name} order has been cancelled.`,
-    }
+  const statusLabels = {
+    processing: 'PREPARING',
+    shipped: 'EN ROUTE',
+    delivered: 'DELIVERED',
+    cancelled: 'CANCELLED'
   };
-
-  const config = statusConfig[data.status];
-
-  // Progress bar
-  const steps = ['Confirmed', 'Processing', 'Shipped', 'Delivered'];
-  const currentStep = data.status === 'processing' ? 1 : data.status === 'shipped' ? 2 : 3;
-  
-  const progressHtml = steps.map((step, i) => {
-    const isActive = i <= currentStep;
-    const dotColor = isActive ? BRAND.colors.accent : BRAND.colors.border;
-    const textColor = isActive ? BRAND.colors.text : BRAND.colors.muted;
-    return `
-      <td style="text-align:center;width:25%;">
-        <div style="width:12px;height:12px;border-radius:50%;background:${dotColor};margin:0 auto 8px;"></div>
-        <p style="color:${textColor};font-size:9px;letter-spacing:1.5px;text-transform:uppercase;margin:0;font-weight:${isActive ? '600' : '400'};">${step}</p>
-      </td>`;
-  }).join('');
-
-  const trackingSection = data.status === 'shipped' && data.trackingNumber ? `
-  <tr>
-    <td style="padding:16px 48px;" class="mobile-padding">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BRAND.colors.bg};border-radius:2px;padding:24px;">
-        <tr>
-          <td>
-            <p style="color:${BRAND.colors.muted};font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:0 0 8px;font-weight:600;">Tracking Number</p>
-            <p style="color:${BRAND.colors.accent};font-size:20px;font-weight:600;margin:0;letter-spacing:3px;font-family:'Inter',monospace;">${data.trackingNumber}</p>
-            ${data.courierName ? `<p style="color:${BRAND.colors.muted};font-size:11px;margin:8px 0 0;">Courier: ${data.courierName}</p>` : ''}
-            ${data.estimatedDelivery ? `<p style="color:${BRAND.colors.muted};font-size:11px;margin:4px 0 0;">Estimated delivery: ${data.estimatedDelivery}</p>` : ''}
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>` : '';
 
   const content = `
   <tr>
-    <td style="padding:56px 48px 24px;text-align:center;" class="mobile-padding">
-      <div style="font-size:40px;margin:0 0 20px;">${config.icon}</div>
-      <p style="color:${BRAND.colors.accent};font-size:10px;letter-spacing:4px;text-transform:uppercase;margin:0 0 12px;font-weight:600;">${config.label}</p>
-      <h1 style="color:${BRAND.colors.text};font-size:30px;margin:0 0 12px;font-weight:300;">${config.headline}</h1>
-      <p style="color:${BRAND.colors.muted};font-size:13px;line-height:1.6;margin:0;max-width:440px;display:inline-block;">${config.description}</p>
-    </td>
-  </tr>
+    <td style="padding:40px 60px;" class="padding-mobile">
+      <p style="color:#D4AF37;font-size:10px;letter-spacing:4px;text-transform:uppercase;text-align:center;margin-bottom:12px;font-weight:600;">Status Update</p>
+      <h2 style="color:#000000;font-size:36px;margin:0 0 8px;text-align:center;">Your order is ${statusLabels[data.status]}</h2>
+      <p style="color:#888888;font-size:12px;text-align:center;margin-bottom:40px;letter-spacing:1px;">ORDER ${data.orderId}</p>
+      
+      ${data.status === 'shipped' && data.trackingNumber ? `
+      <div style="background:#000000;padding:32px;text-align:center;margin-bottom:32px;">
+        <p style="color:#D4AF37;font-size:10px;letter-spacing:2px;margin:0 0 12px;">TRACKING NUMBER</p>
+        <p style="color:#ffffff;font-size:24px;font-weight:bold;margin:0;letter-spacing:4px;">${data.trackingNumber}</p>
+        <p style="color:#888888;font-size:11px;margin:12px 0 0;">Courier: ${data.courierName || 'Global Express'}</p>
+      </div>
+      ` : ''}
 
-  ${goldDivider()}
-
-  <!-- ORDER ID -->
-  <tr>
-    <td style="padding:32px 48px 16px;" class="mobile-padding">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BRAND.colors.bg};border-radius:2px;padding:20px 24px;">
-        <tr>
-          <td>
-            <p style="color:${BRAND.colors.muted};font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:0 0 6px;">Order</p>
-            <p style="color:${BRAND.colors.accent};font-size:18px;font-weight:600;margin:0;letter-spacing:2px;">${data.orderId}</p>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-
-  ${trackingSection}
-
-  <!-- PROGRESS BAR -->
-  ${data.status !== 'cancelled' ? `
-  <tr>
-    <td style="padding:32px 48px;" class="mobile-padding">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-          <td colspan="4" style="padding-bottom:16px;">
-            <div style="height:2px;background:${BRAND.colors.border};position:relative;">
-              <div style="height:2px;background:${BRAND.colors.accent};width:${Math.round(((currentStep) / 3) * 100)}%;"></div>
-            </div>
-          </td>
-        </tr>
-        <tr>${progressHtml}</tr>
-      </table>
-    </td>
-  </tr>
-  ` : ''}
-
-  ${data.status === 'delivered' ? `
-  <tr>
-    <td style="padding:0 48px 16px;text-align:center;" class="mobile-padding">
-      <p style="color:${BRAND.colors.muted};font-size:13px;line-height:1.6;margin:0;">
-        We'd love to hear about your experience. Share your look with <strong style="color:${BRAND.colors.accent};">#WEARITION</strong> on Instagram.
+      <p style="color:#555555;font-size:14px;line-height:1.8;text-align:center;">
+        ${data.status === 'processing' ? 'Our artisans are carefully preparing your items for dispatch.' : 
+          data.status === 'shipped' ? 'Your package has been dispatched and is currently on its way to you.' :
+          data.status === 'delivered' ? 'Your WEARITION package has been delivered. We hope you enjoy your selection.' :
+          'Your order has been cancelled as per your request or due to unforeseen circumstances.'}
       </p>
-    </td>
-  </tr>` : ''}
 
-  <tr>
-    <td style="padding:8px 48px 48px;text-align:center;" class="mobile-padding">
-      ${ctaButton('Track Your Order', `${BRAND.website}/track-order?id=${data.orderId}`)}
-      <p style="color:${BRAND.colors.muted};font-size:11px;margin:16px 0 0;">
-        Need help? <a href="https://wa.me/${BRAND.whatsapp}" style="color:${BRAND.colors.accent};">Chat with us on WhatsApp</a>
-      </p>
+      <div style="text-align:center;margin-top:48px;">
+        <a href="${BRAND.website}/track-order?id=${data.orderId}" style="border:1px solid #000000;padding:16px 32px;color:#000000;text-decoration:none;font-size:10px;letter-spacing:3px;font-weight:bold;">VIEW DETAILS</a>
+      </div>
     </td>
   </tr>`;
 
   return {
-    subject: `${config.subject} | ${BRAND.name}`,
-    html: emailWrapper(content, config.preheader)
+    subject: `Update on Order ${data.orderId} | ${BRAND.name}`,
+    html: emailWrapper(content, `Your order status has been updated to ${data.status}.`)
   };
 }
