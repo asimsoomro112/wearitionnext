@@ -410,7 +410,7 @@ export function ProductDetails() {
   }, [product]);
   if (loading) return <WearitionSpinner />;
   if (!product) return (
-    <div className="min-h-screen flex items-center justify-center pt-24 text-white/40 text-sm">
+    <div className="min-h-screen flex items-center justify-center pt-24 text-foreground/40 text-sm">
       Product not found.
     </div>
   );
@@ -457,12 +457,12 @@ export function ProductDetails() {
       <div className="w-full relative bg-background">
 
         {/* ── Breadcrumb ─────────────────────────────────────────────────── */}
-        <div className="w-full max-w-[1600px] mx-auto px-6 pt-40 pb-2 flex items-center gap-2 text-[10px] text-white/30 uppercase tracking-widest">
-          <span className="hover:text-white/60 cursor-pointer transition-colors">Home</span>
+        <div className="w-full max-w-[1600px] mx-auto px-6 pt-40 pb-2 flex items-center gap-2 text-[10px] text-foreground/30 uppercase tracking-widest">
+          <span className="hover:text-foreground/60 cursor-pointer transition-colors">Home</span>
           <ChevronRight className="w-3 h-3" />
-          <span className="hover:text-white/60 cursor-pointer transition-colors">Collection</span>
+          <span className="hover:text-foreground/60 cursor-pointer transition-colors">Collection</span>
           <ChevronRight className="w-3 h-3" />
-          <span className="text-white/50 truncate max-w-[200px]">{product.title}</span>
+          <span className="text-foreground/50 truncate max-w-[200px]">{product.title}</span>
         </div>
 
         {/* ── Main Grid ──────────────────────────────────────────────────── */}
