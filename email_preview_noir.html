@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wearition Noir Email Previews</title>
+    <style>
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 40px; }
+        .controls { text-align: center; margin-bottom: 40px; }
+        .btn { background: #D4AF37; color: #000; border: none; padding: 12px 24px; font-weight: bold; cursor: pointer; margin: 0 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 2px; font-size: 11px; }
+        .btn:hover { opacity: 0.8; }
+        .preview-container { max-width: 800px; margin: 0 auto; border: 1px solid #222; padding: 20px; background: #111; border-radius: 8px; }
+        iframe { width: 100%; height: 1200px; border: none; background: #0A0A0A; }
+        h1 { font-family: 'Cormorant Garamond', serif; text-align: center; font-weight: 300; letter-spacing: 6px; margin-bottom: 40px; }
+    </style>
+</head>
+<body>
+    <h1>WEARITION NOIR PREVIEWS</h1>
+    
+    <div class="controls">
+        <button class="btn" onclick="show('welcome')">1. Welcome Email</button>
+        <button class="btn" onclick="show('order')">2. Order Placed</button>
+        <button class="btn" onclick="show('status')">3. Order Shipped</button>
+    </div>
+
+    <div class="preview-container">
+        <iframe id="preview-frame"></iframe>
+    </div>
+
+    <script>
+        const BRAND = {
+            name: 'WEARITION',
+            tagline: 'Modern Luxury. Timeless Craft.',
+            logo: 'https://wearition.store/logo.png',
+            colors: { dark: '#0A0A0A', card: '#111111', accent: '#D4AF37', border: '#1a1a1a', muted: '#888888', white: '#ffffff' }
+        };
+
+        function emailWrapper(content) {
+            return `<!DOCTYPE html><html><head><style>@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap'); body { margin: 0; padding: 0; background-color: #0A0A0A; font-family: 'Inter', sans-serif; color: #ffffff; } .container { max-width: 600px; margin: 0 auto; background-color: #111111; border: 1px solid #1a1a1a; } h2 { font-family: 'Cormorant Garamond', serif; font-weight: 400; color: #ffffff; } </style></head><body><table width="100%" cellpadding="0" cellspacing="0" style="background:#0A0A0A;padding:40px 0;"><tr><td align="center"><table class="container" width="600" cellpadding="0" cellspacing="0"><tr><td style="padding:60px 40px;text-align:center;"><img src="${BRAND.logo}" width="180" /><p style="color:#D4AF37;font-size:9px;letter-spacing:4px;text-transform:uppercase;margin:16px 0 0;">${BRAND.tagline}</p></td></tr>${content}<tr><td style="padding:60px 40px;background:#000000;text-align:center;border-top:1px solid #1a1a1a;"><p style="color:#D4AF37;font-size:9px;letter-spacing:3px;text-transform:uppercase;">The Maison Wearition</p><p style="color:#666666;font-size:10px;">&copy; 2026 WEARITION. All Rights Reserved.</p></td></tr></table></td></tr></table></body></html>`;
+        }
+
+        const welcome = `<tr><td><img src="https://images.unsplash.com/photo-1441996675218-5732df2550b5?q=80&w=2070&auto=format&fit=crop" width="100%" /></td></tr><tr><td style="padding:60px 40px;text-align:center;"><p style="color:#D4AF37;font-size:10px;letter-spacing:5px;text-transform:uppercase;font-weight:600;">Welcome to the Inner Circle</p><h2 style="font-size:42px;margin:20px 0;">Hello, Customer</h2><p style="color:#888888;font-size:15px;line-height:1.8;margin-bottom:40px;">You have successfully joined the Maison Wearition. You now have exclusive access to our private collections and elite drops.</p><div style="background:#D4AF37;padding:18px 48px;display:inline-block;color:#000;font-size:11px;font-weight:bold;letter-spacing:3px;">EXPLORE NOW</div></td></tr>`;
+
+        const order = `<tr><td style="padding:40px 40px 20px;text-align:center;"><h2 style="font-size:36px;margin:0;">Order Placed</h2><p style="color:#888888;font-size:12px;letter-spacing:1px;margin-top:8px;">ORDER NUMBER: WR-88921</p></td></tr><tr><td style="padding:0 40px 40px;"><table width="100%" style="background:#000;border:1px solid #1a1a1a;padding:32px;"><tr><td><h3 style="font-size:11px;color:#888888;text-transform:uppercase;letter-spacing:2px;margin-bottom:20px;">Order Details</h3><table width="100%"><tr><td width="80"><div style="width:80px;height:100px;background:#222;"></div></td><td style="padding-left:20px;"><p style="margin:0;font-size:14px;font-weight:bold;">NOIR ESSENTIAL BLAZER</p><p style="color:#888888;font-size:11px;margin-top:4px;">QTY: 1 · SIZE: L</p></td><td align="right" style="font-weight:bold;">Rs. 24,500</td></tr></table><table width="100%" style="margin-top:32px;border-top:1px solid #1a1a1a;padding-top:20px;"><tr><td style="color:#888888;font-size:13px;">Subtotal</td><td align="right">Rs. 24,500</td></tr><tr><td style="color:#888888;font-size:13px;padding-top:10px;">Shipping</td><td align="right">Rs. 250</td></tr><tr><td style="color:#888888;font-size:13px;padding-top:10px;">Tax (4%)</td><td align="right">Rs. 980</td></tr><tr><td style="font-size:20px;font-weight:bold;color:#D4AF37;padding-top:20px;">Total</td><td align="right" style="font-size:20px;font-weight:bold;color:#D4AF37;padding-top:20px;">Rs. 25,730</td></tr></table></td></tr></table></td></tr>`;
+
+        const status = `<tr><td style="padding:40px 40px 20px;text-align:center;"><h2 style="font-size:36px;margin:0;">Order Update</h2><p style="color:#888888;font-size:12px;letter-spacing:1px;margin-top:8px;">ORDER NUMBER: WR-88921</p></td></tr><tr><td style="padding:0 40px 40px;"><div style="background:#000;border:1px solid #1a1a1a;padding:40px;text-align:center;"><p style="color:#D4AF37;font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:bold;">Current Status</p><h3 style="font-size:28px;margin:16px 0;color:#fff;">SHIPPED</h3><div style="border-top:1px solid #1a1a1a;padding-top:24px;margin-top:24px;"><p style="font-size:10px;color:#888888;letter-spacing:2px;">TRACKING NUMBER</p><p style="font-size:24px;font-weight:bold;letter-spacing:4px;color:#fff;margin-top:8px;">LP-998277162</p></div></div></td></tr>`;
+
+        function show(type) {
+            const frame = document.getElementById('preview-frame');
+            if(type === 'welcome') frame.srcdoc = emailWrapper(welcome);
+            if(type === 'order') frame.srcdoc = emailWrapper(order);
+            if(type === 'status') frame.srcdoc = emailWrapper(status);
+        }
+
+        // Default
+        show('welcome');
+    </script>
+</body>
+</html>
