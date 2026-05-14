@@ -17,6 +17,7 @@ import {
   updateProfile
 } from 'firebase/auth';
 import { toast } from 'sonner';
+import { formatCurrency } from '@/lib/currency';
 import { generateOTP, saveOTP, verifyOTP } from '@/lib/otpService';
 import { sendVerificationOTPEmail, sendPasswordResetOTPEmail } from '@/lib/emailService';
 
