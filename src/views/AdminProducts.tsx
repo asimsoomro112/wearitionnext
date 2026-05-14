@@ -53,28 +53,20 @@ export function AdminProducts() {
 
     setIsUploading(true);
     try {
-      const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
-      if (!apiKey || apiKey === 'YOUR_IMGBB_API_KEY') {
-        alert('Please configure NEXT_PUBLIC_IMGBB_API_KEY in your .env file or settings.');
-        setIsUploading(false);
-        return;
-      }
-
       const uploadPromises = files.map(async (file) => {
         const formData = new FormData();
-        formData.append('image', file);
+        formData.append('file', file);
         
-        const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+        const response = await fetch('/api/upload', {
           method: 'POST',
           body: formData,
         });
 
         const data = await response.json();
         if (data.success) {
-          // Using display_url which is more resilient to hotlinking blocks than the direct i.ibb.co links
-          return data.data.display_url || data.data.url;
+          return data.url;
         } else {
-          throw new Error(data.error?.message || 'Unknown error');
+          throw new Error(data.error || 'Unknown error');
         }
       });
 
@@ -88,7 +80,7 @@ export function AdminProducts() {
       } else {
         setImages((prev) => (prev ? `${prev}, ${uploadedUrls.join(', ')}` : uploadedUrls.join(', ')));
       }
-      toast.success(`${files.length} images uploaded successfully to ImgBB`);
+      toast.success(`${files.length} images uploaded successfully to Cloudinary`);
     } catch (err: any) {
       console.error(err);
       toast.error('Error uploading images: ' + err.message);
@@ -395,7 +387,7 @@ export function AdminProducts() {
                     className={`cursor-pointer flex items-center justify-center gap-3 w-full border-2 border-dashed border-black/10 py-8 rounded-xl hover:border-black/20 hover:bg-black/[0.02] transition-all ${isUploading ? 'opacity-50' : ''}`}
                   >
                     <Plus className="w-5 h-5 text-foreground/40" />
-                    <span className="text-xs uppercase tracking-widest font-bold text-foreground/60">{isUploading ? 'Uploading...' : 'Upload to ImgBB'}</span>
+                    <span className="text-xs uppercase tracking-widest font-bold text-foreground/60">{isUploading ? 'Uploading...' : 'Upload to Cloudinary'}</span>
                   </label>
                 </div>
                 

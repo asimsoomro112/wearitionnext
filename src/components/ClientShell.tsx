@@ -17,6 +17,8 @@ import { SearchOverlay } from "@/components/layout/SearchOverlay";
 import { AIStyleAssistant } from "@/components/layout/AIStyleAssistant";
 import { LoadingScreen } from "@/components/layout/LoadingScreen";
 
+import { usePathname } from "next/navigation";
+
 export function ClientShell({ children }: { children: React.ReactNode }) {
   const { setUser, setIsAdmin, setLoading } = useAuthStore();
   const { initTheme } = useUIStore();
@@ -61,6 +63,9 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
 }
 
 export function StoreLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isPDP = pathname.includes('/product/');
+
   return (
     <>
       <Navbar />
@@ -69,7 +74,7 @@ export function StoreLayout({ children }: { children: React.ReactNode }) {
       <SearchOverlay />
       <main className="min-h-screen">{children}</main>
       <Footer />
-      <MobileBottomBar />
+      {!isPDP && <MobileBottomBar />}
       <AIStyleAssistant />
     </>
   );

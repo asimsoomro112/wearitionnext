@@ -7,6 +7,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useAuthStore } from '../../store/authStore';
 import { Menu, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { AdminMobileBottomBar } from './AdminMobileBottomBar';
 import logo from '../../assets/logo.png';
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -51,14 +52,14 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/20 z-40 lg:hidden backdrop-blur-sm"
+              className="fixed inset-0 bg-black/20 z-[199] lg:hidden backdrop-blur-sm"
             />
             <motion.aside
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 w-64 bg-white border-r border-black/10 flex flex-col z-50 lg:hidden"
+              className="fixed inset-y-0 left-0 w-64 bg-white border-r border-black/10 flex flex-col z-[200] lg:hidden"
             >
               <div className="h-20 border-b border-black/10 flex items-center justify-between px-6">
                 <img src={typeof logo === 'string' ? logo : logo.src} alt="Wearition" className="h-14 w-auto object-contain brightness-110" />
@@ -98,9 +99,9 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       </AnimatePresence>
 
       {/* Desktop Sidebar */}
-      <aside className="w-64 border-r border-black/10 hidden lg:flex flex-col items-center py-10 fixed h-screen bg-white z-30">
-        <Link href="/" className="w-full px-6 mb-16 flex items-center justify-center">
-          <img src={typeof logo === 'string' ? logo : logo.src} alt="Wearition" className="h-24 w-auto object-contain brightness-110" />
+      <aside className="hidden lg:flex fixed left-6 top-6 bottom-6 w-64 bg-white/80 backdrop-blur-2xl border border-black/5 rounded-[2.5rem] flex-col items-center py-10 shadow-[0_20px_50px_rgba(0,0,0,0.05)] z-30 overflow-hidden">
+        <Link href="/" className="w-full px-6 mb-12 flex items-center justify-center">
+          <img src={typeof logo === 'string' ? logo : logo.src} alt="Wearition" className="h-20 w-auto object-contain brightness-110" />
         </Link>
         <nav className="flex flex-col gap-2 w-full px-4 mb-auto">
            {menuItems.map((item) => {
@@ -109,7 +110,11 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
                <Link 
                  key={item.name} 
                  href={item.path} 
-                 className={`px-4 py-3 text-sm tracking-wide rounded-md hover:bg-black/5 ${isActive ? 'bg-black/5 font-medium text-[#0a0a0a]' : 'text-[#0a0a0a]/60 hover:text-[#0a0a0a]'}`}
+                 className={`px-5 py-3.5 text-sm tracking-wide rounded-2xl transition-all duration-300 ${
+                   isActive 
+                     ? 'bg-black text-white shadow-xl shadow-black/10' 
+                     : 'text-[#0a0a0a]/60 hover:text-[#0a0a0a] hover:bg-black/5'
+                 }`}
                >
                  {item.name}
                </Link>
@@ -118,11 +123,12 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
         </nav>
 
         <div className="w-full px-4 mt-auto">
-          <div className="border-t border-black/10 pt-6">
-            <p className="px-4 text-xs font-medium text-[#0a0a0a] mb-4 truncate">{user?.email}</p>
+          <div className="bg-black/[0.03] rounded-3xl p-6">
+            <p className="text-[10px] uppercase tracking-widest text-[#0a0a0a]/40 mb-1">Logged in as</p>
+            <p className="text-xs font-bold text-[#0a0a0a] mb-6 truncate">{user?.email}</p>
             <button 
               onClick={handleSignOut}
-              className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition-colors"
+              className="w-full py-3 text-sm text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-all font-medium"
             >
               Sign Out
             </button>
@@ -131,9 +137,12 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-grow p-6 pt-24 lg:p-12 lg:ml-64 lg:pt-12 bg-[#FDFDFD] w-full max-w-[100vw]">
+      <main className="flex-grow p-6 pt-24 lg:p-12 lg:pl-80 lg:pt-12 bg-[#FDFDFD] w-full max-w-[100vw] pb-32 lg:pb-12">
         {children}
       </main>
+
+      {/* Admin Mobile Bottom Bar */}
+      <AdminMobileBottomBar />
     </div>
   );
 }
