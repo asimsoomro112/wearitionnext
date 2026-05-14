@@ -674,7 +674,6 @@ export function ProductDetails() {
                         +
                       </button>
                     </div>
-                    <span className="text-[10px] text-white/30">{product.stock} available</span>
                   </div>
                 )}
               </div>
