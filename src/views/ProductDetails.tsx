@@ -1,5 +1,6 @@
 "use client";
 import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { db } from '@/lib/firebase';
@@ -196,39 +197,41 @@ function SizeGuideModal({ onClose }: { onClose: () => void }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] bg-background/80 flex items-center justify-center px-4"
+      className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center px-4"
       onClick={onClose}
     >
       <motion.div
-        initial={{ y: 40, opacity: 0 }}
+        initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        exit={{ y: 40, opacity: 0 }}
-        className="bg-background border border-foreground/10 rounded-2xl p-8 max-w-md w-full"
+        exit={{ y: 30, opacity: 0 }}
+        className="bg-[#0b0b0b] border border-white/10 rounded-sm p-8 max-w-md w-full shadow-2xl text-white"
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-foreground font-display font-bold uppercase tracking-wide text-xl">Size Guide</h3>
-          <button onClick={onClose}><X className="w-5 h-5 text-foreground/40 hover:text-foreground" /></button>
+        <div className="flex items-center justify-between mb-6 pb-3 border-b border-white/10">
+          <h3 className="text-white font-serif text-lg uppercase tracking-wider">Atelier Sizing Guide</h3>
+          <button onClick={onClose} aria-label="Close guide"><X className="w-5 h-5 text-white/40 hover:text-white transition-colors" /></button>
         </div>
-        <table className="w-full text-sm">
+        <table className="w-full text-xs font-mono">
           <thead>
-            <tr className="border-b border-foreground/10">
+            <tr className="border-b border-white/10">
               {['Size', 'Chest', 'Waist', 'Hips'].map(h => (
-                <th key={h} className="pb-3 text-left text-[10px] uppercase tracking-widest text-foreground/40 font-medium">{h}</th>
+                <th key={h} className="pb-3 text-left text-[10px] uppercase tracking-widest text-white/40 font-medium">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {sizes.map(row => (
-              <tr key={row.size} className="border-b border-foreground/5">
+              <tr key={row.size} className="border-b border-white/5">
                 {[row.size, row.chest, row.waist, row.hips].map((cell, i) => (
-                  <td key={i} className={`py-3 ${i === 0 ? 'text-accent font-bold' : 'text-foreground/70'}`}>{cell}</td>
+                  <td key={i} className={`py-3 ${i === 0 ? 'text-white font-bold' : 'text-white/60'}`}>{cell}</td>
                 ))}
               </tr>
             ))}
           </tbody>
         </table>
-        <p className="text-[11px] text-foreground/30 mt-4">All measurements are in inches. If between sizes, size up.</p>
+        <p className="text-[10px] text-white/30 uppercase tracking-widest mt-6">
+          All measurements in inches. Custom fittings available via Atelier Styling.
+        </p>
       </motion.div>
     </motion.div>
   );
@@ -243,40 +246,27 @@ function StickyMobileCTA({
       initial={{ y: 100 }}
       animate={{ y: 0 }}
       transition={{ delay: 1, type: 'spring', stiffness: 300, damping: 30 }}
-      className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-background/95 
-                 backdrop-blur-2xl border-t border-foreground/10 px-6 py-5 
-                 flex flex-col items-center gap-3 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]"
+      className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-[#070707]/95 
+                 backdrop-blur-2xl border-t border-white/10 px-6 py-4 
+                 flex flex-col items-center gap-3 shadow-[0_-10px_30px_rgba(0,0,0,0.8)]"
     >
-      <div className="flex items-center gap-3 text-[10px] uppercase tracking-widest font-bold">
-        <span className="text-foreground/40 truncate max-w-[150px]">{product.title}</span>
-        <span className="text-foreground/20">|</span>
-        <span className="text-accent">{formatCurrency(product.price)}</span>
+      <div className="flex items-center justify-between w-full text-[10px] uppercase tracking-widest font-mono">
+        <span className="text-white/50 truncate max-w-[180px]">{product.title}</span>
+        <span className="text-white font-medium">{formatCurrency(product.price)}</span>
       </div>
       
-      <div className="flex gap-3 w-full max-w-md">
+      <div className="flex gap-2.5 w-full">
         <button
           onClick={onAddToCart}
           disabled={isOutOfStock}
-          className={`flex-1 py-4 rounded-full text-[10px] font-bold uppercase tracking-[0.15em]
+          className={`flex-1 py-3.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em]
                      transition-all duration-300 border ${
                        isOutOfStock
-                         ? 'border-foreground/10 text-foreground/30 cursor-not-allowed'
-                         : 'border-foreground/20 text-foreground active:scale-95'
+                         ? 'border-white/10 text-white/30 cursor-not-allowed'
+                         : 'bg-white text-black active:scale-95 shadow-xl'
                      }`}
         >
-          {isOutOfStock ? 'Sold' : 'Add to Bag'}
-        </button>
-        <button
-          onClick={onBuyNow}
-          disabled={isOutOfStock}
-          className={`flex-[1.5] py-4 rounded-full text-[10px] font-bold uppercase tracking-[0.15em]
-                     transition-all duration-300 ${
-                       isOutOfStock
-                         ? 'bg-foreground/10 text-foreground/30 cursor-not-allowed'
-                         : 'bg-accent text-white active:scale-95 shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)]'
-                     }`}
-        >
-          {isOutOfStock ? 'Out of Stock' : 'Buy Now'}
+          {isOutOfStock ? 'Sold Out' : 'Add to Bag'}
         </button>
       </div>
     </motion.div>
@@ -408,25 +398,25 @@ export function ProductDetails() {
       }
     } catch { /* user cancelled */ }
   }, [product]);
+
   if (loading) return <WearitionSpinner />;
   if (!product) return (
-    <div className="min-h-screen flex items-center justify-center pt-24 text-foreground/40 text-sm">
+    <div className="min-h-screen flex items-center justify-center pt-24 text-white/40 text-sm bg-[#050505]">
       Product not found.
     </div>
   );
+
+  const whatsappHref = `https://wa.me/923000000000?text=${encodeURIComponent('Hello WEARITION Concierge, I would like to inquire about ' + product.title)}`;
 
   // ─── Render ────────────────────────────────────────────────────────────────
   return (
     <>
       <SEO
         title={product.title}
-        description={product.description || `Shop ${product.title} at WEARITION — Premium luxury fashion from Pakistan.`}
+        description={product.description || `Shop ${product.title} at WEARITION.`}
         image={product.images?.[0]}
         type="product"
       />
-
-      {/* Real-time notifications */}
-      <PurchaseNotification />
 
       {/* Lightbox */}
       <AnimatePresence>
@@ -454,30 +444,30 @@ export function ProductDetails() {
         />
       )}
 
-      <div className="w-full relative bg-background">
+      <div className="w-full relative bg-[#050505] text-white min-h-screen">
 
         {/* ── Breadcrumb ─────────────────────────────────────────────────── */}
-        <div className="w-full max-w-[1600px] mx-auto px-6 pt-32 pb-2 flex items-center gap-2 text-[10px] text-foreground/30 uppercase tracking-widest">
-          <span className="hover:text-foreground/60 cursor-pointer transition-colors">Home</span>
-          <ChevronRight className="w-3 h-3" />
-          <span className="hover:text-foreground/60 cursor-pointer transition-colors">Collection</span>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-foreground/50 truncate max-w-[200px]">{product.title}</span>
+        <div className="w-full max-w-[1600px] mx-auto px-6 md:px-12 pt-36 md:pt-40 pb-4 flex items-center gap-2 text-[10px] text-white/40 uppercase tracking-[0.2em]">
+          <Link href="/" className="hover:text-white cursor-pointer transition-colors">Home</Link>
+          <ChevronRight className="w-3 h-3 text-white/20" />
+          <Link href="/shop" className="hover:text-white cursor-pointer transition-colors">Atelier Collection</Link>
+          <ChevronRight className="w-3 h-3 text-white/20" />
+          <span className="text-white/70 truncate max-w-[200px]">{product.title}</span>
         </div>
 
         {/* ── Main Grid ──────────────────────────────────────────────────── */}
         <div className="flex flex-col md:flex-row w-full max-w-[1600px] mx-auto">
 
           {/* ═══════════════════════ LEFT: Gallery ═══════════════════════ */}
-          <div ref={heroRef} className="w-full md:w-[58%] flex flex-col pt-4 md:pt-6 pb-12 px-4 md:px-12 gap-4">
+          <div ref={heroRef} className="w-full md:w-[58%] flex flex-col pt-2 md:pt-4 pb-12 px-4 md:px-12 gap-4">
             {displayImages.length > 0 ? displayImages.map((img: string, idx: number) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-80px' }}
+                viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.7, delay: Math.min(idx * 0.08, 0.3) }}
-                className="w-full aspect-[3/4] bg-foreground/5 overflow-hidden rounded-xl relative group cursor-zoom-in"
+                className="w-full aspect-[3/4] bg-[#0c0c0c] border border-white/5 overflow-hidden rounded-sm relative group cursor-zoom-in"
                 onClick={() => { setLightboxIndex(idx); setLightboxOpen(true); }}
                 style={idx === 0 ? { y: imageY } as any : undefined}
               >
@@ -486,77 +476,70 @@ export function ProductDetails() {
                   alt={`${product.title} – view ${idx + 1}`}
                   referrerPolicy="no-referrer"
                   loading={idx === 0 ? 'eager' : 'lazy'}
-                  className="w-full h-full object-cover md:object-contain bg-[#0a0a0a] 
-                             transition-transform duration-700 group-hover:scale-[1.04]"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                 />
                 {/* Zoom hint */}
-                <div className="absolute inset-0 flex items-end justify-end p-5 opacity-0 
-                                group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="flex items-center gap-2 bg-black/60 backdrop-blur-sm 
-                                  rounded-full px-3 py-2">
+                <div className="absolute inset-0 flex items-end justify-end p-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="flex items-center gap-2 bg-black/70 backdrop-blur-md border border-white/10 rounded-full px-3.5 py-2">
                     <ZoomIn className="w-3.5 h-3.5 text-white" />
                     <span className="text-[9px] uppercase tracking-widest text-white font-medium">
-                      Zoom
+                      Inspect
                     </span>
                   </div>
                 </div>
               </motion.div>
             )) : (
-              <div className="w-full aspect-[3/4] bg-foreground/5 flex items-center justify-center 
-                             text-foreground/20 uppercase tracking-widest text-xs rounded-xl">
+              <div className="w-full aspect-[3/4] bg-[#0c0c0c] border border-white/5 flex items-center justify-center text-white/20 uppercase tracking-widest text-xs rounded-sm">
                 No Images Available
               </div>
             )}
           </div>
 
           {/* ═══════════════════════ RIGHT: Info Panel ═══════════════════ */}
-          <div className="w-full md:w-[42%] md:sticky md:top-0 h-auto md:h-screen 
-                         overflow-y-auto hide-scrollbar pt-4 md:pt-32 
-                         px-6 md:pl-10 md:pr-20 flex flex-col pb-40 md:pb-24">
+          <div className="w-full md:w-[42%] md:sticky md:top-0 h-auto md:h-screen overflow-y-auto hide-scrollbar pt-4 md:pt-32 px-6 md:pl-8 md:pr-16 flex flex-col pb-36 md:pb-24">
 
             <motion.div
-              initial={{ opacity: 0, x: 24 }}
+              initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, delay: 0.15 }}
               className="flex flex-col"
             >
               {/* ── Brand Tag ─────────────────────────────────────────── */}
-              <p className="text-accent uppercase tracking-[0.35em] font-semibold text-[9px] mb-3">
-                The House of WEARITION
-              </p>
+              <div className="flex items-center gap-2 text-[9px] uppercase tracking-[0.25em] text-white/40 mb-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                <span>ATELIER HAUTE COUTURE • WEARITION</span>
+              </div>
 
               {/* ── Viewers Badge ─────────────────────────────────────── */}
               <ViewersBadge count={viewerCount} />
 
               {/* ── Title ─────────────────────────────────────────────── */}
-              <TextReveal as="h1" className="font-display font-bold uppercase tracking-tight text-3xl md:text-5xl text-foreground leading-[1.05] mb-4">
+              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-white uppercase tracking-tight leading-[1.1] mb-4">
                 {product.title}
-              </TextReveal>
+              </h1>
 
               {/* ── Rating Row ────────────────────────────────────────── */}
               <div className="flex items-center gap-3 mb-5 cursor-pointer group"
                 onClick={() => setActiveTab('reviews')}>
                 <StarRating rating={Math.round(avgRating)} />
-                <span className="text-amber-400 text-xs font-bold">{avgRating}</span>
-                <span className="text-foreground/30 text-xs">·</span>
-                <span className="text-foreground/50 text-xs underline underline-offset-2 
-                                group-hover:text-foreground transition-colors">
-                  {reviewCount} verified reviews
+                <span className="text-white text-xs font-mono font-medium">{avgRating}</span>
+                <span className="text-white/20 text-xs">|</span>
+                <span className="text-white/40 text-xs underline underline-offset-4 group-hover:text-white transition-colors">
+                  {reviewCount} verified patrons
                 </span>
               </div>
 
               {/* ── Price Block ───────────────────────────────────────── */}
               <div className="flex items-baseline gap-4 mb-6">
-                <p className="text-3xl text-foreground font-bold tracking-tight">
+                <p className="text-3xl text-white font-mono font-medium tracking-tight">
                   {formatCurrency(product.price)}
                 </p>
                 {product.originalPrice && product.originalPrice > product.price && (
                   <>
-                    <p className="text-foreground/30 line-through text-lg">
+                    <p className="text-white/30 line-through text-lg font-mono">
                       {formatCurrency(product.originalPrice)}
                     </p>
-                    <span className="text-emerald-400 text-xs font-bold bg-emerald-500/10 
-                                     border border-emerald-500/20 px-2 py-1 rounded-full">
+                    <span className="text-white text-xs font-mono font-medium bg-white/10 border border-white/20 px-2.5 py-1 rounded-full">
                       SAVE {Math.round((1 - product.price / product.originalPrice) * 100)}%
                     </span>
                   </>
@@ -565,40 +548,39 @@ export function ProductDetails() {
 
               {/* ── Stock / Urgency Bar ───────────────────────────────── */}
               {isLowStock && (
-                <div className="mb-5 p-3 rounded-xl bg-red-500/5 border border-red-500/20">
+                <div className="mb-5 p-3.5 rounded-sm bg-white/[0.02] border border-white/10">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] uppercase tracking-widest text-red-400 font-bold">
-                      Selling Fast — {product.stock} items left
+                    <span className="text-[10px] uppercase tracking-widest text-white/80 font-bold">
+                      Limited Atelier Run — {product.stock} pieces remaining
                     </span>
-                    <span className="text-[10px] text-foreground/30">{product.stock}/{product.stock + 12} sold</span>
+                    <span className="text-[10px] text-white/40 font-mono">{product.stock} left</span>
                   </div>
-                  <div className="h-1.5 bg-foreground/10 rounded-full overflow-hidden">
+                  <div className="h-1 bg-white/10 rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${((12) / (product.stock + 12)) * 100}%` }}
                       transition={{ duration: 1.2, delay: 0.5 }}
-                      className="h-full bg-gradient-to-r from-amber-500 to-red-500 rounded-full"
+                      className="h-full bg-white rounded-full"
                     />
                   </div>
                 </div>
               )}
               {isOutOfStock && (
-                <div className="mb-5 flex items-center gap-2 text-red-400 text-xs bg-red-500/10 
-                               border border-red-500/20 rounded-xl px-4 py-3">
-                  <AlertCircle className="w-4 h-4" />
-                  <span>This item is currently out of stock</span>
+                <div className="mb-5 flex items-center gap-2 text-white/70 text-xs bg-white/[0.03] border border-white/10 rounded-sm px-4 py-3">
+                  <AlertCircle className="w-4 h-4 text-white/50" />
+                  <span className="uppercase text-[10px] tracking-widest">This silhouette is currently sold out in the atelier</span>
                 </div>
               )}
 
               {/* ── Selector Area ─────────────────────────────────────── */}
-              <div className="flex flex-col gap-6 mb-8 border-y border-foreground/8 py-8">
+              <div className="flex flex-col gap-6 mb-8 border-y border-white/10 py-8">
 
                 {/* Color */}
                 {product.colors?.length > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-[10px] uppercase tracking-[0.2em] text-foreground/70 font-medium">
-                        Color: <span className="text-foreground font-bold">{selectedColor || 'Select'}</span>
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-medium">
+                        Fabric Palette: <span className="text-white font-bold">{selectedColor || 'Select'}</span>
                       </span>
                     </div>
                     <div className="flex gap-2.5 flex-wrap">
@@ -606,12 +588,11 @@ export function ProductDetails() {
                         <button
                           key={color}
                           onClick={() => { setSelectedColor(color); triggerHaptic('light'); }}
-                          className={`px-4 py-2.5 rounded-full border text-[10px] uppercase 
-                                     tracking-widest font-bold transition-all duration-200 ${
-                                       selectedColor === color
-                                         ? 'border-accent bg-accent/15 text-accent shadow-[0_0_12px_rgba(var(--accent-rgb),0.3)]'
-                                         : 'border-foreground/10 text-foreground/40 hover:border-foreground/30 hover:text-foreground/70'
-                                     }`}
+                          className={`px-4 py-2 rounded-full border text-[10px] uppercase tracking-[0.18em] font-medium transition-all duration-200 ${
+                            selectedColor === color
+                              ? 'border-white bg-white text-black shadow-lg scale-105'
+                              : 'border-white/15 bg-white/[0.02] text-white/50 hover:border-white/30 hover:text-white'
+                          }`}
                         >
                           {color}
                         </button>
@@ -624,38 +605,36 @@ export function ProductDetails() {
                 {!product.isUnstitched && (
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-[10px] uppercase tracking-[0.2em] text-foreground/70 font-medium">
-                        Size: <span className="text-foreground font-bold">{selectedSize || 'Select'}</span>
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-medium">
+                        Atelier Fit: <span className="text-white font-bold">{selectedSize || 'Select'}</span>
                       </span>
                       <button
                         onClick={() => setSizeGuideOpen(true)}
-                        className="text-[10px] uppercase tracking-widest text-accent/70 
-                                   hover:text-accent transition-colors flex items-center gap-1"
+                        className="text-[10px] uppercase tracking-[0.18em] text-white/50 hover:text-white transition-colors flex items-center gap-1"
                       >
                         <span>Size Guide</span>
                         <ChevronRight className="w-3 h-3" />
                       </button>
                     </div>
-                    <div className="flex gap-2.5 flex-wrap">
+                    <div className="flex gap-2 flex-wrap">
                       {(product.sizes?.length > 0 ? product.sizes : ['XS', 'S', 'M', 'L', 'XL'])
                         .map((size: string) => (
                           <button
                             key={size}
                             onClick={() => { setSelectedSize(size); triggerHaptic('light'); }}
-                            className={`w-12 h-12 rounded-xl border font-bold text-sm
-                                       transition-all duration-200 ${
-                                         selectedSize === size
-                                           ? 'border-foreground bg-foreground text-background'
-                                           : 'border-foreground/15 text-foreground/60 hover:border-foreground/40 hover:text-foreground'
-                                       }`}
+                            className={`min-w-12 h-11 px-3 rounded-full border font-mono text-xs uppercase tracking-wider transition-all duration-200 ${
+                              selectedSize === size
+                                ? 'border-white bg-white text-black shadow-lg scale-105 font-bold'
+                                : 'border-white/15 bg-white/[0.02] text-white/60 hover:border-white/40 hover:text-white'
+                            }`}
                           >
                             {size}
                           </button>
                         ))}
                     </div>
                     {!selectedSize && !product.isUnstitched && (
-                      <p className="text-[10px] text-foreground/30 mt-2 flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3" /> Select a size to continue
+                      <p className="text-[10px] text-white/40 mt-2 flex items-center gap-1 uppercase tracking-wider">
+                        <AlertCircle className="w-3 h-3" /> Select a silhouette size
                       </p>
                     )}
                   </div>
@@ -664,24 +643,20 @@ export function ProductDetails() {
                 {/* Quantity */}
                 {!isOutOfStock && (
                   <div className="flex items-center gap-4">
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-foreground/70 font-medium">Qty</span>
-                    <div className="flex items-center border border-foreground/10 rounded-full overflow-hidden">
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-medium">Quantity</span>
+                    <div className="flex items-center border border-white/15 bg-white/[0.02] rounded-full overflow-hidden">
                       <button
                         onClick={() => setQuantity(q => Math.max(1, q - 1))}
                         disabled={quantity <= 1}
-                        className="w-10 h-10 flex items-center justify-center text-foreground/60 
-                                   hover:text-foreground hover:bg-foreground/5 transition-all disabled:opacity-30 
-                                   text-lg font-light"
+                        className="w-9 h-9 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all disabled:opacity-30 text-base"
                       >
                         −
                       </button>
-                      <span className="w-10 text-center text-sm font-mono text-foreground">{quantity}</span>
+                      <span className="w-10 text-center text-xs font-mono text-white">{quantity}</span>
                       <button
                         onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
                         disabled={quantity >= product.stock}
-                        className="w-10 h-10 flex items-center justify-center text-foreground/60 
-                                   hover:text-foreground hover:bg-foreground/5 transition-all disabled:opacity-30 
-                                   text-lg font-light"
+                        className="w-9 h-9 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all disabled:opacity-30 text-base"
                       >
                         +
                       </button>
@@ -691,112 +666,79 @@ export function ProductDetails() {
               </div>
 
               {/* ── Primary CTA ───────────────────────────────────────── */}
-              <MagneticButton
+              <button
                 onClick={handleAddToCart}
-                className={`relative w-full py-5 rounded-full font-bold uppercase text-xs 
-                           tracking-[0.2em] overflow-hidden transition-all duration-300 mb-3
-                           group ${
-                             isOutOfStock
-                               ? 'bg-foreground/10 text-foreground/30 cursor-not-allowed'
-                               : 'bg-foreground text-background hover:shadow-[0_0_40px_rgba(var(--foreground-rgb),0.15)]'
-                           }`}
+                disabled={isOutOfStock}
+                className={`relative w-full py-4.5 rounded-full font-bold uppercase text-xs tracking-[0.25em] transition-all duration-300 mb-3 shadow-2xl flex items-center justify-center gap-2.5 ${
+                  isOutOfStock
+                    ? 'bg-white/10 text-white/30 cursor-not-allowed border border-white/10'
+                    : 'bg-white text-black hover:bg-white/90 hover:scale-[1.01]'
+                }`}
               >
-                {!isOutOfStock && (
-                  <span className="absolute inset-0 bg-gradient-to-r from-accent to-accent/80 
-                                   translate-x-[-100%] group-hover:translate-x-0 
-                                   transition-transform duration-500 ease-out" />
-                )}
-                <span className="relative flex items-center justify-center gap-2">
-                  <ShoppingBag className="w-4 h-4" />
-                  {isOutOfStock ? 'Out of Stock' : `Add to Bag · ${formatCurrency(product.price * quantity)}`}
-                </span>
-              </MagneticButton>
+                <ShoppingBag className="w-4 h-4" />
+                {isOutOfStock ? 'Sold Out' : `Add to Bag • ${formatCurrency(product.price * quantity)}`}
+              </button>
 
               {/* ── Secondary CTAs Row ────────────────────────────────── */}
-              <div className="flex gap-2.5 mb-4">
+              <div className="flex gap-2.5 mb-6">
                 <button
                   onClick={handleWishlistToggle}
-                  className={`flex-1 py-4 rounded-full border text-xs font-bold uppercase 
-                             tracking-widest flex items-center justify-center gap-2
-                             transition-all duration-300 ${
-                               isWished
-                                 ? 'border-red-500/50 bg-red-500/10 text-red-400'
-                                 : 'border-foreground/15 text-foreground/60 hover:border-foreground/30 hover:text-foreground'
-                             }`}
+                  className={`flex-1 py-3.5 rounded-full border text-[10px] font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all duration-300 ${
+                    isWished
+                      ? 'border-white bg-white text-black'
+                      : 'border-white/15 bg-white/[0.02] text-white/60 hover:border-white/40 hover:text-white'
+                  }`}
                 >
-                  <Heart className={`w-3.5 h-3.5 ${isWished ? 'fill-red-400' : ''}`} />
-                  {isWished ? 'Wishlisted' : 'Wishlist'}
+                  <Heart className={`w-3.5 h-3.5 ${isWished ? 'fill-black' : ''}`} />
+                  {isWished ? 'Saved to Wishlist' : 'Add to Wishlist'}
                 </button>
                 <button
                   onClick={handleShare}
-                  className="px-5 py-4 rounded-full border border-foreground/15 text-foreground/60 
-                             hover:border-foreground/30 hover:text-foreground transition-all duration-300 
-                             flex items-center justify-center"
-                  aria-label="Share"
+                  className="px-5 py-3.5 rounded-full border border-white/15 bg-white/[0.02] text-white/60 hover:border-white/40 hover:text-white transition-all duration-300 flex items-center justify-center"
+                  aria-label="Share silhouette"
                 >
                   <Share2 className="w-4 h-4" />
                 </button>
               </div>
 
               {/* ── Trust Badges ──────────────────────────────────────── */}
-              <div className="grid grid-cols-2 gap-2.5 mb-8">
+              <div className="grid grid-cols-2 gap-2 mb-8">
                 {[
-                  { icon: <Banknote className="w-4 h-4 text-emerald-400" />, label: 'Cash on Delivery', sub: 'Nationwide' },
-                  { icon: <Truck className="w-4 h-4 text-blue-400" />, label: 'Fast Delivery', sub: 'Rs. 250 shipping' },
-                  { icon: <RotateCcw className="w-4 h-4 text-amber-400" />, label: 'Easy Returns', sub: '3 days policy' },
-                  { icon: <ShieldCheck className="w-4 h-4 text-accent" />, label: '100% Authentic', sub: 'Verified brands' },
+                  { icon: <Banknote className="w-4 h-4 text-white" />, label: 'Cash on Delivery', sub: 'Nationwide' },
+                  { icon: <Truck className="w-4 h-4 text-white" />, label: 'Express Delivery', sub: 'DHL / TCS Express' },
+                  { icon: <RotateCcw className="w-4 h-4 text-white" />, label: 'Atelier Exchange', sub: 'Hassle-free policy' },
+                  { icon: <ShieldCheck className="w-4 h-4 text-white" />, label: '100% Authentic', sub: 'Verified original' },
                 ].map(({ icon, label, sub }) => (
                   <div key={label}
-                    className="flex items-center gap-3 bg-foreground/[0.03] border border-foreground/[0.06] 
-                               rounded-xl p-3 hover:border-foreground/10 transition-colors"
+                    className="flex items-center gap-3 bg-[#0a0a0a] border border-white/5 rounded-sm p-3 hover:border-white/15 transition-colors"
                   >
                     {icon}
                     <div>
-                      <p className="text-[10px] text-foreground font-semibold">{label}</p>
-                      <p className="text-[9px] text-foreground/35">{sub}</p>
+                      <p className="text-[10px] text-white font-medium tracking-wide">{label}</p>
+                      <p className="text-[9px] text-white/40">{sub}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* ── Delivery Estimator ────────────────────────────────── */}
-              <div className="flex items-center gap-3 bg-foreground/[0.03] border border-foreground/[0.06] 
-                             rounded-xl p-4 mb-8">
-                <Clock className="w-4 h-4 text-foreground/40 flex-shrink-0" />
-                <div>
-                  <p className="text-xs text-foreground font-medium">
-                    Order now → Delivers by{' '}
-                    <span className="text-accent">
-                      {new Date(Date.now() + 3 * 86400000).toLocaleDateString('en-PK', {
-                        weekday: 'short', month: 'short', day: 'numeric'
-                      })}
-                    </span>
-                  </p>
-                  <p className="text-[10px] text-foreground/35 mt-0.5">
-                    via TCS / Leopards / M&P
-                  </p>
-                </div>
-              </div>
-
               {/* ── Tabs: Description / Reviews / Care ────────────────── */}
-              <div className="border-t border-foreground/10">
-                <div className="flex gap-0 border-b border-foreground/10 mb-6 mt-4">
+              <div className="border-t border-white/10">
+                <div className="flex gap-0 border-b border-white/10 mb-6 mt-4">
                   {(['description', 'reviews', 'care'] as const).map(tab => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
-                      className={`flex-1 pb-3 text-[10px] uppercase tracking-widest font-bold 
-                                 transition-all duration-200 relative ${
-                                   activeTab === tab
-                                     ? 'text-foreground'
-                                     : 'text-foreground/30 hover:text-foreground/60'
-                                 }`}
+                      className={`flex-1 pb-3 text-[10px] uppercase tracking-widest font-bold transition-all duration-200 relative ${
+                        activeTab === tab
+                          ? 'text-white'
+                          : 'text-white/40 hover:text-white/70'
+                      }`}
                     >
-                      {tab === 'reviews' ? `Reviews (${reviewCount})` : tab}
+                      {tab === 'reviews' ? `Patron Reviews (${reviewCount})` : tab === 'description' ? 'Atelier Notes' : 'Care & Maintenance'}
                       {activeTab === tab && (
                         <motion.div
                           layoutId="tab-underline"
-                          className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent rounded-full"
+                          className="absolute bottom-0 left-0 right-0 h-0.5 bg-white rounded-full"
                         />
                       )}
                     </button>
@@ -810,9 +752,9 @@ export function ProductDetails() {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -8 }}
-                      className="text-foreground/55 text-sm leading-relaxed font-sans mb-6"
+                      className="text-white/60 text-xs md:text-sm leading-relaxed font-sans mb-6"
                     >
-                      {product.description || 'Premium quality piece from WEARITION\'s curated collection. Sourced from Pakistan\'s finest fashion houses.'}
+                      {product.description || 'Premium bespoke silhouette from WEARITION\'s curated collection. Handcrafted by master artisans with intricate detail and precision tailoring.'}
                     </motion.div>
                   )}
 
@@ -822,56 +764,53 @@ export function ProductDetails() {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -8 }}
-                      className="flex flex-col gap-5 mb-6"
+                      className="flex flex-col gap-4 mb-6"
                     >
-                      {/* Average rating summary */}
-                      <div className="flex items-center gap-5 bg-foreground/[0.03] rounded-xl p-4 
-                                     border border-foreground/[0.06]">
+                      {/* Rating summary */}
+                      <div className="flex items-center gap-5 bg-[#0a0a0a] rounded-sm p-4 border border-white/5">
                         <div className="text-center">
-                          <p className="text-4xl font-bold text-foreground">{avgRating}</p>
+                          <p className="text-3xl font-mono font-medium text-white">{avgRating}</p>
                           <StarRating rating={5} size="sm" />
-                          <p className="text-[10px] text-foreground/30 mt-1">{reviewCount} reviews</p>
+                          <p className="text-[9px] text-white/30 uppercase tracking-widest mt-1">{reviewCount} reviews</p>
                         </div>
                         <div className="flex-1 flex flex-col gap-1.5">
                           {[5, 4, 3, 2, 1].map(star => {
                             const pct = star === 5 ? 72 : star === 4 ? 20 : star === 3 ? 5 : 2;
                             return (
                               <div key={star} className="flex items-center gap-2">
-                                <span className="text-[9px] text-foreground/30 w-3">{star}</span>
-                                <div className="flex-1 h-1.5 bg-foreground/10 rounded-full overflow-hidden">
+                                <span className="text-[9px] text-white/30 w-3">{star}</span>
+                                <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
                                   <div
-                                    className="h-full bg-amber-400 rounded-full"
+                                    className="h-full bg-white rounded-full"
                                     style={{ width: `${pct}%` }}
                                   />
                                 </div>
-                                <span className="text-[9px] text-foreground/30 w-6">{pct}%</span>
+                                <span className="text-[9px] text-white/30 w-6 font-mono">{pct}%</span>
                               </div>
                             );
                           })}
                         </div>
                       </div>
-                      {/* Individual reviews */}
+
+                      {/* Reviews List */}
                       {MOCK_REVIEWS.map((rev, i) => (
-                        <div key={i} className="flex flex-col gap-2 pb-4 border-b border-foreground/5 last:border-0">
+                        <div key={i} className="flex flex-col gap-1.5 pb-4 border-b border-white/5 last:border-0">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <div className="w-7 h-7 rounded-full bg-accent/20 flex items-center 
-                                             justify-center text-accent text-[11px] font-bold">
+                              <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white text-[10px] font-mono">
                                 {rev.name[0]}
                               </div>
-                              <div>
-                                <span className="text-xs text-foreground font-semibold">{rev.name}</span>
-                                {rev.verified && (
-                                  <span className="ml-1.5 text-[9px] text-emerald-400 flex items-center gap-0.5 inline-flex">
-                                    <CheckCircle2 className="w-3 h-3" /> Verified
-                                  </span>
-                                )}
-                              </div>
+                              <span className="text-xs text-white font-medium">{rev.name}</span>
+                              {rev.verified && (
+                                <span className="text-[8px] text-white/60 uppercase tracking-widest flex items-center gap-0.5 border border-white/10 px-1.5 py-0.5 rounded-full">
+                                  Verified Patron
+                                </span>
+                              )}
                             </div>
-                            <span className="text-[9px] text-foreground/25">{rev.date} · {rev.location}</span>
+                            <span className="text-[9px] text-white/30">{rev.date} · {rev.location}</span>
                           </div>
                           <StarRating rating={rev.rating} size="sm" />
-                          <p className="text-[12px] text-foreground/55 leading-relaxed">{rev.comment}</p>
+                          <p className="text-xs text-white/60 leading-relaxed font-sans">{rev.comment}</p>
                         </div>
                       ))}
                     </motion.div>
@@ -883,20 +822,16 @@ export function ProductDetails() {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -8 }}
-                      className="mb-6"
+                      className="mb-6 space-y-2"
                     >
                       {[
-                        { icon: '🌡️', title: 'Wash', detail: 'Cold water, gentle cycle only' },
-                        { icon: '🧴', title: 'Dry Clean', detail: 'Recommended for best results' },
-                        { icon: '☀️', title: 'Drying', detail: 'Dry in shade, avoid direct sunlight' },
-                        { icon: '🔥', title: 'Ironing', detail: 'Low heat, iron inside out' },
-                      ].map(({ icon, title, detail }) => (
-                        <div key={title} className="flex items-center gap-3 py-3 border-b border-foreground/5 last:border-0">
-                          <span className="text-lg">{icon}</span>
-                          <div>
-                            <p className="text-xs text-foreground font-semibold">{title}</p>
-                            <p className="text-[11px] text-foreground/40">{detail}</p>
-                          </div>
+                        { title: 'Dry Clean Only', detail: 'Professional couture dry cleaning recommended to protect fine silks and embroidery.' },
+                        { title: 'Preservation Storage', detail: 'Store in complimentary breathable garment bag away from direct heat.' },
+                        { title: 'Low Heat Steaming', detail: 'Steam inside out on low temperature setting.' },
+                      ].map(({ title, detail }) => (
+                        <div key={title} className="p-3 bg-[#0a0a0a] border border-white/5 rounded-sm">
+                          <p className="text-[10px] text-white font-semibold uppercase tracking-wider">{title}</p>
+                          <p className="text-[11px] text-white/50 font-sans mt-0.5">{detail}</p>
                         </div>
                       ))}
                     </motion.div>
@@ -904,28 +839,19 @@ export function ProductDetails() {
                 </AnimatePresence>
               </div>
 
-              {/* ── UGC Social Proof Strip ────────────────────────────── */}
-              <div className="flex items-center gap-3 bg-foreground/[0.03] border border-foreground/[0.06] 
-                             rounded-xl p-4 mb-4">
-                <div className="flex -space-x-2">
-                  {['A', 'F', 'S', 'Z'].map((l, i) => (
-                    <div key={i}
-                      className="w-7 h-7 rounded-full border-2 border-background 
-                                 bg-gradient-to-br from-accent/40 to-accent/10 
-                                 flex items-center justify-center text-[9px] font-bold text-foreground"
-                    >
-                      {l}
-                    </div>
-                  ))}
-                </div>
-                <p className="text-[11px] text-foreground/60">
-                  <span className="text-foreground font-semibold">289 customers</span> bought this in the last 30 days
-                </p>
-              </div>
+              {/* ── WhatsApp Styling Concierge ────────────────────────── */}
+              <a 
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-3.5 rounded-full border border-white/15 bg-white/[0.02] hover:border-white/30 hover:bg-white/[0.05] text-[10px] uppercase tracking-[0.2em] font-semibold text-white/80 hover:text-white transition-all text-center flex items-center justify-center gap-2 mb-6"
+              >
+                <span>Speak with an Atelier Stylist ↗</span>
+              </a>
 
               {/* ── Tax Note ─────────────────────────────────────────── */}
-              <p className="text-[10px] text-foreground/25 text-center mb-4">
-                4% Government Tax applied at checkout · Prices in PKR
+              <p className="text-[9px] text-white/20 uppercase tracking-[0.2em] text-center mb-4">
+                Complimentary Worldwide Express Courier & Luxury Box Included
               </p>
 
             </motion.div>

@@ -110,38 +110,45 @@ export function OrderTracking() {
 
   if (!hasSearched || !order) {
     return (
-      <div className="w-full pt-40 px-6 md:px-12 pb-32 bg-background min-h-screen">
-        <SEO title="Track Order" />
-        <div className="max-w-[600px] mx-auto text-center">
-          <h1 className="font-display text-4xl mb-8 uppercase tracking-widest">Track Your Order</h1>
-          <p className="text-foreground/50 mb-12 font-sans text-sm">Enter your Order ID to view live updates on your luxury selection.</p>
+      <div className="w-full pt-40 px-6 md:px-12 pb-36 bg-[#050505] text-white min-h-screen flex flex-col justify-center">
+        <SEO title="Track Order • WEARITION" />
+        <div className="max-w-[540px] mx-auto text-center w-full">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.03] text-[9px] uppercase tracking-[0.25em] text-white/50 mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+            <span>ATELIER DISPATCH TRACKER</span>
+          </div>
+
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl mb-4 uppercase tracking-tight text-white">Track Order</h1>
+          <p className="text-white/40 mb-10 font-sans text-xs tracking-wide">
+            Enter your unique atelier order reference to view real-time tailoring, dispatch, and courier progression.
+          </p>
           
-          <form onSubmit={handleTrack} className="space-y-6">
+          <form onSubmit={handleTrack} className="space-y-4">
             <input 
               required 
               value={orderId} 
               onChange={(e) => setOrderId(e.target.value)} 
               type="text" 
               placeholder="ORDER ID (E.G. WR-XXXXXX)" 
-              className="w-full bg-foreground/[0.03] border border-white/5 px-6 py-4 text-sm focus:outline-none focus:border-accent/30 transition-colors uppercase tracking-widest text-center" 
+              className="w-full bg-white/[0.03] border border-white/15 px-6 py-4 text-xs focus:outline-none focus:border-white transition-colors uppercase tracking-[0.25em] text-center font-mono text-white placeholder-white/25 rounded-full shadow-inner" 
             />
             <button 
               type="submit" 
               disabled={isSearching}
-              className="w-full bg-foreground text-background py-5 uppercase text-xs tracking-[0.3em] font-bold hover:bg-accent transition-all duration-300 disabled:opacity-50 rounded-full"
+              className="w-full bg-white text-black py-4 uppercase text-[10px] tracking-[0.25em] font-bold hover:bg-white/90 transition-all duration-300 disabled:opacity-50 rounded-full shadow-2xl"
             >
-              {isSearching ? 'Searching...' : 'Track Order'}
+              {isSearching ? 'Accessing Archives...' : 'Track Shipment ↗'}
             </button>
           </form>
 
           {isSearching && (
-             <p className="mt-4 text-[10px] text-accent animate-pulse uppercase tracking-widest">Verifying ID: {orderId}</p>
+             <p className="mt-4 text-[10px] text-white/50 animate-pulse uppercase tracking-widest font-mono">Verifying Reference: {orderId}</p>
           )}
 
           {hasSearched && !order && !isSearching && (
-            <div className="mt-8 space-y-2">
-              <p className="text-red-500 text-xs font-sans">{error || `Order "${orderId}" not found.`}</p>
-              <p className="text-foreground/30 text-[10px] uppercase tracking-widest">Please verify the ID from your confirmation email.</p>
+            <div className="mt-8 p-4 rounded-sm border border-white/10 bg-white/[0.02] space-y-1.5">
+              <p className="text-white text-xs font-mono">{error || `Reference "${orderId}" not found in current records.`}</p>
+              <p className="text-white/40 text-[9px] uppercase tracking-widest font-sans">Please verify the Order ID listed on your confirmation receipt.</p>
             </div>
           )}
         </div>
@@ -150,81 +157,84 @@ export function OrderTracking() {
   }
 
   const currentStatusIdx = getStatusIndex(order.status);
-
   const computedSubtotal = order.subtotal || order.items.reduce((acc: number, item: any) => acc + ((item.price || 0) * (item.quantity || 1)), 0);
   const computedShipping = order.shippingDetails?.shippingAmount || 0;
-  // Fallback to order.total only if it's greater than or equal to our computed values, otherwise trust the dynamic computation
   const computedTotal = (order.total && order.total > computedShipping) ? order.total : (computedSubtotal + computedShipping);
 
-
   return (
-    <div className="w-full pt-32 md:pt-40 px-6 md:px-12 pb-32 bg-background min-h-screen">
-      <SEO title={`Order ${order.orderId} Tracking`} />
+    <div className="w-full pt-36 md:pt-40 px-6 md:px-12 pb-36 bg-[#050505] text-white min-h-screen">
+      <SEO title={`Order ${order.orderId} • Tracking • WEARITION`} />
       
-      <div className="max-w-[1200px] mx-auto">
+      <div className="max-w-[1280px] mx-auto">
         {/* Page Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-4 pb-6 border-b border-white/5">
           <div>
-            <h1 className="font-display text-3xl md:text-4xl text-foreground mb-2">{order.orderId}</h1>
-            <p className="text-foreground/40 text-sm font-sans">
-              {new Date(order.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
+            <div className="flex items-center gap-2 text-[9px] uppercase tracking-[0.25em] text-white/40 mb-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+              <span>ATELIER DISPATCH REFERENCE</span>
+            </div>
+            <h1 className="font-serif text-3xl sm:text-4xl text-white uppercase tracking-tight">{order.orderId}</h1>
+            <p className="text-white/40 text-xs font-sans mt-1">
+              Authorized on {new Date(order.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
             </p>
           </div>
-          <div className={`border px-6 py-2 rounded-full ${order.status === 'cancelled' ? 'bg-red-500/10 border-red-500/20' : 'bg-accent/10 border-accent/20'}`}>
-            <span className={`${order.status === 'cancelled' ? 'text-red-500' : 'text-accent'} text-[10px] uppercase tracking-[0.2em] font-bold`}>
-              {order.status}
+          <div className="border border-white/20 bg-white/10 px-5 py-2 rounded-full">
+            <span className="text-white text-[10px] uppercase tracking-[0.22em] font-mono font-semibold">
+              STATUS: {order.status}
             </span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           {/* LEFT: Tracking Timeline */}
           <div className="lg:col-span-2 space-y-8">
-            <div className="bg-foreground/[0.02] border border-white/5 rounded-3xl p-8 md:p-12">
-              <div className="flex items-center gap-3 mb-12">
-                <Box className="w-5 h-5 text-accent" />
-                <h2 className="font-display text-2xl uppercase tracking-wider">Order Tracking</h2>
+            <div className="bg-[#0a0a0a] border border-white/5 rounded-sm p-6 md:p-10 shadow-2xl">
+              <div className="flex items-center gap-3 mb-10 pb-4 border-b border-white/5">
+                <Box className="w-4 h-4 text-white" />
+                <h2 className="font-serif text-xl uppercase tracking-wider text-white">Progression Stepper</h2>
               </div>
 
               {order.status === 'cancelled' ? (
-                <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-8 text-center flex flex-col items-center">
-                  <XCircle className="w-12 h-12 text-red-500 mb-4" />
-                  <h3 className="font-display text-2xl text-red-500 mb-2">Order Cancelled</h3>
-                  <p className="text-foreground/60 text-sm font-sans max-w-md mx-auto">
-                    This order has been successfully cancelled. The inventory has been restored. If you wish to purchase these items again, you can reorder them below.
+                <div className="bg-white/[0.02] border border-white/10 rounded-sm p-8 text-center flex flex-col items-center">
+                  <XCircle className="w-10 h-10 text-white/50 mb-4" />
+                  <h3 className="font-serif text-2xl text-white mb-2 uppercase tracking-wide">Acquisition Cancelled</h3>
+                  <p className="text-white/40 text-xs font-sans max-w-md mx-auto leading-relaxed">
+                    This order has been archived. The reserved atelier inventory has been returned to the catalogue.
                   </p>
                 </div>
               ) : (
-                <div className="relative space-y-12">
+                <div className="relative space-y-10 pl-2">
                   {/* Vertical Line */}
-                  <div className="absolute left-[23px] top-4 bottom-4 w-0.5 bg-foreground/5" />
+                  <div className="absolute left-[26px] top-4 bottom-4 w-[1px] bg-white/10" />
 
                   {statusSteps.map((step, idx) => {
                     const isActive = idx <= currentStatusIdx;
                     const Icon = step.icon;
                     
                     return (
-                      <div key={idx} className="flex gap-8 relative">
-                        <div className={`relative z-10 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 ${
-                          isActive ? 'bg-accent text-background shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)]' : 'bg-background border border-white/10 text-foreground/20'
+                      <div key={idx} className="flex gap-6 relative items-start">
+                        <div className={`relative z-10 w-11 h-11 rounded-full flex items-center justify-center transition-all duration-500 ${
+                          isActive 
+                            ? 'bg-white text-black shadow-xl font-bold' 
+                            : 'bg-[#070707] border border-white/15 text-white/30'
                         }`}>
-                          {isActive ? <CheckCircle className="w-6 h-6" /> : <span className="text-sm font-bold font-mono">{idx + 1}</span>}
+                          {isActive ? <CheckCircle className="w-5 h-5 text-black" /> : <span className="text-xs font-bold font-mono">{idx + 1}</span>}
                         </div>
                         
-                        <div className="flex-1 pt-1">
-                          <div className="flex justify-between items-start mb-1">
-                            <h3 className={`text-sm font-bold uppercase tracking-widest ${isActive ? 'text-foreground' : 'text-foreground/30'}`}>
+                        <div className="flex-1 pt-1.5">
+                          <div className="flex justify-between items-baseline mb-1">
+                            <h3 className={`text-xs font-bold uppercase tracking-[0.2em] ${isActive ? 'text-white' : 'text-white/30'}`}>
                               {step.label}
                             </h3>
-                            {isActive && (
-                              <span className="text-[10px] text-foreground/40 font-mono">
-                                {idx === 0 ? new Date(order.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                            {isActive && idx === 0 && (
+                              <span className="text-[10px] text-white/40 font-mono">
+                                {new Date(order.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                               </span>
                             )}
                           </div>
-                          <p className={`text-xs font-sans leading-relaxed ${isActive ? 'text-foreground/60' : 'text-foreground/20'}`}>
+                          <p className={`text-xs font-sans leading-relaxed ${isActive ? 'text-white/60' : 'text-white/20'}`}>
                             {step.status === 'shipped' && order.trackingNumber 
-                              ? `Order shipped via ${order.courierName || 'Courier'}. Tracking: ${order.trackingNumber}`
+                              ? `Consigned via ${order.courierName || 'Courier'}. Consignment #: ${order.trackingNumber}`
                               : step.desc}
                           </p>
                         </div>
@@ -236,23 +246,23 @@ export function OrderTracking() {
             </div>
 
             {/* Bottom: Items List */}
-            <div className="bg-foreground/[0.02] border border-white/5 rounded-3xl p-8 md:p-12">
-              <h2 className="font-display text-2xl uppercase tracking-wider mb-8">Items</h2>
-              <div className="space-y-6">
+            <div className="bg-[#0a0a0a] border border-white/5 rounded-sm p-6 md:p-8 shadow-2xl">
+              <h2 className="text-[11px] uppercase tracking-[0.2em] mb-6 pb-3 border-b border-white/5 font-semibold text-white">Acquired Silhouettes ({order.items.length})</h2>
+              <div className="space-y-4">
                 {order.items.map((item: any, i: number) => (
-                  <div key={i} className="flex justify-between items-center py-4 border-b border-white/5 last:border-0">
+                  <div key={i} className="flex justify-between items-center py-3 border-b border-white/5 last:border-0">
                     <div className="flex gap-4 items-center">
-                      <div className="w-16 h-20 bg-foreground/5 rounded-lg overflow-hidden flex-shrink-0">
+                      <div className="w-16 h-20 bg-neutral-900 rounded-sm border border-white/10 overflow-hidden flex-shrink-0">
                         <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
                       </div>
                       <div>
-                        <h4 className="text-sm font-sans font-bold text-foreground">{item.title}</h4>
-                        <p className="text-[10px] text-foreground/40 uppercase tracking-widest mt-1">
+                        <h4 className="text-xs font-sans font-medium uppercase tracking-wide text-white">{item.title}</h4>
+                        <p className="text-[10px] text-white/40 uppercase tracking-widest mt-1 font-sans">
                           {item.quantity} Unit{item.quantity > 1 ? 's' : ''} {item.size && `· Size: ${item.size}`} {item.color && `· ${item.color}`}
                         </p>
                       </div>
                     </div>
-                    <p className="text-sm font-mono font-bold">{formatCurrency(item.price * item.quantity)}</p>
+                    <p className="text-xs font-mono font-medium text-white">{formatCurrency(item.price * item.quantity)}</p>
                   </div>
                 ))}
               </div>
@@ -262,73 +272,80 @@ export function OrderTracking() {
           {/* RIGHT: Summary & Address */}
           <div className="space-y-8">
             {/* Order Summary */}
-            <div className="bg-foreground/[0.02] border border-white/5 rounded-3xl p-8">
-              <h2 className="font-display text-lg uppercase tracking-widest mb-8">Order Summary</h2>
-              <div className="space-y-4 font-sans text-sm">
-                <div className="flex justify-between text-foreground/60">
-                  <span>Subtotal</span>
-                  <span>{formatCurrency(computedSubtotal)}</span>
+            <div className="bg-[#0a0a0a] border border-white/5 rounded-sm p-6 md:p-8 shadow-2xl">
+              <h2 className="text-[11px] uppercase tracking-[0.2em] mb-6 pb-3 border-b border-white/5 font-semibold text-white">Financial Summary</h2>
+              <div className="space-y-3 font-sans text-xs">
+                <div className="flex justify-between text-white/60">
+                  <span className="uppercase tracking-wider text-[10px]">Subtotal</span>
+                  <span className="font-mono text-white">{formatCurrency(computedSubtotal)}</span>
                 </div>
-                <div className="flex justify-between text-foreground/60">
-                  <span>Shipping</span>
-                  <span className="text-green-500 font-bold uppercase tracking-widest text-[10px]">
-                    {computedShipping > 0 ? formatCurrency(computedShipping) : 'FREE'}
+                <div className="flex justify-between text-white/60">
+                  <span className="uppercase tracking-wider text-[10px]">Express Courier</span>
+                  <span className="font-mono text-white">
+                    {computedShipping > 0 ? formatCurrency(computedShipping) : 'COMPLIMENTARY'}
                   </span>
                 </div>
-                <div className="pt-4 border-t border-white/10 flex justify-between items-end">
-                  <span className="text-foreground font-bold uppercase text-[10px] tracking-widest">Total</span>
-                  <span className="text-2xl font-display text-foreground">{formatCurrency(computedTotal)}</span>
+                <div className="pt-4 border-t border-white/10 flex justify-between items-baseline font-medium text-white">
+                  <span className="uppercase tracking-[0.2em] text-xs">Total</span>
+                  <span className="font-mono text-xl font-medium">{formatCurrency(computedTotal)}</span>
                 </div>
-                <div className="mt-4 flex items-center gap-2 text-[10px] uppercase tracking-widest text-foreground/40">
-                  <Clock className="w-3 h-3" />
-                  <span>{order.paymentMethod === 'cod' ? 'Cash on Delivery' : order.paymentMethod}</span>
+                <div className="mt-4 pt-3 border-t border-white/5 flex items-center gap-2 text-[10px] uppercase tracking-widest text-white/40">
+                  <Clock className="w-3.5 h-3.5" />
+                  <span>Protocol: {order.paymentMethod === 'cod' ? 'Cash on Delivery' : order.paymentMethod}</span>
                 </div>
               </div>
             </div>
 
             {/* Shipping Address */}
-            <div className="bg-foreground/[0.02] border border-white/5 rounded-3xl p-8">
-              <h2 className="font-display text-lg uppercase tracking-widest mb-8">Shipping Address</h2>
-              <div className="space-y-4 text-sm font-sans">
-                <div className="flex items-start gap-4">
-                  <MapPin className="w-5 h-5 text-accent flex-shrink-0" />
+            <div className="bg-[#0a0a0a] border border-white/5 rounded-sm p-6 md:p-8 shadow-2xl">
+              <h2 className="text-[11px] uppercase tracking-[0.2em] mb-6 pb-3 border-b border-white/5 font-semibold text-white">Consignment Destination</h2>
+              <div className="space-y-4 text-xs font-sans">
+                <div className="flex items-start gap-3">
+                  <MapPin className="w-4 h-4 text-white/60 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-bold text-foreground mb-1">{order.shippingAddress.name}</p>
-                    <p className="text-foreground/60 leading-relaxed">
+                    <p className="font-medium text-white mb-1">{order.shippingAddress.name}</p>
+                    <p className="text-white/50 leading-relaxed font-sans">
                       {order.shippingAddress.address}<br />
                       {order.shippingAddress.city}, {order.shippingAddress.zip}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 text-foreground/60">
-                  <Phone className="w-5 h-5 text-accent flex-shrink-0" />
-                  <p>{order.shippingAddress.phone}</p>
+                <div className="flex items-center gap-3 text-white/60 pt-2 border-t border-white/5">
+                  <Phone className="w-4 h-4 text-white/60 flex-shrink-0" />
+                  <p className="font-mono text-xs">{order.shippingAddress.phone}</p>
                 </div>
               </div>
             </div>
 
             {/* Support Actions */}
-            <div className="space-y-4">
-              <button className="w-full flex items-center justify-center gap-3 border border-white/10 hover:bg-white/5 py-4 rounded-xl transition-all text-[10px] uppercase tracking-widest font-bold">
-                <MessageSquare className="w-4 h-4 text-accent" />
-                Contact Support
-              </button>
+            <div className="space-y-2.5">
+              <a 
+                href={`https://wa.me/923000000000?text=${encodeURIComponent(`Hello WEARITION Support, I would like an update on Order ${order.orderId}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center gap-2.5 border border-white/15 hover:border-white/30 hover:bg-white/[0.04] py-3.5 rounded-full transition-all text-[10px] uppercase tracking-[0.2em] font-semibold text-white/80 hover:text-white"
+              >
+                <MessageSquare className="w-3.5 h-3.5" />
+                <span>Contact Atelier Concierge ↗</span>
+              </a>
+
               {order.status === 'pending' && (
                 <button 
                   onClick={handleCancelOrder}
                   disabled={isSearching}
-                  className="w-full flex items-center justify-center gap-3 border border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-500/50 py-4 rounded-xl transition-all text-[10px] uppercase tracking-widest font-bold disabled:opacity-50"
+                  className="w-full flex items-center justify-center gap-2.5 border border-white/10 hover:border-white/20 text-white/50 hover:text-white py-3.5 rounded-full transition-all text-[10px] uppercase tracking-[0.2em] font-semibold disabled:opacity-50"
                 >
-                  <XCircle className="w-4 h-4" />
-                  {isSearching ? 'Processing...' : 'Cancel Order'}
+                  <XCircle className="w-3.5 h-3.5" />
+                  <span>{isSearching ? 'Processing...' : 'Cancel Order'}</span>
                 </button>
               )}
+
               <Link 
                 href="/shop"
-                className="w-full flex items-center justify-center gap-3 border border-white/10 hover:bg-white/5 py-4 rounded-xl transition-all text-[10px] uppercase tracking-widest font-bold"
+                className="w-full flex items-center justify-center gap-2.5 bg-white text-black py-3.5 rounded-full transition-all text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-white/90 shadow-xl"
               >
-                <RefreshCcw className="w-4 h-4 text-accent" />
-                Reorder These Items
+                <RefreshCcw className="w-3.5 h-3.5" />
+                <span>Browse Atelier Collections ↗</span>
               </Link>
             </div>
           </div>

@@ -120,7 +120,7 @@ export function AdminStorefront() {
   return (
     <div className="max-w-4xl mx-auto pb-24">
       <div className="flex justify-between items-center mb-10">
-        <h1 className="text-3xl font-display text-[#0a0a0a]">Storefront Layout</h1>
+        <h1 className="text-3xl font-serif text-[#0a0a0a]">Storefront Layout</h1>
         <div className="flex gap-4">
           <button 
             onClick={resetToDefaults}
@@ -264,7 +264,7 @@ export function AdminStorefront() {
         </div>
 
         <div className="mt-8 pt-8 border-t border-black/10">
-          <h3 className="text-lg font-display mb-4 text-[#0a0a0a]">Add New Section</h3>
+          <h3 className="text-lg font-serif mb-4 text-[#0a0a0a]">Add New Section</h3>
           <button 
             onClick={addProductScrollSection}
             className="flex items-center gap-2 border border-dashed border-black/30 text-[#0a0a0a]/70 hover:text-[#0a0a0a] hover:border-black hover:bg-black/5 px-6 py-4 rounded-md transition-all font-medium text-sm w-full justify-center"

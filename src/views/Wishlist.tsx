@@ -5,6 +5,7 @@ import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { ProductCard } from '../components/shop/ProductCard';
 import Link from 'next/link';
+import { Bookmark, ArrowRight } from 'lucide-react';
 
 export function Wishlist() {
   const { wishlistIds } = useWishlistStore();
@@ -37,28 +38,45 @@ export function Wishlist() {
   }, [wishlistIds]);
 
   return (
-    <div className="w-full pt-40 px-6 md:px-12 pb-32 bg-background min-h-screen">
-      <div className="max-w-[1440px] mx-auto">
-        <header className="mb-20 text-center">
-          <h1 className="font-display text-[4rem] leading-none tracking-tight text-foreground mb-6">Your Wishlist</h1>
-          <p className="text-foreground/60 text-sm max-w-xl mx-auto font-sans">
-            {wishlistIds.length} items saved
+    <div className="w-full pt-32 md:pt-40 px-6 md:px-12 pb-32 bg-[#050505] text-white min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        <header className="mb-14 pb-8 border-b border-white/10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <p className="text-[10px] uppercase font-mono tracking-[0.3em] text-white/40 mb-2">
+              [01] • CURATED WISHLIST
+            </p>
+            <h1 className="font-serif text-3xl md:text-5xl tracking-tight text-white">
+              Saved Archives
+            </h1>
+          </div>
+          <p className="text-white/40 text-xs font-mono tracking-[0.2em] uppercase">
+            [{wishlistIds.length} Selections Saved]
           </p>
         </header>
 
         {loading ? (
-          <div className="w-full h-64 flex items-center justify-center">
-            <div className="w-8 h-8 border-t border-foreground rounded-full animate-spin"></div>
+          <div className="w-full py-32 flex flex-col items-center justify-center gap-4">
+            <div className="w-7 h-7 border border-white/20 border-t-white rounded-full animate-spin" />
+            <p className="text-[10px] uppercase font-mono tracking-[0.2em] text-white/40">
+              Loading Saved Pieces...
+            </p>
           </div>
         ) : products.length === 0 ? (
-           <div className="text-center text-foreground/40 pt-12">
-              <p className="uppercase text-xs tracking-widest mb-8">Your wishlist is empty</p>
-              <Link href="/shop" className="inline-block bg-foreground text-background px-10 py-5 uppercase text-xs tracking-[0.2em] font-medium hover:bg-accent transition-colors">
-                 Continue Shopping
-              </Link>
-           </div>
+          <div className="text-center py-28 bg-[#0a0a0a] border border-white/5 rounded-sm p-8 max-w-xl mx-auto">
+            <Bookmark className="w-12 h-12 text-white/20 mx-auto mb-4 stroke-1" />
+            <h3 className="font-serif text-2xl text-white mb-2">No Saved Pieces</h3>
+            <p className="text-white/40 text-xs font-sans max-w-sm mx-auto mb-8 leading-relaxed">
+              Explore the atelier collections and bookmark your desired couture garments for future acquisition.
+            </p>
+            <Link 
+              href="/shop" 
+              className="inline-flex items-center gap-2 bg-white text-black px-8 py-3.5 rounded-full text-[10px] uppercase font-mono tracking-[0.2em] font-semibold hover:bg-white/90 transition-all shadow-xl"
+            >
+              <span>Explore Atelier Archive ↗</span>
+            </Link>
+          </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {products.map((product, i) => (
               <ProductCard key={product.id} product={product} index={i} />
             ))}

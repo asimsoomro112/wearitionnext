@@ -1,120 +1,120 @@
+'use client';
+
 import Link from 'next/link';
-import logo from '../../assets/logo.png';
-
-const SHOP_LINKS = [
-  { label: 'Shop All', href: '/shop' },
-  { label: 'Collections', href: '/editorial' },
-  { label: 'Brands', href: '/brands' },
-  { label: 'Wishlist', href: '/wishlist' },
-];
-
-const SUPPORT_LINKS = [
-  { label: 'Track Order', href: '/track-order' },
-  { label: 'Shipping', href: '/shipping' },
-  { label: 'Returns', href: '/returns' },
-  { label: 'Contact', href: '/contact' },
-];
+import logo from '../../assets/navbar_logo.png';
 
 export function Footer() {
   return (
-    <footer
-      className="relative overflow-hidden mt-auto"
-      style={{ background: 'linear-gradient(180deg, #030303 0%, #282828 100%)' }}
-    >
-      <div className="section-shell pt-20 md:pt-28 pb-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
-          <div className="md:col-span-5">
+    <footer className="relative w-full bg-[#030303] text-[#fafafa] pt-20 pb-8 px-6 sm:px-12 md:px-16 border-t border-white/5 overflow-hidden">
+      <div className="container mx-auto max-w-7xl relative z-10">
+        {/* Top Split Section */}
+        <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-12 sm:gap-16 pb-16 border-b border-white/10">
+          {/* Left: Brand Identity & Primary Links */}
+          <div className="flex flex-col gap-6 max-w-md">
             <Link href="/" className="inline-block">
               <img
                 src={typeof logo === 'string' ? logo : logo.src}
-                alt="Wearition"
-                className="h-16 md:h-20 w-auto object-contain brightness-0 invert"
+                alt="WEARITION"
+                className="h-9 sm:h-11 w-auto object-contain brightness-125"
               />
             </Link>
-            <p className="mt-6 text-sm text-white/50 max-w-sm leading-relaxed">
-              Wear your identity. Curated eastern and contemporary wear,
-              delivered across Pakistan.
+
+            <p className="text-xs sm:text-sm font-sans text-[#adadad] leading-relaxed">
+              Maison WEARITION &mdash; Curators of bespoke women&apos;s haute couture, heritage craftsmanship, and certified luxury designer collections.
             </p>
-            <a
-              href="mailto:hello@wearition.store"
-              className="mt-6 inline-block text-sm text-[#339e9b] hover:opacity-70 transition-opacity"
-            >
-              hello@wearition.store
-            </a>
+
+            <nav className="flex flex-wrap gap-x-8 gap-y-3 text-xs uppercase font-mono tracking-[0.2em] font-medium text-white/70">
+              <Link href="/" className="hover:text-white transition-colors">
+                HOME
+              </Link>
+              <Link href="/shop" className="hover:text-white transition-colors">
+                ARCHIVE
+              </Link>
+              <Link href="/brands" className="hover:text-white transition-colors">
+                BRANDS
+              </Link>
+              <Link href="/editorial" className="hover:text-white transition-colors">
+                COUTURE
+              </Link>
+              <Link href="/about" className="hover:text-white transition-colors">
+                STUDIO
+              </Link>
+              <Link href="/contact" className="hover:text-white transition-colors">
+                CONTACT
+              </Link>
+            </nav>
           </div>
 
-          <div className="md:col-span-3">
-            <h3 className="eyebrow text-white/40 mb-6">Shop</h3>
-            <ul className="space-y-4">
-              {SHOP_LINKS.map((l) => (
-                <li key={l.href}>
-                  <Link
-                    href={l.href}
-                    className="text-sm uppercase tracking-[0.14em] text-white/70 hover:text-white hover:-translate-y-0.5 inline-block transition-all"
-                  >
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Right: Direct Email, Origin & Channels */}
+          <div className="flex flex-col gap-6 lg:text-right">
+            <div>
+              <span className="text-[10px] uppercase tracking-[0.3em] font-mono text-[#adadad] block mb-2">
+                [DIRECT ATELIER INQUIRIES &bull; KARACHI, PK]
+              </span>
+              <a
+                href="mailto:wearition.80@gmail.com"
+                className="text-lg sm:text-2xl md:text-3xl font-display font-medium text-white hover:underline transition-all block tracking-tight"
+              >
+                WEARITION.80@GMAIL.COM
+              </a>
+            </div>
 
-          <div className="md:col-span-4">
-            <h3 className="eyebrow text-white/40 mb-6">Support</h3>
-            <ul className="space-y-4">
-              {SUPPORT_LINKS.map((l) => (
-                <li key={l.href}>
-                  <Link
-                    href={l.href}
-                    className="text-sm uppercase tracking-[0.14em] text-white/70 hover:text-white hover:-translate-y-0.5 inline-block transition-all"
-                  >
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <div className="flex gap-8 mt-10">
+            <div className="flex flex-wrap lg:justify-end gap-x-6 gap-y-2 text-xs uppercase tracking-[0.2em] text-[#adadad] font-mono pt-2">
               <a
                 href="https://www.instagram.com/_wearition?igsh=eG5obHgydGc3a2Vr"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs uppercase tracking-[0.18em] text-white/50 hover:text-[#339e9b] transition-colors"
+                className="hover:text-white transition-colors"
               >
-                Instagram
-              </a>
-              <a
-                href="https://www.facebook.com/profile.php?id=61589494648557"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs uppercase tracking-[0.18em] text-white/50 hover:text-[#339e9b] transition-colors"
-              >
-                Facebook
+                Instagram &nearr;
               </a>
               <a
                 href="https://www.tiktok.com/@wearition3?_r=1&_t=ZS-96Byntwejln"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs uppercase tracking-[0.18em] text-white/50 hover:text-[#339e9b] transition-colors"
+                className="hover:text-white transition-colors"
               >
-                TikTok
+                TikTok &nearr;
               </a>
+              <a
+                href="https://www.facebook.com/profile.php?id=61589494648557"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition-colors"
+              >
+                Facebook &nearr;
+              </a>
+              <Link href="/track-order" className="hover:text-white transition-colors">
+                Track Order
+              </Link>
             </div>
           </div>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-[10px] uppercase tracking-[0.2em] text-white/40">
-          <p>&copy; 2026 Wearition. All rights reserved.</p>
-          <div className="flex gap-6">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-            <Link href="/about" className="hover:text-white transition-colors">About</Link>
+        {/* Bottom Utility Row */}
+        <div className="flex flex-col sm:flex-row items-center justify-between text-[10px] uppercase font-mono tracking-[0.25em] text-[#adadad] py-8 gap-4 border-b border-white/5">
+          <span>&copy; 2026 WEARITION. ALL RIGHTS RESERVED.</span>
+          <div className="flex items-center gap-6">
+            <Link href="/privacy" className="hover:text-white transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/shipping" className="hover:text-white transition-colors">
+              Shipping Policy
+            </Link>
+            <Link href="/returns" className="hover:text-white transition-colors">
+              Returns &amp; Exchanges
+            </Link>
           </div>
         </div>
-      </div>
 
-      {/* giant bleeding wordmark */}
-      <div className="relative select-none pointer-events-none" aria-hidden="true">
-        <div className="font-display font-bold uppercase text-center leading-[0.8] text-white/[0.07] text-[clamp(80px,22vw,420px)] tracking-tight -mb-[0.12em]">
-          Wearition
+        {/* Giant Viewport-Width Typographic Watermark (XODEX footerwordmark) */}
+        <div className="w-full text-center overflow-hidden pt-10 select-none pointer-events-none">
+          <span 
+            className="block font-light uppercase tracking-[0.08em] text-white/[0.05] text-[18vw] leading-[0.8]"
+            style={{ fontFamily: "var(--font-cinzel), 'Cinzel', serif" }}
+          >
+            WEARITION
+          </span>
         </div>
       </div>
     </footer>

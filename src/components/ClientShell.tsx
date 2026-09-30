@@ -11,10 +11,12 @@ import { Toaster } from "sonner";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CartDrawer } from "@/components/layout/CartDrawer";
+import { MobileMenu } from "@/components/layout/MobileMenu";
 import { MobileBottomBar } from "@/components/layout/MobileBottomBar";
 import { SearchOverlay } from "@/components/layout/SearchOverlay";
 import { AIStyleAssistant } from "@/components/layout/AIStyleAssistant";
 import { LoadingScreen } from "@/components/layout/LoadingScreen";
+import { LenisProvider } from "@/components/layout/LenisProvider";
 
 import { usePathname } from "next/navigation";
 
@@ -26,13 +28,6 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Restore saved theme preference
     initTheme();
-
-    // If Firebase isn't configured (auth is null), don't hang on the loader.
-    if (!auth) {
-      setLoading(false);
-      setAppLoading(false);
-      return;
-    }
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
@@ -73,14 +68,15 @@ export function StoreLayout({ children }: { children: React.ReactNode }) {
   const isPDP = pathname.includes('/product/');
 
   return (
-    <>
+    <LenisProvider>
       <Navbar />
       <CartDrawer />
+      <MobileMenu />
       <SearchOverlay />
       <main className="min-h-screen">{children}</main>
       <Footer />
       {!isPDP && <MobileBottomBar />}
       <AIStyleAssistant />
-    </>
+    </LenisProvider>
   );
 }

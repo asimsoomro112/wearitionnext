@@ -1,209 +1,201 @@
-'use client'
+'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react'
-import styles from './HeroSection.module.css'
-import { formatCurrency } from '@/lib/currency'
-import Link from 'next/link'
+import { useState } from 'react';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
 
-// Fallback image used when a hero product has no image of its own —
-// prevents empty gradient-only cards.
-const HERO_FALLBACK_IMG = "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop";
-
-const FALLBACK_COLLECTIONS = [  {
-    id: 'f1',
-    label: 'NEW ARRIVAL',
-    brand: 'WEARITION',
-    line1: 'LUXURY',
-    line2: 'COLLECTION',
-    price: 'Rs. 12,500',
-    tag: 'Premium Selection',
-    bg: 'linear-gradient(145deg, #F2EDE4 0%, #E8DDD0 40%, #D4C5B0 100%)',
-    accent: '#8B6914',
-    textAccent: '#5C4209',
-    img: HERO_FALLBACK_IMG,
-  }
-]
-
-const BG_GRADIENTS = [
-  { bg: 'linear-gradient(145deg, #F2EDE4 0%, #E8DDD0 40%, #D4C5B0 100%)', accent: '#8B6914', textAccent: '#5C4209' },
-  { bg: 'linear-gradient(145deg, #EAF0F2 0%, #D4E5EA 40%, #B8D0D8 100%)', accent: '#2A6478', textAccent: '#1A3F4E' },
-  { bg: 'linear-gradient(145deg, #F0EBF2 0%, #E2D5E8 40%, #C8B4D0 100%)', accent: '#6B3578', textAccent: '#3E1F49' },
-  { bg: 'linear-gradient(145deg, #F2EAE2 0%, #EAD8C8 40%, #D4B898 100%)', accent: '#8B4513', textAccent: '#5C2D0A' },
-]
-
-const AUTO_PLAY_INTERVAL = 4500
+// Curated high-fashion editorial pieces for the infinite runway showcase
+const FALLBACK_SHOWCASE_ITEMS = [
+  {
+    id: 'faraz-manan-zardozi-bridal',
+    title: 'Faraz Manan Bridal Masterpiece',
+    category: 'Haute Couture',
+    tag: 'Bespoke Atelier',
+    image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=1200&auto=format&fit=crop',
+    href: '/shop',
+  },
+  {
+    id: 'elan-silk-organza-peshwas',
+    title: 'Élan Handcrafted Peshwas',
+    category: 'Prestige Resale',
+    tag: 'Bridal Heritage',
+    image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1200&auto=format&fit=crop',
+    href: '/shop',
+  },
+  {
+    id: 'sana-safinaz-noir-velvet',
+    title: 'Sana Safinaz Noir Velvet Gown',
+    category: 'Evening Gala',
+    tag: 'Archive Drop',
+    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1200&auto=format&fit=crop',
+    href: '/shop',
+  },
+  {
+    id: 'hussain-rehar-zardozi-cape',
+    title: 'Hussain Rehar Embroidered Cape',
+    category: 'Editorial Exclusive',
+    tag: 'Limited 1 of 1',
+    image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200&auto=format&fit=crop',
+    href: '/shop',
+  },
+  {
+    id: 'zara-shahjahan-festive-silk',
+    title: 'Zara Shahjahan Festive Raw Silk',
+    category: 'Ready-to-Wear',
+    tag: 'Signature Drop',
+    image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1200&auto=format&fit=crop',
+    href: '/shop',
+  },
+  {
+    id: 'suffuse-mukesh-organza',
+    title: 'Suffuse Hand-Embellished Formal',
+    category: 'Prestige Resale',
+    tag: 'Certified Authentic',
+    image: 'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?q=80&w=1200&auto=format&fit=crop',
+    href: '/shop',
+  },
+];
 
 interface HeroSectionProps {
-  products?: any[]
+  products?: any[];
 }
 
 export default function HeroSection({ products = [] }: HeroSectionProps) {
-  const [active, setActive] = useState(0)
-  const [animKey, setAnimKey] = useState(0)
-  const [progressKey, setProgressKey] = useState(0)
-  const [isPaused, setIsPaused] = useState(false)
+  const [isPaused, setIsPaused] = useState(false);
 
-  // Only products with an actual image become hero cards — imageless
-  // products would otherwise render as empty gradient placeholders.
-  const productsWithImages = products.filter((p: any) => p.images?.[0] || p.image);
+  // Blend live Firestore products with fallback editorial visuals
+  const showcaseItems = products.length >= 4 
+    ? products.map((p, idx) => ({
+        id: p.id,
+        title: p.title || 'Maison Couture',
+        category: p.category || p.brand || 'Luxury Fashion',
+        tag: p.isNew ? 'New Archive' : 'Featured',
+        image: p.images?.[0] || p.image || FALLBACK_SHOWCASE_ITEMS[idx % FALLBACK_SHOWCASE_ITEMS.length].image,
+        href: `/product/${p.id}`,
+      }))
+    : FALLBACK_SHOWCASE_ITEMS;
 
-  const collections = productsWithImages.length > 0 ? productsWithImages.map((p, i) => {
-    const grad = BG_GRADIENTS[i % BG_GRADIENTS.length]
-    const parts = (p.title || 'Wearition Collection').split(' ')
-    const line1 = parts.slice(0, Math.ceil(parts.length / 2)).join(' ')
-    const line2 = parts.slice(Math.ceil(parts.length / 2)).join(' ')
-
-    return {
-      id: p.id,
-      label: p.isNew ? 'NEW ARRIVAL' : 'FEATURED',
-      brand: p.brand || 'WEARITION',
-      line1: line1.toUpperCase(),
-      line2: (line2 || p.category || 'COLLECTION').toUpperCase(),
-      price: formatCurrency(p.price),
-      tag: p.category || 'Luxury Resale',
-      img: p.images?.[0] || p.image,
-      ...grad
-    }
-  }) : FALLBACK_COLLECTIONS
-
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  const goTo = useCallback((index: number) => {
-    setActive(index)
-    setAnimKey((k) => k + 1)
-    setProgressKey((k) => k + 1)
-  }, [])
-
-  const goNext = useCallback(() => {
-    if (collections.length <= 1) return
-    goTo((active + 1) % collections.length)
-  }, [active, goTo, collections.length])
-
-  const goPrev = useCallback(() => {
-    if (collections.length <= 1) return
-    goTo((active - 1 + collections.length) % collections.length)
-  }, [active, goTo, collections.length])
-
-  useEffect(() => {
-    if (isPaused || collections.length <= 1) return
-    timerRef.current = setTimeout(goNext, AUTO_PLAY_INTERVAL)
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current)
-    }
-  }, [active, isPaused, goNext, collections.length])
-
-  const col = collections[active] || FALLBACK_COLLECTIONS[0]
+  const loopedItems = [...showcaseItems, ...showcaseItems];
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap');
-      `}</style>
+    <section id="home" className="relative w-full overflow-hidden bg-[#030303] text-[#fafafa] pt-36 md:pt-48 pb-20">
+      
+      {/* Hero Center Text & Actions Suite (Desktop Expansive) */}
+      <div className="w-full px-6 md:px-12 xl:px-20 relative z-10 text-center max-w-[1440px] mx-auto mb-16 lg:mb-24">
+        
+        {/* Eyebrow Label with 4px Letter Spacing */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-4"
+        >
+          <span className="text-[11px] md:text-xs font-mono uppercase tracking-[0.3em] text-[#adadad] letterspacing4px">
+            WEAR YOUR IDENTITY &bull; PAKISTAN&apos;S PREMIER LUXURY ATELIER
+          </span>
+        </motion.div>
 
-      <section
-        className={styles.hero}
-        style={{ '--accent': col.accent, '--text-accent': col.textAccent } as React.CSSProperties}
-      >
-        <div className={styles.bg} style={{ background: col.bg }} key={`bg-${active}`} />
-        <div className={styles.noise} />
+        {/* Massive Clean Luxury Headline */}
+        <motion.h1
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="headinghero select-none my-4"
+        >
+          WEARITION
+        </motion.h1>
 
-        <div className={styles.cardWrapper}>
-          {collections.map((c, i) => {
-            // Logic for a long 8-card stack
-            // -4, -3, -2, -1, 0, 1, 2, 3
-            const diff = i - active
-            // Handle wrapping
-            let offset = diff
-            if (diff > collections.length / 2) offset -= collections.length
-            if (diff < -collections.length / 2) offset += collections.length
-
-            const isActive = offset === 0
-            const absOffset = Math.abs(offset)
-            
-            // Only show cards within a certain range
-            if (absOffset > 5) return null
-
-            let classNames = [styles.card]
-            if (isActive) classNames.push(styles.cardActive)
-            else if (offset === 1) classNames.push(styles.cardNext1)
-            else if (offset === 2) classNames.push(styles.cardNext2)
-            else if (offset === 3) classNames.push(styles.cardNext3)
-            else if (offset === 4) classNames.push(styles.cardNext4)
-            else if (offset === -1) classNames.push(styles.cardPrev1)
-            else if (offset === -2) classNames.push(styles.cardPrev2)
-            else if (offset === -3) classNames.push(styles.cardPrev3)
-
-            return (
-              <div
-                key={c.id}
-                className={classNames.join(' ')}
-                onClick={() => !isActive && goTo(i)}
-                style={{ '--depth': absOffset } as React.CSSProperties}
-              >
-                <div className={styles.cardImg} style={{ background: c.bg }}>
-                  <img
-                    src={c.img || HERO_FALLBACK_IMG}
-                    alt={`${c.brand} ${c.line1} ${c.line2}`.trim() || 'Wearition collection'}
-                    draggable="false"
-                    className={styles.productImg}
-                    onError={(e) => {
-                      const t = e.target as HTMLImageElement;
-                      if (t.src !== HERO_FALLBACK_IMG) t.src = HERO_FALLBACK_IMG;
-                    }}
-                  />
-                  <div className={styles.silhouette} />
-                </div>
-
-                {isActive && (
-                  <div className={styles.priceTag} key={`price-${animKey}`}>
-                    <span className={styles.priceLabel}>VALUE</span>
-                    <span className={styles.priceValue}>{c.price}</span>
-                  </div>
-                )}
-              </div>
-            )
-          })}
-        </div>
-
-        <div className={styles.content}>
-          <div className={styles.label} key={`label-${animKey}`}>{col.label}</div>
-          <div className={styles.titleBlock} key={`title-${animKey}`}>
-            <h2 className={styles.brand}>{col.brand}</h2>
-            <h1 className={styles.collection}>
-              <span className={styles.line1}>{col.line1}</span>
-              <span className={styles.line2}>{col.line2}</span>
-            </h1>
+        {/* Subtitle & Actions */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="max-w-3xl mx-auto"
+        >
+          <div className="subheading-xodex mt-4">
+            CURATED DESIGNER COUTURE &bull; BESPOKE BRIDAL CREATIONS &bull; TIMELESS PRELOVED LUXURY
           </div>
-          <div className={styles.tagPill} key={`tag-${animKey}`}>{col.tag}</div>
 
-          <Link href={col.id.startsWith('f') ? "/shop" : `/product/${col.id}`} className={styles.cta} key={`cta-${animKey}`}>
-            <span>SHOP NOW</span>
-          </Link>
-        </div>
+          <div className="dividerhero" />
 
-        <div className={styles.dots}>
-          {collections.slice(0, 10).map((c, i) => (
-            <button
-              key={c.id}
-              className={`${styles.dot} ${i === active ? styles.dotActive : ''}`}
-              onClick={() => goTo(i)}
+          {/* Dual Action Buttons (Exact XODEX rectangular geometry with 8px radius) */}
+          <div className="flex flex-wrap items-center justify-center gap-5 sm:gap-6 mt-8">
+            <Link
+              href="/shop"
+              className="buttonprimary"
             >
-              {i === active && <span className={styles.dotProgress} key={progressKey} style={{ animationDuration: `${AUTO_PLAY_INTERVAL}ms` }} />}
-            </button>
-          ))}
-        </div>
+              <span>EXPLORE ARCHIVE ↗</span>
+            </Link>
 
-        <button className={`${styles.navBtn} ${styles.navPrev}`} onClick={goPrev} aria-label="Previous">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-        </button>
-        <button className={`${styles.navBtn} ${styles.navNext}`} onClick={goNext} aria-label="Next">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M9 18l6-6-6-6" />
-          </svg>
-        </button>
-      </section>
-    </>
-  )
+            <Link
+              href="/contact"
+              className="buttonsecondary group"
+            >
+              <span>BOOK BRIDAL FITTING</span>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                className="w-4 h-4 text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+              >
+                <path
+                  d="M7 17L17 7M17 7H8M17 7V16"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </Link>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Signature XODEX Curved Runway Carousel */}
+      <div className="relative w-full overflow-hidden mt-8 md:mt-14 lg:mt-20">
+        
+        {/* Top Inverted Oval Curve Horizon */}
+        <div className="outer-curve-top" />
+
+        {/* Left & Right Gradient Shadows */}
+        <div className="grandientmarqueeleft" />
+        <div className="gradientmarqueeright" />
+
+        {/* Infinite Horizontal Carousel */}
+        <div 
+          className="flex overflow-hidden py-6 cursor-grab active:cursor-grabbing"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          <div 
+            className={`flex gap-6 sm:gap-8 shrink-0 ${isPaused ? '' : 'animate-marquee-infinite'}`}
+          >
+            {loopedItems.map((item, index) => (
+              <Link
+                key={`${item.id}-${index}`}
+                href={item.href}
+                className="project-card-2 group block bg-[#0d0d0d] shadow-2xl transition-transform duration-500 hover:scale-[1.02] shrink-0"
+              >
+                {/* Image */}
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  loading="lazy"
+                  className="w-full h-full object-cover grayscale-[15%] contrast-[1.05] group-hover:scale-105 group-hover:grayscale-0 transition-all duration-700 ease-out"
+                />
+
+                {/* Dark Vignette Bottom Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
+
+                {/* XODEX Floating Project Label */}
+                <div className="floatinglabelnameproject">
+                  <div className="projectname">{item.title}</div>
+                  <div className="textcategory">{item.category}</div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }

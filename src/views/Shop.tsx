@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { ProductCard } from '../components/shop/ProductCard';
 import { SEO } from '../components/layout/SEO';
-import { Marquee } from '../components/home/Marquee';
 
 const SORT_OPTIONS = [
   { label: 'Recommended', value: 'recommended' },
@@ -18,10 +17,11 @@ const SORT_OPTIONS = [
 
 function ProductSkeleton() {
   return (
-    <div className="animate-pulse">
-      <div className="aspect-[3/4] bg-white/5 mb-4 rounded-xl" />
-      <div className="h-3 bg-white/5 rounded mb-2 w-3/4" />
-      <div className="h-3 bg-white/5 rounded w-1/2" />
+    <div className="bg-[#0d0d0d] border border-white/5 p-3 rounded-sm animate-pulse">
+      <div className="aspect-[3/4] bg-white/[0.04] mb-4 rounded-sm" />
+      <div className="h-2.5 bg-white/[0.05] rounded mb-2.5 w-1/3" />
+      <div className="h-3.5 bg-white/[0.07] rounded mb-2 w-3/4" />
+      <div className="h-3 bg-white/[0.05] rounded w-1/4" />
     </div>
   );
 }
@@ -48,13 +48,12 @@ export function Shop() {
             name: c,
             value: c.toLowerCase()
           }));
-          setCategories([{ name: 'All', value: '' }, ...fetchedCats]);
+          setCategories([{ name: 'All Pieces', value: '' }, ...fetchedCats]);
         } else {
-          // Fallback if no settings exist yet
-          const defaults = ['Men', 'Shirts', 'Pants', 'Tech-Noir', 'Accessories', 'Shoes'].map(c => ({
+          const defaults = ['Couture', 'Ready-to-Wear', 'Silks & Chiffon', 'Embroidery', 'Bridal', 'Accessories'].map(c => ({
             name: c, value: c.toLowerCase()
           }));
-          setCategories([{ name: 'All', value: '' }, ...defaults]);
+          setCategories([{ name: 'All Pieces', value: '' }, ...defaults]);
         }
       } catch (e) {
         console.error("Error fetching shop settings:", e);
@@ -99,7 +98,6 @@ export function Shop() {
     fetchProducts();
   }, [searchString, categoryFilter, brandFilter]);
 
-  // Client-side sorting — no re-fetch needed
   const sortedProducts = useMemo(() => {
     const sorted = [...products];
     if (sortBy === 'price_asc') sorted.sort((a, b) => a.price - b.price);
@@ -112,54 +110,47 @@ export function Shop() {
     const params = new URLSearchParams(searchParams.toString());
     if (value) params.set('category', value);
     else params.delete('category');
-    // Clear brand filter when switching category for better UX
     params.delete('brand');
     router.push(`${pathname}?${params.toString()}`);
   };
 
   return (
-    <div className="w-full pt-32 md:pt-40 px-6 md:px-12 pb-32 bg-background relative overflow-hidden">
+    <div className="w-full pt-36 md:pt-44 px-6 md:px-12 lg:px-16 pb-36 bg-[#030303] text-[#fafafa] min-h-screen">
       <SEO 
-        title={brandFilter ? `${brandFilter.charAt(0).toUpperCase() + brandFilter.slice(1)} Collection` : categoryFilter ? `${categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1)} Collection` : 'Shop the Collection'}
-        description="Explore WEARITION's curated collection of luxury fashion. Premium menswear and womenswear designed for the modern visionary."
+        title={brandFilter ? `${brandFilter.toUpperCase()} Collection • WEARITION` : categoryFilter ? `${categoryFilter.toUpperCase()} • WEARITION` : 'Atelier Archive • WEARITION'}
+        description="Explore WEARITION's curated collection of luxury haute couture and ready-to-wear pieces designed for the modern visionary."
       />
-      {/* giant scrolling wordmark drifting behind the collection */}
-      <div className="pointer-events-none absolute top-40 md:top-56 left-0 right-0 opacity-[0.55]" aria-hidden="true">
-        <Marquee slow>
-          <span className="font-display font-extrabold uppercase whitespace-nowrap leading-none text-[22vw] md:text-[16vw] text-outline select-none pr-16">
-            Wearition&nbsp;· Wearition&nbsp;·&nbsp;
-          </span>
-        </Marquee>
-      </div>
-      <div className="max-w-[1440px] mx-auto relative">
-        <header className="mb-12">
-          <div className="flex items-center gap-4 mb-5">
-            <span className="text-sm text-white/40 tracking-[0.2em]">[01]</span>
-            <span className="eyebrow text-accent">Shop</span>
+      <div className="max-w-[1440px] mx-auto">
+        {/* Editorial Section Header */}
+        <header className="mb-14 text-center">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.03] text-[9px] uppercase tracking-[0.25em] text-[#adadad] font-mono mb-5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#339e9b]" />
+            <span>ATELIER ARCHIVE &bull; CATALOGUE</span>
           </div>
+
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="font-display font-bold uppercase tracking-tight leading-[1.02] text-5xl md:text-7xl text-foreground mb-4"
+            className="font-display text-4xl sm:text-6xl md:text-7xl font-bold leading-none tracking-tight text-white uppercase mb-4"
           >
-            {brandFilter ? brandFilter : categoryFilter ? categoryFilter : 'The Collection'}
+            {brandFilter ? brandFilter.toUpperCase() : categoryFilter ? categoryFilter.toUpperCase() : 'THE ARCHIVE'}
           </motion.h1>
-          <p className="text-muted text-sm max-w-xl">
-            {loading ? 'Curating your collection...' : `${products.length} piece${products.length !== 1 ? 's' : ''} available`}
+          <p className="text-[#adadad] text-xs md:text-sm max-w-xl mx-auto font-sans tracking-wide">
+            {loading ? 'Curating your atelier selection...' : `${products.length} bespoke piece${products.length !== 1 ? 's' : ''} available for immediate acquisition.`}
           </p>
         </header>
 
-        {/* Category Pills */}
-        <div className="flex flex-wrap items-center gap-3 mb-10">
+        {/* Category Filter Pills */}
+        <div className="flex flex-wrap items-center justify-center gap-2.5 mb-14">
           {categories.map((cat) => (
             <button
               key={cat.name}
               onClick={() => setCategory(cat.value)}
-              className={`px-5 py-2.5 rounded-full border text-xs tracking-[0.14em] uppercase font-medium transition-all duration-300 ${
+              className={`px-5 py-2 rounded-full text-[10px] tracking-[0.2em] uppercase font-mono font-medium transition-all duration-300 cursor-pointer ${
                 categoryFilter === cat.value
-                  ? 'bg-accent text-white border-accent shadow-[0_0_20px_var(--accent-glow)]'
-                  : 'bg-transparent border-white/15 text-white/60 hover:border-white/40 hover:text-white'
+                  ? 'bg-white text-black shadow-xl scale-105 border border-white font-semibold'
+                  : 'bg-white/[0.03] border border-white/10 text-[#adadad] hover:border-white/30 hover:text-white hover:bg-white/[0.06]'
               }`}
             >
               {cat.name}
@@ -167,46 +158,54 @@ export function Shop() {
           ))}
         </div>
 
-        {/* Sort Bar */}
-        <div className="flex justify-between items-center border-y border-white/10 py-5 mb-12 text-xs uppercase tracking-[0.18em] text-white/50">
-          <span>{loading ? '...' : `${sortedProducts.length} Results`}</span>
+        {/* Sort & Metric Bar */}
+        <div className="flex justify-between items-center border-y border-white/10 py-4 mb-12 text-[10px] uppercase font-mono tracking-[0.22em] text-[#adadad]">
+          <span className="flex items-center gap-2">
+            <span className="inline-block w-1 h-1 rounded-full bg-[#339e9b]" />
+            {loading ? 'CALCULATING...' : `${sortedProducts.length} ARCHIVE PIECES`}
+          </span>
           <div className="flex items-center gap-3">
-            <span className="hidden md:block">Sort:</span>
+            <span className="hidden md:inline text-white/30">SORT BY:</span>
             <select
               value={sortBy}
               onChange={e => setSortBy(e.target.value)}
-              className="bg-transparent border-none outline-none text-white/80 cursor-pointer uppercase text-xs tracking-[0.18em]"
+              className="bg-[#0d0d0d] border border-white/10 rounded-full px-3 py-1.5 outline-none text-white/80 cursor-pointer uppercase text-[10px] tracking-[0.18em] hover:border-white/30 transition-colors font-mono"
             >
-              {SORT_OPTIONS.map(o => <option key={o.value} value={o.value} className="bg-[#0a0a0a]">{o.label}</option>)}
+              {SORT_OPTIONS.map(o => <option key={o.value} value={o.value} className="bg-[#0d0d0d] text-white">{o.label}</option>)}
             </select>
           </div>
         </div>
 
         {/* Product Grid */}
         {loading ? (
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8">
-            {Array.from({ length: 6 }).map((_, i) => <ProductSkeleton key={i} />)}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {Array.from({ length: 8 }).map((_, i) => <ProductSkeleton key={i} />)}
           </div>
         ) : products.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-32"
+            className="text-center py-28 px-4 border border-white/5 bg-[#0d0d0d] rounded-sm"
           >
-            <p className="font-display font-bold uppercase text-4xl text-white/10 mb-6">Coming soon</p>
-            <p className="text-white/40 text-sm mb-10">
-              This collection is being carefully curated. Please check back soon.
+            <p className="font-display text-5xl text-white/10 mb-6">◇</p>
+            <h3 className="font-display text-2xl md:text-3xl text-white/80 uppercase tracking-wide mb-3">Curating New Silhouettes</h3>
+            <p className="text-[#adadad] text-xs md:text-sm max-w-md mx-auto font-sans mb-8">
+              No pieces currently match this specific atelier filter. Our master tailors are releasing new drops weekly.
             </p>
-            <button onClick={() => {
-              router.push(`${pathname}`);
-            }} className="text-xs uppercase tracking-[0.2em] border-b border-white/30 pb-1 hover:text-accent hover:border-accent transition-colors">
-              Clear All Filters
+            <button 
+              onClick={() => {
+                const params = new URLSearchParams();
+                router.push(`${pathname}`);
+              }} 
+              className="px-6 py-3 rounded-full bg-white text-black text-[10px] uppercase font-mono tracking-[0.2em] font-bold hover:bg-white/80 transition-colors shadow-xl cursor-pointer"
+            >
+              Reset Filters
             </button>
           </motion.div>
         ) : (
           <motion.div
             layout
-            className="grid grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8"
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
           >
             {sortedProducts.map((product, i) => (
               <ProductCard key={product.id} product={product} index={i} />

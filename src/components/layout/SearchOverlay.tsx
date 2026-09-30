@@ -61,7 +61,7 @@ export function SearchOverlay() {
                   placeholder="What are you looking for?"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-transparent border-b border-foreground/20 pb-4 pl-14 outline-none text-4xl md:text-6xl font-display tracking-wide text-foreground placeholder-foreground/20 focus:border-accent transition-all duration-500"
+                  className="w-full bg-transparent border-b border-foreground/20 pb-4 pl-14 outline-none text-4xl md:text-6xl font-serif tracking-wide text-foreground placeholder-foreground/20 focus:border-accent transition-all duration-500"
                 />
               </form>
 

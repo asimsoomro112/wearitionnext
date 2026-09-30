@@ -72,7 +72,7 @@ export function Contact() {
       />
       <div className="max-w-[1000px] mx-auto">
         <header className="mb-20 text-center">
-          <TextReveal as="h1" className="font-display text-4xl sm:text-5xl md:text-6xl text-foreground mb-6 text-center">
+          <TextReveal as="h1" className="font-serif text-4xl sm:text-5xl md:text-6xl text-foreground mb-6 text-center">
             Get in Touch
           </TextReveal>
           <p className="text-foreground/60 text-sm font-sans max-w-lg mx-auto">
@@ -80,21 +80,26 @@ export function Contact() {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-20">
           <div className="flex flex-col items-center text-center p-8 bg-background-secondary/5 border border-white/5 rounded-sm">
             <Mail className="w-6 h-6 mb-4 text-accent" />
-            <h3 className="uppercase text-[10px] tracking-widest mb-2 font-bold">Email Us</h3>
-            <p className="text-sm text-foreground/60">wearition.80@gmail.com</p>
+            <h3 className="uppercase text-[10px] tracking-widest mb-2 font-bold">Email Concierge</h3>
+            <p className="text-sm text-foreground/60">care@wearition.store</p>
           </div>
           <div className="flex flex-col items-center text-center p-8 bg-background-secondary/5 border border-white/5 rounded-sm">
             <Globe className="w-6 h-6 mb-4 text-accent" />
-            <h3 className="uppercase text-[10px] tracking-widest mb-2 font-bold">Online Store</h3>
-            <p className="text-sm text-foreground/60">Always Open</p>
+            <h3 className="uppercase text-[10px] tracking-widest mb-2 font-bold">Global Dispatch</h3>
+            <p className="text-sm text-foreground/60">DHL Express Worldwide</p>
           </div>
           <div className="flex flex-col items-center text-center p-8 bg-background-secondary/5 border border-white/5 rounded-sm">
             <MapPin className="w-6 h-6 mb-4 text-accent" />
-            <h3 className="uppercase text-[10px] tracking-widest mb-2 font-bold">Origin</h3>
+            <h3 className="uppercase text-[10px] tracking-widest mb-2 font-bold">Atelier Origin</h3>
             <p className="text-sm text-foreground/60">Karachi, Pakistan</p>
+          </div>
+          <div className="flex flex-col items-center text-center p-8 bg-background-secondary/5 border border-white/5 rounded-sm">
+            <Mail className="w-6 h-6 mb-4 text-accent" />
+            <h3 className="uppercase text-[10px] tracking-widest mb-2 font-bold">Client Care</h3>
+            <p className="text-sm text-foreground/60">Mon — Sat (10am - 8pm PKT)</p>
           </div>
         </div>
 
@@ -105,7 +110,7 @@ export function Contact() {
           className="bg-background-secondary/20 p-8 md:p-12 border border-white/5"
         >
           <div className="max-w-2xl mx-auto">
-            <h2 className="font-display text-3xl mb-8 text-center">Send a Message</h2>
+            <h2 className="font-serif text-3xl mb-8 text-center">Send a Message</h2>
             <form onSubmit={handleSubmit} className="space-y-6 flex flex-col">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>

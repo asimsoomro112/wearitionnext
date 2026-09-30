@@ -28,7 +28,10 @@ import {
   History,
   LogOut,
   LayoutDashboard,
-  KeyRound
+  KeyRound,
+  Package,
+  Clock,
+  Sparkles
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { formatCurrency } from '@/lib/currency';
@@ -38,7 +41,7 @@ import { sendVerificationOTPEmail, sendPasswordResetOTPEmail } from '@/lib/email
 type AuthView = 'login' | 'signup' | 'verify' | 'forgot' | 'reset';
 
 const GoogleIcon = () => (
-  <svg className="w-5 h-5" viewBox="0 0 24 24">
+  <svg className="w-4 h-4" viewBox="0 0 24 24">
     <path
       fill="currentColor"
       d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -226,159 +229,236 @@ export function Account() {
 
   if (isLoading) {
     return (
-      <div className="w-full min-h-screen flex items-center justify-center bg-background">
-        <motion.div 
-          animate={{ rotate: 360 }}
-          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-          className="w-12 h-12 border-2 border-accent/20 border-t-accent rounded-full"
-        />
+      <div className="w-full min-h-screen flex items-center justify-center bg-[#050505]">
+        <div className="w-8 h-8 border border-white/20 border-t-white rounded-full animate-spin" />
       </div>
     );
   }
 
+  // LOGGED IN: PATRON DASHBOARD
   if (user) {
     return (
-      <div className="w-full min-h-screen pt-32 md:pt-40 px-6 pb-32 bg-background">
-        <div className="max-w-[1200px] mx-auto">
+      <div className="w-full min-h-screen pt-32 md:pt-40 px-6 md:px-12 pb-32 bg-[#050505] text-white">
+        <div className="max-w-7xl mx-auto">
+          {/* Header Bar */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 pb-8 border-b border-white/10">
+            <div>
+              <p className="text-[10px] uppercase font-mono tracking-[0.3em] text-white/40 mb-2">
+                [01] • PATRON DASHBOARD
+              </p>
+              <h1 className="font-serif text-3xl md:text-5xl tracking-tight text-white">
+                Welcome back, {user.displayName?.split(' ')[0] || 'Patron'}
+              </h1>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] uppercase font-mono tracking-[0.2em] px-3.5 py-1.5 rounded-full border border-white/15 bg-white/[0.03] text-white/70">
+                Atelier Member
+              </span>
+              <button
+                onClick={handleSignOut}
+                className="text-[10px] uppercase font-mono tracking-[0.2em] px-3.5 py-1.5 rounded-full border border-white/10 text-white/50 hover:text-white hover:border-white/30 transition-all flex items-center gap-2"
+              >
+                <LogOut className="w-3 h-3" />
+                <span>Sign Out</span>
+              </button>
+            </div>
+          </div>
+
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col lg:flex-row gap-16"
+            transition={{ duration: 0.6 }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-10"
           >
-            {/* Sidebar / Profile Summary */}
-            <aside className="w-full lg:w-1/3">
-              <div className="sticky top-40 bg-foreground/[0.03] p-10 rounded-2xl border border-foreground/5 shadow-2xl">
-                <div className="w-20 h-20 bg-accent/20 rounded-full flex items-center justify-center mb-8 mx-auto lg:mx-0 border border-accent/30 shadow-inner">
-                  <UserCircle className="w-10 h-10 text-accent" />
+            {/* Sidebar / Navigation */}
+            <aside className="lg:col-span-4">
+              <div className="bg-[#0a0a0a] border border-white/5 rounded-sm p-6 md:p-8 space-y-6">
+                <div className="flex items-center gap-4 pb-6 border-b border-white/5">
+                  <div className="w-14 h-14 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center text-white/80">
+                    <UserCircle className="w-7 h-7" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-medium text-white truncate text-sm">
+                      {user.displayName || 'Patron'}
+                    </p>
+                    <p className="text-white/40 text-xs font-mono truncate">{user.email}</p>
+                  </div>
                 </div>
-                <h1 className="font-display text-3xl text-foreground mb-2 text-center lg:text-left">Welcome back</h1>
-                <p className="text-foreground/60 text-sm font-sans mb-10 text-center lg:text-left break-all">{user.email}</p>
-                
-                <nav className="flex flex-col gap-3">
+
+                <nav className="space-y-1.5 font-mono text-[10px] uppercase tracking-[0.2em]">
                   <button 
                     onClick={() => setActiveTab('orders')}
-                    className={`flex items-center justify-between px-6 py-4 rounded-xl transition-all duration-300 ${activeTab === 'orders' ? 'bg-foreground text-background font-bold shadow-lg' : 'text-foreground/60 hover:bg-foreground/5'}`}
+                    className={`w-full flex items-center justify-between px-4 py-3 rounded-sm transition-all ${
+                      activeTab === 'orders' 
+                        ? 'bg-white text-black font-semibold shadow-lg' 
+                        : 'text-white/60 hover:text-white hover:bg-white/[0.03]'
+                    }`}
                   >
                     <div className="flex items-center gap-3">
-                      <History className="w-4 h-4" />
-                      <span className="uppercase text-[10px] tracking-widest">Order History</span>
+                      <History className="w-3.5 h-3.5" />
+                      <span>Order Archive</span>
                     </div>
-                    <span className="text-[10px] opacity-40">{userOrders.length}</span>
+                    <span className="opacity-60">[{userOrders.length}]</span>
                   </button>
+
                   <button 
                     onClick={() => setActiveTab('profile')}
-                    className={`flex items-center justify-between px-6 py-4 rounded-xl transition-all duration-300 ${activeTab === 'profile' ? 'bg-foreground text-background font-bold shadow-lg' : 'text-foreground/60 hover:bg-foreground/5'}`}
+                    className={`w-full flex items-center justify-between px-4 py-3 rounded-sm transition-all ${
+                      activeTab === 'profile' 
+                        ? 'bg-white text-black font-semibold shadow-lg' 
+                        : 'text-white/60 hover:text-white hover:bg-white/[0.03]'
+                    }`}
                   >
                     <div className="flex items-center gap-3">
-                      <UserIcon className="w-4 h-4" />
-                      <span className="uppercase text-[10px] tracking-widest">Personal Info</span>
+                      <UserIcon className="w-3.5 h-3.5" />
+                      <span>Profile & Credentials</span>
                     </div>
                   </button>
+
                   {isAdmin && (
                     <Link 
                       href="/admin"
-                      className="flex items-center justify-between px-6 py-4 rounded-xl text-accent border border-accent/20 hover:bg-accent/5 mt-4 text-center transition-all"
+                      className="w-full flex items-center justify-between px-4 py-3 rounded-sm text-white/80 border border-white/10 hover:border-white/30 hover:bg-white/[0.03] transition-all pt-3 mt-4"
                     >
                       <div className="flex items-center gap-3">
-                        <LayoutDashboard className="w-4 h-4" />
-                        <span className="uppercase text-[10px] tracking-widest">Admin Dashboard</span>
+                        <LayoutDashboard className="w-3.5 h-3.5" />
+                        <span>Admin Console</span>
                       </div>
+                      <ChevronRight className="w-3.5 h-3.5 opacity-50" />
                     </Link>
                   )}
-                  <button
-                    onClick={handleSignOut}
-                    className="flex items-center justify-between px-6 py-4 rounded-xl text-red-500/60 hover:text-red-500 hover:bg-red-500/5 mt-8 border border-red-500/10 transition-all"
-                  >
-                    <div className="flex items-center gap-3">
-                      <LogOut className="w-4 h-4" />
-                      <span className="uppercase text-[10px] tracking-widest">Sign Out</span>
-                    </div>
-                  </button>
                 </nav>
+
+                <div className="pt-6 border-t border-white/5">
+                  <div className="bg-white/[0.02] border border-white/5 p-4 rounded-sm">
+                    <p className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40 mb-1">
+                      Concierge Support
+                    </p>
+                    <p className="text-xs text-white/60 font-sans leading-relaxed mb-3">
+                      Need bespoke tailoring or order assistance?
+                    </p>
+                    <a
+                      href="https://wa.me/923000000000?text=Hello%20WEARITION%20Concierge"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-[10px] uppercase font-mono tracking-[0.2em] text-white hover:underline"
+                    >
+                      <span>Connect via WhatsApp ↗</span>
+                    </a>
+                  </div>
+                </div>
               </div>
             </aside>
 
-            {/* Main Content Area */}
-            <main className="w-full lg:w-2/3">
+            {/* Main Content Pane */}
+            <main className="lg:col-span-8">
               <AnimatePresence mode="wait">
                 {activeTab === 'orders' ? (
                   <motion.div
                     key="orders"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="space-y-8"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="space-y-6"
                   >
-                    <div className="flex items-center justify-between mb-8">
-                      <h2 className="font-display text-3xl uppercase tracking-wider">My Orders</h2>
-                      <Link href="/shop" className="text-[10px] uppercase tracking-widest text-accent hover:underline flex items-center gap-2">
-                        Continue Shopping <ChevronRight className="w-3 h-3" />
+                    <div className="flex items-center justify-between pb-4 border-b border-white/5">
+                      <h2 className="font-serif text-2xl tracking-tight text-white">Acquisition History</h2>
+                      <Link 
+                        href="/shop" 
+                        className="text-[10px] uppercase font-mono tracking-[0.2em] text-white/60 hover:text-white flex items-center gap-1.5 transition-colors"
+                      >
+                        Explore Atelier <ChevronRight className="w-3 h-3" />
                       </Link>
                     </div>
 
                     {isOrdersLoading ? (
-                      <div className="flex flex-col items-center py-20 gap-4">
-                        <div className="w-6 h-6 border-2 border-accent/20 border-t-accent rounded-full animate-spin" />
-                        <p className="text-[10px] uppercase tracking-[0.2em] text-foreground/40">Fetching your orders...</p>
+                      <div className="py-24 text-center">
+                        <div className="w-6 h-6 border border-white/20 border-t-white rounded-full animate-spin mx-auto mb-4" />
+                        <p className="text-[10px] uppercase font-mono tracking-[0.2em] text-white/40">
+                          Retrieving Order Manifests...
+                        </p>
                       </div>
                     ) : userOrders.length === 0 ? (
-                      <div className="text-center py-32 border border-foreground/5 rounded-3xl bg-foreground/[0.01] shadow-inner">
-                        <ShoppingBag className="w-16 h-16 text-foreground/10 mx-auto mb-6" />
-                        <h3 className="font-display text-2xl mb-4">No orders yet</h3>
-                        <p className="text-foreground/40 text-sm font-sans mb-10 max-w-xs mx-auto leading-relaxed">Your journey with WEARITION begins with your first selection.</p>
-                        <Link href="/shop" className="px-10 py-4 bg-foreground text-background text-xs uppercase tracking-widest hover:bg-accent transition-all inline-block rounded-full shadow-xl">
-                          Start Shopping
+                      <div className="bg-[#0a0a0a] border border-white/5 rounded-sm p-16 text-center">
+                        <ShoppingBag className="w-12 h-12 text-white/20 mx-auto mb-4 stroke-1" />
+                        <h3 className="font-serif text-2xl mb-2 text-white">No Orders on Record</h3>
+                        <p className="text-white/40 text-xs font-sans max-w-sm mx-auto mb-8 leading-relaxed">
+                          Your acquisition portfolio is currently vacant. Discover our latest couture runway drops.
+                        </p>
+                        <Link 
+                          href="/shop" 
+                          className="inline-flex items-center gap-2 bg-white text-black px-8 py-3.5 rounded-full text-[10px] uppercase tracking-[0.2em] font-semibold hover:bg-white/90 transition-all shadow-xl"
+                        >
+                          <span>Browse Atelier Collection ↗</span>
                         </Link>
                       </div>
                     ) : (
-                      <div className="grid gap-6">
+                      <div className="space-y-4">
                         {userOrders.map((order) => (
-                          <div key={order.id} className="bg-foreground/[0.03] border border-foreground/5 p-8 rounded-2xl hover:border-accent/20 transition-all group">
-                            <div className="flex flex-col md:flex-row justify-between md:items-center gap-6 mb-8 pb-6 border-b border-foreground/5">
+                          <div 
+                            key={order.id} 
+                            className="bg-[#0a0a0a] border border-white/5 hover:border-white/15 rounded-sm p-6 md:p-8 transition-all space-y-6"
+                          >
+                            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 pb-4 border-b border-white/5">
                               <div>
-                                <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-1">Order ID</p>
-                                <p className="font-sans text-lg font-bold">{order.orderId}</p>
+                                <p className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40 mb-1">
+                                  Manifest ID
+                                </p>
+                                <p className="font-mono text-sm font-semibold text-white tracking-wider">
+                                  {order.orderId || order.id}
+                                </p>
                               </div>
-                              <div className="flex gap-12">
+                              <div className="flex flex-wrap items-center gap-6">
                                 <div>
-                                  <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-1">Date</p>
-                                  <p className="text-sm font-medium">{new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                                  <p className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40 mb-1">
+                                    Date
+                                  </p>
+                                  <p className="text-xs font-mono text-white/70">
+                                    {order.date ? new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recent'}
+                                  </p>
                                 </div>
                                 <div>
-                                  <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-1">Total</p>
-                                  <p className="text-sm font-bold text-accent">{formatCurrency(order.total)}</p>
+                                  <p className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40 mb-1">
+                                    Total
+                                  </p>
+                                  <p className="text-xs font-mono font-semibold text-white">
+                                    {formatCurrency(order.total)}
+                                  </p>
                                 </div>
                                 <div>
-                                  <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-1">Status</p>
-                                  <span className={`text-[9px] uppercase tracking-widest px-3 py-1 rounded-full font-bold shadow-sm ${
-                                    order.status === 'delivered' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
-                                    order.status === 'shipped' ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' :
-                                    'bg-accent/10 text-accent border border-accent/20'
+                                  <p className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40 mb-1">
+                                    Status
+                                  </p>
+                                  <span className={`inline-block text-[9px] uppercase font-mono tracking-[0.2em] px-2.5 py-0.5 rounded-full border ${
+                                    order.status === 'delivered' ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/5' :
+                                    order.status === 'shipped' ? 'border-sky-500/30 text-sky-400 bg-sky-500/5' :
+                                    'border-white/20 text-white/80 bg-white/5'
                                   }`}>
-                                    {order.status}
+                                    {order.status || 'Processing'}
                                   </span>
                                 </div>
                               </div>
                             </div>
 
-                            <div className="flex justify-between items-center">
-                              <div className="flex -space-x-3 overflow-hidden">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                              <div className="flex -space-x-3 overflow-hidden py-1">
                                 {order.items?.slice(0, 4).map((item: any, i: number) => (
-                                  <div key={i} className="w-12 h-16 border-2 border-background rounded-lg overflow-hidden bg-foreground/5 shadow-md">
-                                    <img src={item.image} alt="" className="w-full h-full object-cover transition-transform group-hover:scale-110 duration-500" />
+                                  <div key={i} className="w-12 h-16 border border-white/10 rounded-sm overflow-hidden bg-white/5 shadow-md flex-shrink-0">
+                                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                                   </div>
                                 ))}
                                 {order.items?.length > 4 && (
-                                  <div className="w-12 h-16 border-2 border-background rounded-lg bg-foreground/10 flex items-center justify-center text-[10px] font-bold shadow-md">
+                                  <div className="w-12 h-16 border border-white/10 rounded-sm bg-white/10 flex items-center justify-center text-[10px] font-mono text-white/70">
                                     +{order.items.length - 4}
                                   </div>
                                 )}
                               </div>
+
                               <Link 
-                                href={`/track-order?id=${order.orderId}&email=${order.email}`}
-                                className="px-8 py-3 bg-foreground text-background text-[10px] uppercase tracking-widest font-bold hover:bg-accent transition-all rounded-lg shadow-lg"
+                                href={`/track-order?id=${order.orderId || order.id}&email=${order.email || user.email}`}
+                                className="inline-flex items-center justify-center gap-2 border border-white/15 hover:border-white/30 hover:bg-white/[0.04] text-white px-6 py-2.5 rounded-full text-[10px] uppercase font-mono tracking-[0.2em] transition-all"
                               >
-                                Track Order
+                                <span>Track Consignment ↗</span>
                               </Link>
                             </div>
                           </div>
@@ -389,37 +469,54 @@ export function Account() {
                 ) : (
                   <motion.div
                     key="profile"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="max-w-xl"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="space-y-6"
                   >
-                    <h2 className="font-display text-3xl uppercase tracking-wider mb-12">Personal Information</h2>
-                    
-                    <div className="space-y-8">
-                      <div className="grid grid-cols-2 gap-8">
-                        <div className="bg-foreground/[0.02] p-6 rounded-xl border border-foreground/5">
-                          <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-2">Display Name</p>
-                          <p className="text-lg font-display">{user.displayName || 'Guest Member'}</p>
-                        </div>
-                        <div className="bg-foreground/[0.02] p-6 rounded-xl border border-foreground/5">
-                          <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-2">Member Since</p>
-                          <p className="text-lg font-display">{new Date(user.metadata.creationTime || '').toLocaleDateString('en-US', { year: 'numeric' })}</p>
-                        </div>
-                      </div>
-                      
-                      <div className="bg-foreground/[0.02] p-6 rounded-xl border border-foreground/5">
-                        <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-2">Email Address</p>
-                        <p className="text-lg font-sans italic">{user.email}</p>
+                    <div className="pb-4 border-b border-white/5">
+                      <h2 className="font-serif text-2xl tracking-tight text-white">Patron Credentials</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-[#0a0a0a] border border-white/5 p-6 rounded-sm">
+                        <p className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40 mb-2">
+                          [01] Full Name
+                        </p>
+                        <p className="text-base font-serif text-white">
+                          {user.displayName || 'Patron Member'}
+                        </p>
                       </div>
 
-                      <div className="p-10 border border-accent/20 bg-accent/5 rounded-2xl shadow-xl relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 blur-3xl -mr-16 -mt-16 rounded-full" />
-                        <ShieldCheck className="w-10 h-10 text-accent mb-6" />
-                        <h4 className="uppercase text-xs tracking-[0.2em] text-accent font-bold mb-4">Elite Membership</h4>
-                        <p className="text-sm text-foreground/70 leading-relaxed font-sans italic relative z-10">
-                          As a registered member of WEARITION, you receive exclusive access to early drops, priority customer support, and tailored luxury styling.
+                      <div className="bg-[#0a0a0a] border border-white/5 p-6 rounded-sm">
+                        <p className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40 mb-2">
+                          [02] Patron Since
                         </p>
+                        <p className="text-base font-serif text-white">
+                          {user.metadata?.creationTime ? new Date(user.metadata.creationTime).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) : 'Active Member'}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-[#0a0a0a] border border-white/5 p-6 rounded-sm">
+                      <p className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40 mb-2">
+                        [03] Registered Email
+                      </p>
+                      <p className="text-sm font-mono text-white/80">{user.email}</p>
+                    </div>
+
+                    <div className="p-8 border border-white/10 bg-white/[0.02] rounded-sm relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-48 h-48 bg-white/[0.02] blur-2xl pointer-events-none" />
+                      <div className="flex items-start gap-4">
+                        <ShieldCheck className="w-6 h-6 text-white/80 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <h4 className="text-[10px] uppercase font-mono tracking-[0.25em] text-white font-semibold mb-2">
+                            Elite Atelier Tier
+                          </h4>
+                          <p className="text-xs text-white/50 leading-relaxed font-sans">
+                            As a verified patron of WEARITION, your account is pre-registered for priority concierge delivery, exclusive preview of seasonal drops, and custom tailoring consultations.
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </motion.div>
@@ -432,6 +529,7 @@ export function Account() {
     );
   }
 
+  // GUEST / AUTHENTICATION VIEW
   const renderAuthView = () => {
     switch (view) {
       case 'login':
@@ -441,43 +539,47 @@ export function Account() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="flex flex-col gap-5"
+            className="space-y-4"
             onSubmit={handleLogin}
           >
-            <div className="group space-y-2">
-              <label className="uppercase text-[9px] tracking-[0.2em] text-foreground/40 font-bold ml-1">Email Address</label>
+            <div className="space-y-1.5">
+              <label className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40">
+                Email Address
+              </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/20 group-focus-within:text-accent transition-colors" />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-foreground/[0.03] border border-foreground/10 rounded-xl py-4 pl-12 pr-4 text-foreground focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/20 transition-all placeholder:text-foreground/20 text-sm"
-                  placeholder="name@luxury.com"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-sm py-3.5 pl-10 pr-4 text-white text-xs placeholder:text-white/20 focus:border-white focus:outline-none transition-colors"
+                  placeholder="patron@wearition.store"
                 />
               </div>
             </div>
 
-            <div className="group space-y-2">
-              <div className="flex justify-between items-center ml-1">
-                <label className="uppercase text-[9px] tracking-[0.2em] text-foreground/40 font-bold">Password</label>
+            <div className="space-y-1.5">
+              <div className="flex justify-between items-center">
+                <label className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40">
+                  Password
+                </label>
                 <button 
                   type="button" 
                   onClick={() => setView('forgot')}
-                  className="text-[9px] uppercase tracking-widest text-accent hover:text-foreground transition-colors"
+                  className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40 hover:text-white transition-colors"
                 >
                   Forgot?
                 </button>
               </div>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/20 group-focus-within:text-accent transition-colors" />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
                 <input
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-foreground/[0.03] border border-foreground/10 rounded-xl py-4 pl-12 pr-4 text-foreground focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/20 transition-all placeholder:text-foreground/20 text-sm"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-sm py-3.5 pl-10 pr-4 text-white text-xs placeholder:text-white/20 focus:border-white focus:outline-none transition-colors"
                   placeholder="••••••••"
                 />
               </div>
@@ -486,11 +588,12 @@ export function Account() {
             <button
               type="submit"
               disabled={isLoadingAction}
-              className="mt-4 bg-foreground text-background py-4 rounded-xl uppercase text-[10px] tracking-[0.3em] font-bold hover:bg-accent transition-all w-full shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 group"
+              className="w-full mt-4 bg-white text-black py-4 rounded-full text-[10px] uppercase font-mono tracking-[0.25em] font-semibold hover:bg-white/90 transition-all shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {isLoadingAction ? 'Verifying...' : (
                 <>
-                  Sign In <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  <span>Sign In</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </>
               )}
             </button>
@@ -504,57 +607,67 @@ export function Account() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="flex flex-col gap-5"
+            className="space-y-4"
             onSubmit={handleInitiateSignup}
           >
-            <div className="grid grid-cols-2 gap-4">
-              <div className="group space-y-2">
-                <label className="uppercase text-[9px] tracking-[0.2em] text-foreground/40 font-bold ml-1">First Name</label>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40">
+                  First Name
+                </label>
                 <input
                   type="text"
                   required
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  className="w-full bg-foreground/[0.03] border border-foreground/10 rounded-xl py-4 px-5 text-foreground focus:outline-none focus:border-accent transition-all text-sm"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-sm py-3.5 px-3.5 text-white text-xs focus:border-white focus:outline-none transition-colors"
+                  placeholder="Ahmed"
                 />
               </div>
-              <div className="group space-y-2">
-                <label className="uppercase text-[9px] tracking-[0.2em] text-foreground/40 font-bold ml-1">Last Name</label>
+              <div className="space-y-1.5">
+                <label className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40">
+                  Last Name
+                </label>
                 <input
                   type="text"
                   required
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  className="w-full bg-foreground/[0.03] border border-foreground/10 rounded-xl py-4 px-5 text-foreground focus:outline-none focus:border-accent transition-all text-sm"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-sm py-3.5 px-3.5 text-white text-xs focus:border-white focus:outline-none transition-colors"
+                  placeholder="Khan"
                 />
               </div>
             </div>
 
-            <div className="group space-y-2">
-              <label className="uppercase text-[9px] tracking-[0.2em] text-foreground/40 font-bold ml-1">Email</label>
+            <div className="space-y-1.5">
+              <label className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40">
+                Email Address
+              </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/20 group-focus-within:text-accent transition-colors" />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-foreground/[0.03] border border-foreground/10 rounded-xl py-4 pl-12 pr-4 text-foreground focus:outline-none focus:border-accent transition-all text-sm"
-                  placeholder="name@luxury.com"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-sm py-3.5 pl-10 pr-4 text-white text-xs placeholder:text-white/20 focus:border-white focus:outline-none transition-colors"
+                  placeholder="patron@wearition.store"
                 />
               </div>
             </div>
 
-            <div className="group space-y-2">
-              <label className="uppercase text-[9px] tracking-[0.2em] text-foreground/40 font-bold ml-1">Password</label>
+            <div className="space-y-1.5">
+              <label className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40">
+                Password
+              </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/20 group-focus-within:text-accent transition-colors" />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
                 <input
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-foreground/[0.03] border border-foreground/10 rounded-xl py-4 pl-12 pr-4 text-foreground focus:outline-none focus:border-accent transition-all text-sm"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-sm py-3.5 pl-10 pr-4 text-white text-xs placeholder:text-white/20 focus:border-white focus:outline-none transition-colors"
                   placeholder="Minimum 6 characters"
                 />
               </div>
@@ -563,11 +676,12 @@ export function Account() {
             <button
               type="submit"
               disabled={isLoadingAction}
-              className="mt-4 bg-foreground text-background py-4 rounded-xl uppercase text-[10px] tracking-[0.3em] font-bold hover:bg-accent transition-all w-full shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 group"
+              className="w-full mt-4 bg-white text-black py-4 rounded-full text-[10px] uppercase font-mono tracking-[0.25em] font-semibold hover:bg-white/90 transition-all shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {isLoadingAction ? 'Preparing Access...' : (
                 <>
-                  Create Account <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  <span>Create Account</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </>
               )}
             </button>
@@ -578,19 +692,19 @@ export function Account() {
         return (
           <motion.form
             key="verify"
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col gap-8 text-center"
+            className="space-y-6 text-center"
             onSubmit={handleVerifySignup}
           >
             <div>
-              <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <ShieldCheck className="w-8 h-8 text-accent" />
+              <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <ShieldCheck className="w-6 h-6 text-white" />
               </div>
-              <h2 className="font-display text-3xl mb-4">Verify Identity</h2>
-              <p className="text-foreground/40 text-sm leading-relaxed px-4">
-                We've sent a unique 6-digit code to <br/>
-                <span className="text-accent font-medium">{email}</span>
+              <h2 className="font-serif text-2xl text-white mb-2">Verify Identity</h2>
+              <p className="text-white/40 text-xs font-sans">
+                A 6-digit code has been dispatched to <br/>
+                <span className="text-white font-mono">{email}</span>
               </p>
             </div>
 
@@ -600,24 +714,24 @@ export function Account() {
               maxLength={6}
               value={otp}
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-              className="bg-foreground/[0.05] text-accent text-4xl text-center tracking-[0.5em] py-6 border border-foreground/10 rounded-2xl focus:border-accent focus:ring-1 focus:ring-accent/20 focus:outline-none transition-all font-mono"
+              className="w-full bg-white/[0.03] border border-white/10 rounded-sm py-4 text-center text-3xl font-mono text-white tracking-[0.4em] focus:border-white focus:outline-none transition-colors"
               placeholder="000000"
             />
 
-            <div className="flex flex-col gap-4">
+            <div className="space-y-3">
               <button
                 type="submit"
                 disabled={isLoadingAction || otp.length < 6}
-                className="bg-foreground text-background py-5 rounded-xl uppercase text-[10px] tracking-[0.3em] font-bold hover:bg-accent transition-all w-full shadow-xl disabled:opacity-30"
+                className="w-full bg-white text-black py-4 rounded-full text-[10px] uppercase font-mono tracking-[0.25em] font-semibold hover:bg-white/90 transition-all shadow-xl disabled:opacity-30"
               >
                 {isLoadingAction ? 'Verifying...' : 'Complete Registration'}
               </button>
               <button 
                 type="button"
                 onClick={() => setView('signup')}
-                className="text-[9px] uppercase tracking-widest text-foreground/40 hover:text-foreground transition-colors"
+                className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40 hover:text-white transition-colors"
               >
-                Change Email
+                Change Email Address
               </button>
             </div>
           </motion.form>
@@ -629,50 +743,53 @@ export function Account() {
             key="forgot"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col gap-8"
+            className="space-y-6"
             onSubmit={handleInitiateReset}
           >
             <div className="text-center">
-              <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <KeyRound className="w-8 h-8 text-accent" />
+              <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <KeyRound className="w-6 h-6 text-white" />
               </div>
-              <h2 className="font-display text-3xl mb-4">Reset Access</h2>
-              <p className="text-foreground/40 text-sm leading-relaxed">
-                Enter your email address and we'll send <br/>
-                you a secure reset code.
+              <h2 className="font-serif text-2xl text-white mb-2">Reset Access</h2>
+              <p className="text-white/40 text-xs font-sans">
+                Enter your registered email to receive a secure recovery code.
               </p>
             </div>
 
-            <div className="group space-y-2">
-              <label className="uppercase text-[9px] tracking-[0.2em] text-foreground/40 font-bold ml-1">Email Address</label>
+            <div className="space-y-1.5">
+              <label className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40">
+                Email Address
+              </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/20 group-focus-within:text-accent transition-colors" />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-foreground/[0.03] border border-foreground/10 rounded-xl py-4 pl-12 pr-4 text-foreground focus:outline-none focus:border-accent transition-all text-sm"
-                  placeholder="your@email.com"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-sm py-3.5 pl-10 pr-4 text-white text-xs placeholder:text-white/20 focus:border-white focus:outline-none transition-colors"
+                  placeholder="patron@wearition.store"
                 />
               </div>
             </div>
 
-            <div className="flex flex-col gap-4">
+            <div className="space-y-3">
               <button
                 type="submit"
                 disabled={isLoadingAction}
-                className="bg-foreground text-background py-5 rounded-xl uppercase text-[10px] tracking-[0.3em] font-bold hover:bg-accent transition-all w-full shadow-xl"
+                className="w-full bg-white text-black py-4 rounded-full text-[10px] uppercase font-mono tracking-[0.25em] font-semibold hover:bg-white/90 transition-all shadow-xl disabled:opacity-50"
               >
-                {isLoadingAction ? 'Sending Code...' : 'Send Reset Code'}
+                {isLoadingAction ? 'Sending Code...' : 'Dispatch Reset Code'}
               </button>
-              <button 
-                type="button"
-                onClick={() => setView('login')}
-                className="text-[9px] uppercase tracking-widest text-foreground/40 hover:text-foreground text-center transition-colors"
-              >
-                Return to Login
-              </button>
+              <div className="text-center">
+                <button 
+                  type="button" 
+                  onClick={() => setView('login')}
+                  className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40 hover:text-white transition-colors"
+                >
+                  Return to Sign In
+                </button>
+              </div>
             </div>
           </motion.form>
         );
@@ -681,43 +798,46 @@ export function Account() {
         return (
           <motion.form
             key="reset"
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col gap-8"
+            className="space-y-6"
             onSubmit={handleCompleteReset}
           >
             <div className="text-center">
-              <h2 className="font-display text-3xl mb-4">Set New Password</h2>
-              <p className="text-foreground/40 text-sm leading-relaxed">
-                Verify the code sent to your email <br/>
-                and choose a new secure password.
+              <h2 className="font-serif text-2xl text-white mb-2">Set New Password</h2>
+              <p className="text-white/40 text-xs font-sans">
+                Verify the 6-digit code sent to your email and define your new credential.
               </p>
             </div>
 
-            <div className="space-y-6">
-              <div className="group space-y-2">
-                <label className="uppercase text-[9px] tracking-[0.2em] text-foreground/40 font-bold text-center block">6-Digit Code</label>
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40 text-center block">
+                  Verification Code
+                </label>
                 <input
                   type="text"
                   required
                   maxLength={6}
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                  className="w-full bg-foreground/[0.05] text-accent text-3xl text-center tracking-[0.4em] py-5 border border-foreground/10 rounded-xl focus:border-accent focus:outline-none transition-all font-mono"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-sm py-3.5 text-center text-2xl font-mono text-white tracking-[0.4em] focus:border-white focus:outline-none transition-colors"
                   placeholder="000000"
                 />
               </div>
 
-              <div className="group space-y-2">
-                <label className="uppercase text-[9px] tracking-[0.2em] text-foreground/40 font-bold ml-1">New Password</label>
+              <div className="space-y-1.5">
+                <label className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40">
+                  New Password
+                </label>
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/20 group-focus-within:text-accent transition-colors" />
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
                   <input
                     type="password"
                     required
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    className="w-full bg-foreground/[0.03] border border-foreground/10 rounded-xl py-4 pl-12 pr-4 text-foreground focus:outline-none focus:border-accent transition-all text-sm"
+                    className="w-full bg-white/[0.03] border border-white/10 rounded-sm py-3.5 pl-10 pr-4 text-white text-xs placeholder:text-white/20 focus:border-white focus:outline-none transition-colors"
                     placeholder="••••••••"
                   />
                 </div>
@@ -727,7 +847,7 @@ export function Account() {
             <button
               type="submit"
               disabled={isLoadingAction || otp.length < 6}
-              className="bg-foreground text-background py-5 rounded-xl uppercase text-[10px] tracking-[0.3em] font-bold hover:bg-accent transition-all w-full shadow-xl disabled:opacity-30"
+              className="w-full bg-white text-black py-4 rounded-full text-[10px] uppercase font-mono tracking-[0.25em] font-semibold hover:bg-white/90 transition-all shadow-xl disabled:opacity-30"
             >
               {isLoadingAction ? 'Updating...' : 'Update Password'}
             </button>
@@ -737,30 +857,37 @@ export function Account() {
   };
 
   return (
-    <div className="w-full min-h-screen pt-32 md:pt-40 px-6 pb-20 bg-background flex flex-col items-center justify-center relative overflow-hidden">
-      {/* Decorative Background Elements */}
-      <div className="absolute top-1/4 -left-20 w-80 h-80 bg-accent/5 blur-[100px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-accent/5 blur-[100px] rounded-full pointer-events-none" />
+    <div className="w-full min-h-screen pt-32 md:pt-40 px-6 pb-24 bg-[#050505] text-white flex flex-col items-center justify-center relative overflow-hidden">
+      {/* Background glow accents */}
+      <div className="absolute top-1/3 -left-32 w-96 h-96 bg-white/[0.02] blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-1/3 -right-32 w-96 h-96 bg-white/[0.02] blur-[120px] rounded-full pointer-events-none" />
       
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="w-full max-w-lg relative z-10"
+        className="w-full max-w-md relative z-10"
       >
-        <div className="bg-foreground/[0.03] border border-foreground/10 backdrop-blur-3xl rounded-[2.5rem] p-8 md:p-12 shadow-2xl">
+        <div className="bg-[#0a0a0a] border border-white/10 rounded-sm p-8 md:p-10 shadow-2xl">
           
-          <div className="text-center mb-10">
-            <h1 className="font-display text-4xl mb-3 uppercase tracking-tighter">Wearition</h1>
+          <div className="text-center mb-8">
+            <p className="text-[10px] uppercase font-mono tracking-[0.3em] text-white/40 mb-2">
+              [01] • ATELIER PATRON PORTAL
+            </p>
+            <h1 className="font-serif text-3xl tracking-tight text-white uppercase">
+              WEARITION
+            </h1>
           </div>
 
-          {view === 'login' || view === 'signup' ? (
-            <div className="flex bg-foreground/5 p-1.5 rounded-2xl mb-10 border border-foreground/5 shadow-inner">
+          {(view === 'login' || view === 'signup') && (
+            <div className="flex bg-white/[0.03] p-1 rounded-full mb-8 border border-white/5">
               <button
                 type="button"
                 onClick={() => { setView('login'); setError(null); }}
-                className={`uppercase text-[9px] tracking-[0.3em] font-bold py-3.5 rounded-xl transition-all flex-1 text-center ${
-                  view === 'login' ? 'bg-background text-foreground shadow-lg' : 'text-foreground/30 hover:text-foreground/50'
+                className={`flex-1 py-2.5 rounded-full text-[9px] uppercase font-mono tracking-[0.2em] font-semibold transition-all ${
+                  view === 'login' 
+                    ? 'bg-white text-black shadow-md' 
+                    : 'text-white/40 hover:text-white'
                 }`}
               >
                 Sign In
@@ -768,20 +895,22 @@ export function Account() {
               <button
                 type="button"
                 onClick={() => { setView('signup'); setError(null); }}
-                className={`uppercase text-[9px] tracking-[0.3em] font-bold py-3.5 rounded-xl transition-all flex-1 text-center ${
-                  view === 'signup' ? 'bg-background text-foreground shadow-lg' : 'text-foreground/30 hover:text-foreground/50'
+                className={`flex-1 py-2.5 rounded-full text-[9px] uppercase font-mono tracking-[0.2em] font-semibold transition-all ${
+                  view === 'signup' 
+                    ? 'bg-white text-black shadow-md' 
+                    : 'text-white/40 hover:text-white'
                 }`}
               >
                 Register
               </button>
             </div>
-          ) : null}
+          )}
 
           {error && (
             <motion.div 
-              initial={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-8 p-4 bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] text-center uppercase tracking-widest font-bold rounded-xl"
+              className="mb-6 p-3.5 bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-mono uppercase tracking-widest text-center rounded-sm"
             >
               {error}
             </motion.div>
@@ -792,30 +921,36 @@ export function Account() {
           </AnimatePresence>
 
           {(view === 'login' || view === 'signup') && (
-            <div className="mt-12">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="h-px bg-foreground/10 flex-1" />
-                <span className="text-[8px] uppercase tracking-[0.4em] text-foreground/20 font-bold">Elite Authentication</span>
-                <div className="h-px bg-foreground/10 flex-1" />
+            <div className="mt-8 pt-6 border-t border-white/5">
+              <div className="relative flex items-center justify-center mb-6">
+                <span className="bg-[#0a0a0a] px-3 text-[8px] uppercase font-mono tracking-[0.3em] text-white/30 relative z-10">
+                  Instant Authentication
+                </span>
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-white/5" />
+                </div>
               </div>
+
               <button 
                 type="button"
                 onClick={handleGoogleAuth}
                 disabled={isLoadingAction}
-                className="w-full py-4 bg-background border border-foreground/10 text-foreground uppercase text-[10px] tracking-[0.2em] font-bold rounded-xl hover:bg-foreground hover:text-background transition-all flex items-center justify-center gap-4 shadow-sm active:scale-[0.98] group"
+                className="w-full py-3.5 bg-white/[0.03] border border-white/10 hover:border-white/25 hover:bg-white/[0.06] text-white text-[10px] uppercase font-mono tracking-[0.2em] font-semibold rounded-full transition-all flex items-center justify-center gap-3 active:scale-[0.99] disabled:opacity-50"
               >
-                <div className="bg-white p-1 rounded-md shadow-sm group-hover:bg-transparent group-hover:text-inherit transition-colors">
-                  <GoogleIcon />
-                </div>
-                Continue with Google
+                <GoogleIcon />
+                <span>Continue with Google</span>
               </button>
             </div>
           )}
         </div>
 
-        <div className="mt-12 text-center">
-          <Link href="/shop" className="text-[10px] uppercase tracking-[0.3em] text-foreground/30 hover:text-accent transition-colors flex items-center justify-center gap-2">
-            Return to Collection <ArrowRight className="w-3 h-3" />
+        <div className="mt-8 text-center">
+          <Link 
+            href="/shop" 
+            className="text-[10px] uppercase font-mono tracking-[0.25em] text-white/40 hover:text-white transition-colors inline-flex items-center gap-1.5"
+          >
+            <span>Return to Collections</span>
+            <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
       </motion.div>

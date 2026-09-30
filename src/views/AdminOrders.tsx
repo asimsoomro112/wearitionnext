@@ -125,7 +125,7 @@ export function AdminOrders() {
 
   return (
     <div className="max-w-full">
-      <h1 className="text-2xl md:text-3xl font-display mb-8 pb-6 border-b border-black/10 text-[#0a0a0a]">Order Management</h1>
+      <h1 className="text-2xl md:text-3xl font-serif mb-8 pb-6 border-b border-black/10 text-[#0a0a0a]">Order Management</h1>
       
       <div className="bg-white border border-black/10 rounded-lg overflow-x-auto">
         <table className="w-full text-left min-w-[1000px]">
@@ -207,7 +207,7 @@ export function AdminOrders() {
             <div className="flex items-center justify-between border-b border-black/10 px-6 py-4">
               <div className="flex items-center gap-3">
                 <Truck className="w-5 h-5 text-purple-600" />
-                <h2 className="text-lg font-display text-[#0a0a0a]">Ship Order</h2>
+                <h2 className="text-lg font-serif text-[#0a0a0a]">Ship Order</h2>
               </div>
               <button onClick={() => setShippingModal(null)} className="text-[#0a0a0a]/40 hover:text-[#0a0a0a]">
                 <X className="w-5 h-5" />

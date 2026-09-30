@@ -56,7 +56,7 @@ export function AdminAnalytics() {
 
   return (
     <div className="max-w-full">
-      <h1 className="text-2xl md:text-3xl font-display mb-8 pb-6 border-b border-black/10 text-[#0a0a0a]">Analytics & Reports</h1>
+      <h1 className="text-2xl md:text-3xl font-serif mb-8 pb-6 border-b border-black/10 text-[#0a0a0a]">Analytics & Reports</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         <div className="bg-white border border-black/10 p-8 rounded-lg shadow-sm">
@@ -90,7 +90,7 @@ export function AdminAnalytics() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 bg-white border border-black/10 rounded-lg p-8 shadow-sm">
-          <h3 className="font-display text-xl mb-8 text-[#0a0a0a]">Category Performance</h3>
+          <h3 className="font-serif text-xl mb-8 text-[#0a0a0a]">Category Performance</h3>
           <div className="space-y-6">
             {stats.topCategories.map((cat, i) => (
               <div key={cat.name}>
@@ -113,7 +113,7 @@ export function AdminAnalytics() {
         </div>
 
         <div className="bg-[#0a0a0a] text-[#F5F0EB] rounded-lg p-8 shadow-sm">
-          <h3 className="font-display text-xl mb-6">Sales Insights</h3>
+          <h3 className="font-serif text-xl mb-6">Sales Insights</h3>
           <div className="space-y-4">
             <div className="border-l-2 border-accent pl-4 py-2">
               <p className="text-xs text-white/50 uppercase tracking-widest mb-1">Peak Performance</p>

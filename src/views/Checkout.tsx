@@ -222,78 +222,86 @@ export function Checkout() {
 
   if (items.length === 0) {
     return (
-      <div className="w-full pt-40 px-6 pb-32 bg-background min-h-[80vh] flex flex-col items-center justify-center">
-        <p className="font-display font-bold uppercase text-5xl text-foreground/10 mb-6">◇</p>
-        <h1 className="font-display font-bold uppercase text-3xl mb-4">Your Bag is Empty</h1>
-        <p className="text-foreground/50 mb-10 font-sans text-sm">Add something beautiful to your bag first.</p>
-        <Link href="/shop" className="px-10 py-4 bg-foreground text-background text-xs uppercase tracking-widest hover:bg-accent transition-colors">
-          Explore Collection
+      <div className="w-full pt-40 px-6 pb-32 bg-[#050505] text-white min-h-[85vh] flex flex-col items-center justify-center">
+        <p className="font-serif text-5xl text-white/10 mb-6">◇</p>
+        <h1 className="font-serif text-3xl md:text-4xl uppercase tracking-tight text-white mb-3">Your Atelier Bag is Empty</h1>
+        <p className="text-white/40 mb-8 font-sans text-xs tracking-wide">Acquire exclusive haute couture pieces to proceed with checkout.</p>
+        <Link href="/shop" className="px-8 py-3.5 bg-white text-black text-[10px] uppercase tracking-[0.22em] font-semibold hover:bg-white/80 transition-colors rounded-full shadow-xl">
+          Discover Collections ↗
         </Link>
       </div>
     );
   }
 
-  const inputClass = "w-full bg-background border border-white/10 px-4 py-3 text-sm focus:outline-none focus:border-accent/50 transition-colors text-foreground placeholder-foreground/30 rounded-sm";
-  const labelClass = "block text-[10px] uppercase tracking-widest text-foreground/50 mb-2";
+  const inputClass = "w-full bg-white/[0.03] border border-white/10 px-4 py-3 text-sm focus:outline-none focus:border-white transition-colors text-white placeholder-white/25 rounded-sm font-sans";
+  const labelClass = "block text-[10px] uppercase tracking-[0.2em] text-white/50 mb-2 font-medium";
 
   return (
-    <div className="w-full pt-40 px-6 md:px-12 pb-32 bg-background">
-      <div className="max-w-[1200px] mx-auto">
+    <div className="w-full pt-36 md:pt-40 px-6 md:px-12 pb-36 bg-[#050505] text-white min-h-screen">
+      <div className="max-w-[1280px] mx-auto">
         <motion.header initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
-          <SEO title="Checkout" description="Complete your WEARITION order securely." />
-          <h1 className="font-display font-bold uppercase text-4xl md:text-5xl text-foreground">Checkout</h1>
-          <p className="text-foreground/40 text-sm font-sans mt-2">Secure & confidential</p>
+          <SEO title="Checkout • WEARITION" description="Complete your WEARITION order securely." />
+          <div className="flex items-center gap-2 text-[9px] uppercase tracking-[0.25em] text-white/40 mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+            <span>SECURE ATELIER ACQUISITION</span>
+          </div>
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl uppercase tracking-tight text-white">Checkout</h1>
+          <p className="text-white/40 text-xs font-sans mt-2 tracking-wide">Encrypted transactions & certified luxury handling</p>
         </motion.header>
 
-        <div className="flex flex-col lg:flex-row gap-12">
+        <div className="flex flex-col lg:flex-row gap-10">
           <div className="w-full lg:w-2/3">
             <AnimatePresence mode="wait">
               {!user && !showGuestForm ? (
                 <motion.div 
                   key="choice"
-                  initial={{ opacity: 0, scale: 0.95 }}
+                  initial={{ opacity: 0, scale: 0.97 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  className="bg-foreground/5 p-12 rounded-2xl border border-white/5 text-center"
+                  exit={{ opacity: 0, scale: 0.97 }}
+                  className="bg-[#0a0a0a] p-8 md:p-12 rounded-sm border border-white/10 text-center shadow-2xl"
                 >
-                  <User className="w-12 h-12 text-accent mx-auto mb-6 opacity-50" />
-                  <h2 className="font-display font-bold uppercase text-2xl mb-4">How would you like to proceed?</h2>
-                  <p className="text-foreground/40 text-sm mb-10 max-w-sm mx-auto">Sign in to track your orders and use saved addresses, or proceed as a guest.</p>
+                  <div className="w-14 h-14 rounded-full border border-white/10 flex items-center justify-center mx-auto mb-6 text-white/40">
+                    <User className="w-6 h-6" />
+                  </div>
+                  <h2 className="font-serif text-2xl uppercase tracking-wider text-white mb-3">Choose Acquisition Flow</h2>
+                  <p className="text-white/40 text-xs mb-8 max-w-sm mx-auto font-sans leading-relaxed">
+                    Sign in to track your order in real-time with saved addresses, or proceed instantly as an atelier guest.
+                  </p>
                   
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Link href="/account" className="flex-1 max-w-[240px] bg-foreground text-background py-4 px-8 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-accent transition-all flex items-center justify-center gap-2">
-                      <LogIn className="w-4 h-4" />
-                      Sign In / Sign Up
+                  <div className="flex flex-col sm:flex-row gap-3.5 justify-center">
+                    <Link href="/account" className="flex-1 max-w-[240px] bg-white text-black py-3.5 px-6 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white/80 transition-all flex items-center justify-center gap-2 shadow-xl">
+                      <LogIn className="w-3.5 h-3.5" />
+                      Sign In / Register
                     </Link>
                     <button 
                       onClick={() => setShowGuestForm(true)}
-                      className="flex-1 max-w-[240px] border border-white/10 text-foreground py-4 px-8 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-all flex items-center justify-center gap-2"
+                      className="flex-1 max-w-[240px] border border-white/15 bg-white/[0.02] text-white py-3.5 px-6 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] hover:border-white/40 hover:bg-white/[0.05] transition-all flex items-center justify-center gap-2"
                     >
                       Checkout as Guest
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </motion.div>
               ) : (
                 <motion.div 
                   key="form"
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="space-y-6"
                 >
                   <form onSubmit={handleCheckout} className="space-y-6">
                     {/* Contact Info */}
-                    <section className="bg-foreground/5 p-8 rounded-xl border border-white/5">
-                      <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-xs uppercase tracking-widest font-bold text-foreground">Contact Information</h2>
+                    <section className="bg-[#0a0a0a] p-6 md:p-8 rounded-sm border border-white/5">
+                      <div className="flex justify-between items-center mb-6 pb-3 border-b border-white/5">
+                        <h2 className="text-[11px] uppercase tracking-[0.2em] font-semibold text-white">01. Contact Information</h2>
                         {!user && (
-                          <button onClick={() => setShowGuestForm(false)} className="text-[10px] uppercase tracking-widest text-accent hover:underline">Change Method</button>
+                          <button onClick={() => setShowGuestForm(false)} className="text-[9px] uppercase tracking-widest text-white/50 hover:text-white transition-colors">Change Method</button>
                         )}
                       </div>
                       <div className="space-y-4">
                         <div>
                           <label className={labelClass}>Email Address *</label>
-                          <input value={email} onChange={e => setEmail(e.target.value)} required type="email" className={inputClass} placeholder="your@email.com" />
+                          <input value={email} onChange={e => setEmail(e.target.value)} required type="email" className={inputClass} placeholder="patron@wearition.store" />
                           
                           <AnimatePresence>
                             {isEmailRegistered && (
@@ -301,47 +309,47 @@ export function Checkout() {
                                 initial={{ opacity: 0, height: 0 }}
                                 animate={{ opacity: 1, height: 'auto' }}
                                 exit={{ opacity: 0, height: 0 }}
-                                className="mt-3 p-3 bg-accent/10 border border-accent/20 rounded-lg flex items-center gap-3 overflow-hidden"
+                                className="mt-3 p-3 bg-white/[0.04] border border-white/15 rounded-sm flex items-center gap-3 overflow-hidden"
                               >
-                                <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+                                <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
                                 <div className="flex-1">
-                                  <p className="text-[11px] text-accent font-bold uppercase tracking-widest">Account Registered</p>
-                                  <p className="text-[10px] text-foreground/60 leading-relaxed">This email is already registered. <Link href="/account" className="text-foreground font-bold hover:underline">Sign in</Link> for a faster checkout.</p>
+                                  <p className="text-[10px] text-white font-bold uppercase tracking-widest">Account Registered</p>
+                                  <p className="text-[10px] text-white/60 leading-relaxed font-sans">This email is already registered. <Link href="/account" className="text-white underline hover:text-white/80">Sign in</Link> for faster checkout.</p>
                                 </div>
                               </motion.div>
                             )}
                           </AnimatePresence>
                         </div>
                         <div>
-                          <label className={labelClass}>Phone Number</label>
-                          <input value={shipping.phone} onChange={handleShippingChange('phone')} type="tel" className={inputClass} placeholder="+92 300 0000000" />
+                          <label className={labelClass}>Contact Phone Number *</label>
+                          <input value={shipping.phone} onChange={handleShippingChange('phone')} required type="tel" className={inputClass} placeholder="+92 300 0000000" />
                         </div>
                       </div>
                     </section>
 
                     {/* Shipping Address */}
-                    <section className="bg-foreground/5 p-8 rounded-xl border border-white/5">
-                      <h2 className="text-xs uppercase tracking-widest mb-6 font-bold text-foreground">Shipping Address</h2>
+                    <section className="bg-[#0a0a0a] p-6 md:p-8 rounded-sm border border-white/5">
+                      <h2 className="text-[11px] uppercase tracking-[0.2em] mb-6 pb-3 border-b border-white/5 font-semibold text-white">02. Destination Address</h2>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label className={labelClass}>First Name *</label>
-                          <input value={shipping.firstName} onChange={handleShippingChange('firstName')} required type="text" className={inputClass} placeholder="Muhammad" />
+                          <input value={shipping.firstName} onChange={handleShippingChange('firstName')} required type="text" className={inputClass} placeholder="Given name" />
                         </div>
                         <div>
                           <label className={labelClass}>Last Name *</label>
-                          <input value={shipping.lastName} onChange={handleShippingChange('lastName')} required type="text" className={inputClass} placeholder="Ali" />
+                          <input value={shipping.lastName} onChange={handleShippingChange('lastName')} required type="text" className={inputClass} placeholder="Family name" />
                         </div>
                         <div className="md:col-span-2">
                           <label className={labelClass}>Street Address *</label>
-                          <input value={shipping.address} onChange={handleShippingChange('address')} required type="text" className={inputClass} placeholder="123 Street, Block B" />
+                          <input value={shipping.address} onChange={handleShippingChange('address')} required type="text" className={inputClass} placeholder="House / Apartment, Street, Area" />
                         </div>
                         <div>
                           <label className={labelClass}>City *</label>
-                          <input value={shipping.city} onChange={handleShippingChange('city')} required type="text" className={inputClass} placeholder="Karachi" />
+                          <input value={shipping.city} onChange={handleShippingChange('city')} required type="text" className={inputClass} placeholder="Lahore / Karachi / Islamabad" />
                         </div>
                         <div>
                           <label className={labelClass}>Postal Code</label>
-                          <input value={shipping.zip} onChange={handleShippingChange('zip')} type="text" className={inputClass} placeholder="75500" />
+                          <input value={shipping.zip} onChange={handleShippingChange('zip')} type="text" className={inputClass} placeholder="Zip code" />
                         </div>
                         
                         {user && (
@@ -351,36 +359,36 @@ export function Checkout() {
                               id="saveAddress" 
                               checked={saveAddress} 
                               onChange={(e) => setSaveAddress(e.target.checked)}
-                              className="w-4 h-4 accent-accent"
+                              className="w-4 h-4 accent-white cursor-pointer"
                             />
-                            <label htmlFor="saveAddress" className="text-xs text-foreground/60 cursor-pointer">Save this address for future orders</label>
+                            <label htmlFor="saveAddress" className="text-xs text-white/60 cursor-pointer font-sans">Save this address to your patron profile</label>
                           </div>
                         )}
                       </div>
                     </section>
 
                     {/* Payment */}
-                    <section className="bg-foreground/5 p-8 rounded-xl border border-white/5">
-                      <h2 className="text-xs uppercase tracking-widest mb-6 font-bold text-foreground">Payment Method</h2>
-                      <div className="space-y-3">
+                    <section className="bg-[#0a0a0a] p-6 md:p-8 rounded-sm border border-white/5">
+                      <h2 className="text-[11px] uppercase tracking-[0.2em] mb-6 pb-3 border-b border-white/5 font-semibold text-white">03. Payment Protocol</h2>
+                      <div className="space-y-2.5">
                         {[
-                          { value: 'cod', label: 'Cash on Delivery (COD)', desc: 'Pay when your order arrives' },
-                          { value: 'easypaisa', label: 'EasyPaisa', desc: 'Mobile wallet payment' },
-                          { value: 'jazzcash', label: 'JazzCash', desc: 'Mobile wallet payment' },
-                          { value: 'bank', label: 'Bank Transfer', desc: 'Direct bank payment' },
+                          { value: 'cod', label: 'Cash on Delivery (COD)', desc: 'Pay courier cash upon signature and inspection at your doorstep.' },
+                          { value: 'bank', label: 'Direct Bank Transfer / Wire', desc: 'Secure direct wire to WEARITION Atelier corporate account.' },
+                          { value: 'easypaisa', label: 'EasyPaisa Wallet', desc: 'Instant mobile wallet payment.' },
+                          { value: 'jazzcash', label: 'JazzCash Wallet', desc: 'Instant mobile wallet payment.' },
                         ].map(opt => (
-                          <label key={opt.value} className={`flex items-center gap-4 cursor-pointer p-4 rounded-lg border transition-all ${paymentMethod === opt.value ? 'border-accent/40 bg-accent/5' : 'border-white/5 hover:border-white/10'}`}>
-                            <input type="radio" name="payment" value={opt.value} checked={paymentMethod === opt.value} onChange={() => setPaymentMethod(opt.value)} className="accent-accent" />
+                          <label key={opt.value} className={`flex items-start gap-4 cursor-pointer p-4 rounded-sm border transition-all ${paymentMethod === opt.value ? 'border-white bg-white/[0.06]' : 'border-white/5 hover:border-white/15 bg-white/[0.01]'}`}>
+                            <input type="radio" name="payment" value={opt.value} checked={paymentMethod === opt.value} onChange={() => setPaymentMethod(opt.value)} className="mt-1 accent-white" />
                             <div>
-                              <p className="text-sm font-medium text-foreground">{opt.label}</p>
-                              <p className="text-[10px] text-foreground/40">{opt.desc}</p>
+                              <p className="text-xs font-medium uppercase tracking-wide text-white">{opt.label}</p>
+                              <p className="text-[10px] text-white/40 font-sans mt-0.5">{opt.desc}</p>
                             </div>
                           </label>
                         ))}
                       </div>
                       {paymentMethod !== 'cod' && (
-                        <div className="mt-4 p-4 border border-accent/10 bg-accent/5 rounded-lg text-xs text-foreground/60 font-sans">
-                          Payment instructions will be sent to <b className="text-foreground">{email || 'your email'}</b> after placing your order.
+                        <div className="mt-4 p-4 border border-white/10 bg-white/[0.03] rounded-sm text-xs text-white/70 font-sans">
+                          Payment instructions and account details will be dispatched to <b className="text-white">{email || 'your email'}</b> immediately upon order confirmation.
                         </div>
                       )}
                     </section>
@@ -388,15 +396,15 @@ export function Checkout() {
                     <button
                       type="submit"
                       disabled={isProcessing}
-                      className="w-full bg-foreground text-background py-5 uppercase text-xs tracking-[0.3em] font-bold hover:bg-accent transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-3 rounded-full"
+                      className="w-full bg-white text-black py-4.5 uppercase text-[10px] tracking-[0.25em] font-bold hover:bg-white/90 transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-3 rounded-full shadow-2xl"
                     >
                       {isProcessing ? (
                         <>
-                          <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
-                          Processing Order...
+                          <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                          <span>Authorizing Order...</span>
                         </>
                       ) : (
-                        `Place Order · ${formatCurrency(total)}`
+                        `Confirm Order · ${formatCurrency(total)}`
                       )}
                     </button>
                   </form>
@@ -407,45 +415,47 @@ export function Checkout() {
 
           {/* Order Summary */}
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="w-full lg:w-1/3">
-            <div className="sticky top-32 bg-foreground/5 p-8 rounded-xl border border-white/5">
-              <h2 className="text-xs uppercase tracking-widest mb-6 font-bold text-foreground">Order Summary</h2>
+            <div className="sticky top-32 bg-[#0a0a0a] p-6 md:p-8 rounded-sm border border-white/5 shadow-2xl">
+              <h2 className="text-[11px] uppercase tracking-[0.2em] mb-6 pb-3 border-b border-white/5 font-semibold text-white">Order Summary</h2>
 
-              <div className="space-y-4 mb-6">
+              <div className="space-y-4 mb-6 max-h-[300px] overflow-y-auto hide-scrollbar">
                 {items.map(item => (
-                  <div key={`${item.id}-${item.size}-${item.color}`} className="flex gap-4 items-center">
-                    <div className="w-16 h-20 bg-foreground/5 relative overflow-hidden rounded-sm">
+                  <div key={`${item.id}-${item.size}-${item.color}`} className="flex gap-4 items-center border-b border-white/5 pb-4">
+                    <div className="w-16 h-20 bg-neutral-900 relative overflow-hidden rounded-sm border border-white/10 flex-shrink-0">
                       {item.image && <img src={getOptimizedImage(item.image)} alt={item.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />}
-                      <span className="absolute -top-1.5 -right-1.5 bg-accent text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] font-bold">{item.quantity}</span>
+                      <span className="absolute -top-1 -right-1 bg-white text-black w-4.5 h-4.5 flex items-center justify-center rounded-full text-[9px] font-mono font-bold">{item.quantity}</span>
                     </div>
-                    <div className="flex-1">
-                      <h4 className="text-xs font-sans uppercase tracking-wide text-foreground">{item.title}</h4>
-                      <p className="text-[10px] text-foreground/40 mt-1">{[item.color, item.size && `Size: ${item.size}`].filter(Boolean).join(' · ')}</p>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-xs font-sans uppercase tracking-wide text-white truncate">{item.title}</h4>
+                      <p className="text-[10px] text-white/40 mt-1 font-sans">{[item.color, item.size && `Size: ${item.size}`].filter(Boolean).join(' · ')}</p>
                     </div>
-                    <div className="text-sm font-mono text-foreground">{formatCurrency(item.price * item.quantity)}</div>
+                    <div className="text-xs font-mono text-white whitespace-nowrap">{formatCurrency(item.price * item.quantity)}</div>
                   </div>
                 ))}
               </div>
 
-              <div className="border-t border-white/10 pt-6 space-y-3 font-sans text-sm">
-                <div className="flex justify-between text-foreground/60">
-                  <span>Subtotal</span><span>{formatCurrency(subtotal)}</span>
+              <div className="border-t border-white/10 pt-5 space-y-3 font-sans text-xs">
+                <div className="flex justify-between text-white/60">
+                  <span className="uppercase tracking-wider text-[10px]">Subtotal</span>
+                  <span className="font-mono text-white">{formatCurrency(subtotal)}</span>
                 </div>
-                <div className="flex justify-between text-foreground/60">
+                <div className="flex justify-between text-white/60">
                   <div className="flex flex-col">
-                    <span>Shipping</span>
-                    <span className="text-[10px] text-foreground/40 font-normal lowercase tracking-normal">Rs. 250 base + Rs. 100 per additional item</span>
+                    <span className="uppercase tracking-wider text-[10px]">Express Courier</span>
+                    <span className="text-[9px] text-white/35 font-normal">Nationwide express transit</span>
                   </div>
-                  <span>{formatCurrency(shippingCost)}</span>
+                  <span className="font-mono text-white">{formatCurrency(shippingCost)}</span>
                 </div>
-                <div className="flex justify-between text-foreground/60">
+                <div className="flex justify-between text-white/60">
                   <div className="flex flex-col">
-                    <span>Govt. Tax (4%)</span>
-                    <span className="text-[10px] text-foreground/40 font-normal lowercase tracking-normal">Calculated on subtotal</span>
+                    <span className="uppercase tracking-wider text-[10px]">Govt. Tax (4%)</span>
+                    <span className="text-[9px] text-white/35 font-normal">Standard tariff</span>
                   </div>
-                  <span>{formatCurrency(taxAmount)}</span>
+                  <span className="font-mono text-white">{formatCurrency(taxAmount)}</span>
                 </div>
-                <div className="border-t border-white/10 pt-4 flex justify-between font-bold text-lg text-foreground">
-                  <span>Total Bill</span><span className="text-accent">{formatCurrency(total)}</span>
+                <div className="border-t border-white/10 pt-4 flex justify-between items-baseline font-medium text-white">
+                  <span className="uppercase tracking-[0.2em] text-xs">Total</span>
+                  <span className="font-mono text-xl font-medium">{formatCurrency(total)}</span>
                 </div>
               </div>
             </div>
