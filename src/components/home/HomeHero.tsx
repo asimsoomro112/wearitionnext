@@ -90,7 +90,7 @@ export function HomeHero({ products }: HomeHeroProps) {
           </span>
         </motion.div>
 
-        <Reveal delay={0.12} className="mt-8">
+        <Reveal delay={0.12} immediate className="mt-8">
           <h1
             className="font-display font-extrabold uppercase text-white leading-[0.85] tracking-tight text-[15vw] md:text-[10rem] whitespace-nowrap"
             style={{
