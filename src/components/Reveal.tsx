@@ -20,7 +20,8 @@ const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 /**
  * Line-mask text reveal — the template's signature entrance.
- * Each line slides up from an overflow mask with an expo-out ease.
+ * Each line slides up from an overflow mask with a snappy expo-out ease,
+ * matching the reference's fast, cinematic load choreography.
  *
  * Uses `useInView` + `animate` (not `whileInView`) so the entrance reliably
  * fires exactly once, including for elements mounted while already visible.
@@ -37,7 +38,7 @@ export function Reveal({ children, delay = 0, className = "", as = "span", immed
         className="block will-change-transform"
         initial={{ y: "112%" }}
         animate={play ? { y: "0%" } : { y: "112%" }}
-        transition={{ duration: 0.9, delay, ease: EASE }}
+        transition={{ duration: 0.7, delay, ease: EASE }}
       >
         {children}
       </Tag>
@@ -47,12 +48,13 @@ export function Reveal({ children, delay = 0, className = "", as = "span", immed
 
 /**
  * Fade-up reveal for blocks/cards — same expo-out language, no mask.
+ * Snappy like the reference: short duration, decisive travel.
  */
 export function FadeUp({
   children,
   delay = 0,
   className = "",
-  y = 32,
+  y = 44,
 }: {
   children: ReactNode;
   delay?: number;
@@ -68,7 +70,7 @@ export function FadeUp({
       className={className}
       initial={{ opacity: 0, y }}
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y }}
-      transition={{ duration: 0.85, delay, ease: EASE }}
+      transition={{ duration: 0.7, delay, ease: EASE }}
     >
       {children}
     </motion.div>

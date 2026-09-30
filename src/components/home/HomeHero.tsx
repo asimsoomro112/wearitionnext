@@ -3,12 +3,7 @@ import { useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import { Marquee } from './Marquee';
-import { Reveal } from '@/components/Reveal';
-import { getOptimizedImage } from '@/lib/images';
-
-const FALLBACK_IMG =
-  'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=800&auto=format&fit=crop';
+import { HeroRoller } from './HeroRoller';
 
 /**
  * Measures the heading at a reference size, then scales it so the full word
@@ -54,38 +49,14 @@ interface HomeHeroProps {
   products: any[];
 }
 
-function HeroCard({ product }: { product: any }) {
-  const title = product.title || product.name || 'Wearition';
-  return (
-    <div className="relative w-[240px] md:w-[285px] h-[320px] md:h-[380px] flex-none rounded-xl overflow-hidden border border-white/10 mx-3">
-      <img
-        src={getOptimizedImage(product.images?.[0]) || FALLBACK_IMG}
-        alt={title}
-        loading="eager"
-        referrerPolicy="no-referrer"
-        onError={(e) => {
-          e.currentTarget.src = FALLBACK_IMG;
-        }}
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
-      <div className="absolute bottom-3 left-3 right-3">
-        <p className="text-white text-xs font-medium truncate">{title}</p>
-        <p className="text-white/55 text-[10px] uppercase tracking-[0.18em]">
-          {product.category || 'New in'}
-        </p>
-      </div>
-    </div>
-  );
-}
-
 export function HomeHero({ products }: HomeHeroProps) {
   const cards = (products || []).slice(0, 10);
   const h1Ref = useRef<HTMLHeadingElement | null>(null);
   // Bulletproof full-word fit: measured at runtime, never clipped.
   useFitText(h1Ref, 0.97);
 
-  // Scroll-linked parallax: content drifts up and fades, cards lag behind,
+  // Scroll-linked parallax: content drifts up and fades, cards lag behind
+  // and pan horizontally in sync with scroll (the reference's signature move),
   // the giant outline word slides sideways — depth while scrolling.
   const sectionRef = useRef<HTMLElement | null>(null);
   const { scrollYProgress } = useScroll({
@@ -95,6 +66,7 @@ export function HomeHero({ products }: HomeHeroProps) {
   const contentY = useTransform(scrollYProgress, [0, 1], [0, 130]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
   const cardsY = useTransform(scrollYProgress, [0, 1], [0, -70]);
+  const cardsX = useTransform(scrollYProgress, [0, 1], ['0%', '-12%']);
   const styleX = useTransform(scrollYProgress, [0, 1], ['0%', '-14%']);
 
   return (
@@ -120,14 +92,11 @@ export function HomeHero({ products }: HomeHeroProps) {
         </div>
       </motion.div>
 
-      {/* scrolling product marquee behind content — lags on scroll */}
+      {/* 3D curved roller strip behind content — lags vertically and pans
+          horizontally in sync with scroll, like the reference template */}
       {cards.length > 0 && (
-        <motion.div style={{ y: cardsY }} className="absolute inset-0 flex items-center opacity-70">
-          <Marquee slow className="[mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]">
-            {cards.map((p) => (
-              <HeroCard key={p.id} product={p} />
-            ))}
-          </Marquee>
+        <motion.div style={{ y: cardsY, x: cardsX }} className="absolute inset-0 flex items-center opacity-80">
+          <HeroRoller products={cards} />
         </motion.div>
       )}
 
@@ -149,19 +118,32 @@ export function HomeHero({ products }: HomeHeroProps) {
         </motion.div>
 
         {/* Giant wordmark — runtime-measured to fit the viewport exactly.
-            The old vw-only sizing overflowed because Syne is a very wide face,
-            clipping the W and N at the viewport edges. */}
-        <Reveal delay={0.12} immediate className="mt-8 w-full">
+            Letters rise from a mask with a stagger, the reference's
+            letter-staggered load feel. useFitText measures the h1's full
+            scrollWidth, so per-letter spans keep the exact-fit guarantee. */}
+        <span className="block overflow-hidden mt-8 w-full">
           <h1
             ref={h1Ref}
+            aria-label="Wearition"
             className="font-display font-extrabold uppercase text-white leading-[0.85] tracking-tight whitespace-nowrap text-center text-[11vw]"
             style={{
               textShadow: '0 0 6px #ffffff38, 0 0 18px #ffffff1f',
             }}
           >
-            Wearition
+            {'Wearition'.split('').map((ch, i) => (
+              <motion.span
+                key={i}
+                aria-hidden="true"
+                className="inline-block will-change-transform"
+                initial={{ y: '112%' }}
+                animate={{ y: '0%' }}
+                transition={{ duration: 0.7, delay: 0.12 + i * 0.04, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {ch}
+              </motion.span>
+            ))}
           </h1>
-        </Reveal>
+        </span>
 
         <motion.p
           initial={{ opacity: 0, y: 24 }}

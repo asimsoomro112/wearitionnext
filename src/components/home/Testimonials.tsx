@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Quote } from 'lucide-react';
 import { SectionHeader } from './SectionHeader';
+import { FadeUp } from '@/components/Reveal';
 
 const REVIEWS = [
   {
@@ -59,6 +60,7 @@ export function Testimonials() {
         />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* stat card */}
+          <FadeUp>
           <div className="bg-[#fafafa] text-black rounded-[28px] p-10 md:p-12 flex flex-col justify-between min-h-[380px]">
             <div>
               <p className="font-display font-extrabold text-7xl md:text-8xl leading-none">4.9</p>
@@ -71,9 +73,11 @@ export function Testimonials() {
               </p>
             </div>
           </div>
+          </FadeUp>
 
           {/* slider */}
-          <div className="lg:col-span-2 relative">
+          <FadeUp delay={0.12} className="lg:col-span-2">
+          <div className="relative">
             <AnimatePresence mode="wait">
               <motion.div
                 key={active}
@@ -109,6 +113,7 @@ export function Testimonials() {
               ))}
             </div>
           </div>
+          </FadeUp>
         </div>
       </div>
     </section>

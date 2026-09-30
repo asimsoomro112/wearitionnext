@@ -1,4 +1,5 @@
 import { Marquee } from './Marquee';
+import { FadeUp } from '@/components/Reveal';
 
 const BRANDS = [
   'Gul Ahmed',
@@ -14,7 +15,10 @@ const BRANDS = [
 export function BrandsMarquee() {
   return (
     <section className="py-16 md:py-20 border-y border-white/[0.07] overflow-hidden">
-      <p className="eyebrow text-accent text-center mb-10">Premium brands we resell</p>
+      <FadeUp y={28}>
+        <p className="eyebrow text-accent text-center mb-10">Premium brands we resell</p>
+      </FadeUp>
+      <FadeUp delay={0.1} y={28}>
       <Marquee className="[mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
         {BRANDS.map((b) => (
           <span key={b} className="flex items-center shrink-0">
@@ -25,6 +29,7 @@ export function BrandsMarquee() {
           </span>
         ))}
       </Marquee>
+      </FadeUp>
     </section>
   );
 }

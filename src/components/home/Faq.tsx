@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import { SectionHeader } from './SectionHeader';
+import { FadeUp } from '@/components/Reveal';
 
 const FAQS = [
   {
@@ -46,8 +47,8 @@ export function Faq() {
           {FAQS.map((f, i) => {
             const isOpen = open === i;
             return (
+              <FadeUp key={i} delay={(i % 2) * 0.08 + Math.floor(i / 2) * 0.05} y={28}>
               <div
-                key={i}
                 className={`rounded-lg border transition-colors duration-300 ${
                   isOpen ? 'bg-[#1a1a1a] border-white/10' : 'bg-[#262626] border-transparent'
                 }`}
@@ -81,6 +82,7 @@ export function Faq() {
                   )}
                 </AnimatePresence>
               </div>
+              </FadeUp>
             );
           })}
         </div>
