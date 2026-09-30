@@ -33,7 +33,7 @@ export function ParallaxBanner() {
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
               className="font-display font-bold uppercase tracking-tight leading-[1.05] text-white text-4xl md:text-7xl max-w-4xl"
             >
-              Crafted for the modern man
+              Crafted for the modern wardrobe
             </motion.h2>
           </div>
         </div>

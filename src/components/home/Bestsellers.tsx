@@ -16,7 +16,7 @@ export function Bestsellers({ products }: BestsellersProps) {
           index="01"
           eyebrow="Bestsellers"
           title="Most loved right now"
-          intro="The suits Pakistan keeps reordering — curated from our best-reviewed pieces."
+          intro="Handpicked pieces from our latest collection."
           linkHref="/shop"
           linkLabel="Shop all"
         />

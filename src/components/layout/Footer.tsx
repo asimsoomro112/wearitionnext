@@ -32,7 +32,7 @@ export function Footer() {
               />
             </Link>
             <p className="mt-6 text-sm text-white/50 max-w-sm leading-relaxed">
-              Wear your identity. Curated eastern and contemporary menswear,
+              Wear your identity. Curated eastern and contemporary wear,
               delivered across Pakistan.
             </p>
             <a

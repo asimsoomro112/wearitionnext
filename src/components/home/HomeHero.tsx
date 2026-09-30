@@ -92,7 +92,7 @@ export function HomeHero({ products }: HomeHeroProps) {
 
         <Reveal delay={0.12} immediate className="mt-8">
           <h1
-            className="font-display font-extrabold uppercase text-white leading-[0.85] tracking-tight text-[15vw] md:text-[10rem] whitespace-nowrap"
+            className="font-display font-extrabold uppercase text-white leading-[0.85] tracking-tight text-[12vw] md:text-[10rem] whitespace-nowrap"
             style={{
               textShadow: '0 0 6px #ffffff38, 0 0 18px #ffffff1f',
             }}
