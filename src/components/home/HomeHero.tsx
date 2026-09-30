@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Marquee } from './Marquee';
+import { Reveal } from '@/components/Reveal';
 import { getOptimizedImage } from '@/lib/images';
 
 const FALLBACK_IMG =
@@ -89,17 +90,16 @@ export function HomeHero({ products }: HomeHeroProps) {
           </span>
         </motion.div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-          className="font-display font-extrabold uppercase text-white leading-[0.85] tracking-tight mt-8 text-[17vw] md:text-[11rem]"
-          style={{
-            textShadow: '0 0 6px #ffffff38, 0 0 18px #ffffff1f',
-          }}
-        >
-          Wearition
-        </motion.h1>
+        <Reveal delay={0.12} className="mt-8">
+          <h1
+            className="font-display font-extrabold uppercase text-white leading-[0.85] tracking-tight text-[15vw] md:text-[10rem] whitespace-nowrap"
+            style={{
+              textShadow: '0 0 6px #ffffff38, 0 0 18px #ffffff1f',
+            }}
+          >
+            Wearition
+          </h1>
+        </Reveal>
 
         <motion.p
           initial={{ opacity: 0, y: 24 }}

@@ -27,6 +27,13 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
     // Restore saved theme preference
     initTheme();
 
+    // If Firebase isn't configured (auth is null), don't hang on the loader.
+    if (!auth) {
+      setLoading(false);
+      setAppLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       if (user) {

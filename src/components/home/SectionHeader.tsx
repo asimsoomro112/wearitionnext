@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Reveal } from '@/components/Reveal';
 
 interface SectionHeaderProps {
   index: string;
@@ -18,9 +19,11 @@ export function SectionHeader({ index, eyebrow, title, intro, linkHref, linkLabe
             <span className="text-sm text-white/40 tracking-[0.2em]">[{index}]</span>
             <span className="eyebrow text-accent">{eyebrow}</span>
           </div>
-          <h2 className="font-display font-bold uppercase tracking-tight leading-[1.05] text-4xl md:text-6xl text-foreground max-w-3xl">
-            {title}
-          </h2>
+          <Reveal as="div">
+            <h2 className="font-display font-bold uppercase tracking-tight leading-[1.05] text-4xl md:text-6xl text-foreground max-w-3xl">
+              {title}
+            </h2>
+          </Reveal>
         </div>
         {(intro || linkHref) && (
           <div className="hidden md:block max-w-xs text-right shrink-0 pt-1">

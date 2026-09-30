@@ -1,6 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { Reveal } from '@/components/Reveal';
 
 export function Cta() {
   return (
@@ -13,15 +14,11 @@ export function Cta() {
         Wearition
       </div>
       <div className="section-shell relative text-center">
-        <motion.h2
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="font-display font-bold uppercase tracking-tight leading-[1.02] text-4xl md:text-6xl text-white max-w-4xl mx-auto"
-        >
-          Let's create something timeless.
-        </motion.h2>
+        <Reveal as="div" className="max-w-4xl mx-auto">
+          <h2 className="font-display font-bold uppercase tracking-tight leading-[1.02] text-4xl md:text-6xl text-white">
+            Let's create something timeless.
+          </h2>
+        </Reveal>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
