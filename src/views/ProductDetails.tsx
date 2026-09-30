@@ -207,7 +207,7 @@ function SizeGuideModal({ onClose }: { onClose: () => void }) {
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-foreground font-serif text-xl">Size Guide</h3>
+          <h3 className="text-foreground font-display font-bold uppercase tracking-wide text-xl">Size Guide</h3>
           <button onClick={onClose}><X className="w-5 h-5 text-foreground/40 hover:text-foreground" /></button>
         </div>
         <table className="w-full text-sm">
@@ -273,7 +273,7 @@ function StickyMobileCTA({
                      transition-all duration-300 ${
                        isOutOfStock
                          ? 'bg-foreground/10 text-foreground/30 cursor-not-allowed'
-                         : 'bg-accent text-black active:scale-95 shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)]'
+                         : 'bg-accent text-white active:scale-95 shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)]'
                      }`}
         >
           {isOutOfStock ? 'Out of Stock' : 'Buy Now'}
@@ -457,7 +457,7 @@ export function ProductDetails() {
       <div className="w-full relative bg-background">
 
         {/* ── Breadcrumb ─────────────────────────────────────────────────── */}
-        <div className="w-full max-w-[1600px] mx-auto px-6 pt-40 pb-2 flex items-center gap-2 text-[10px] text-foreground/30 uppercase tracking-widest">
+        <div className="w-full max-w-[1600px] mx-auto px-6 pt-32 pb-2 flex items-center gap-2 text-[10px] text-foreground/30 uppercase tracking-widest">
           <span className="hover:text-foreground/60 cursor-pointer transition-colors">Home</span>
           <ChevronRight className="w-3 h-3" />
           <span className="hover:text-foreground/60 cursor-pointer transition-colors">Collection</span>
@@ -486,7 +486,7 @@ export function ProductDetails() {
                   alt={`${product.title} – view ${idx + 1}`}
                   referrerPolicy="no-referrer"
                   loading={idx === 0 ? 'eager' : 'lazy'}
-                  className="w-full h-full object-cover md:object-contain bg-[#f7f5f2] 
+                  className="w-full h-full object-cover md:object-contain bg-[#0a0a0a] 
                              transition-transform duration-700 group-hover:scale-[1.04]"
                 />
                 {/* Zoom hint */}
@@ -529,7 +529,7 @@ export function ProductDetails() {
               <ViewersBadge count={viewerCount} />
 
               {/* ── Title ─────────────────────────────────────────────── */}
-              <TextReveal as="h1" className="font-serif text-3xl md:text-5xl text-foreground leading-[1.1] mb-4">
+              <TextReveal as="h1" className="font-display font-bold uppercase tracking-tight text-3xl md:text-5xl text-foreground leading-[1.05] mb-4">
                 {product.title}
               </TextReveal>
 

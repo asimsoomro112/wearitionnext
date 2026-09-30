@@ -72,7 +72,7 @@ export function Contact() {
       />
       <div className="max-w-[1000px] mx-auto">
         <header className="mb-20 text-center">
-          <TextReveal as="h1" className="font-serif text-4xl sm:text-5xl md:text-6xl text-foreground mb-6 text-center">
+          <TextReveal as="h1" className="font-display text-4xl sm:text-5xl md:text-6xl text-foreground mb-6 text-center">
             Get in Touch
           </TextReveal>
           <p className="text-foreground/60 text-sm font-sans max-w-lg mx-auto">
@@ -105,7 +105,7 @@ export function Contact() {
           className="bg-background-secondary/20 p-8 md:p-12 border border-white/5"
         >
           <div className="max-w-2xl mx-auto">
-            <h2 className="font-serif text-3xl mb-8 text-center">Send a Message</h2>
+            <h2 className="font-display text-3xl mb-8 text-center">Send a Message</h2>
             <form onSubmit={handleSubmit} className="space-y-6 flex flex-col">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>

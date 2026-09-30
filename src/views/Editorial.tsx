@@ -71,7 +71,7 @@ export function Editorial() {
           className="relative z-10 text-center px-6"
         >
           <span className="text-accent uppercase tracking-[0.4em] text-[10px] mb-6 block font-bold">New Season Arrivals</span>
-          <TextReveal as="h1" className="font-serif text-5xl md:text-8xl lg:text-[12rem] text-white uppercase tracking-tighter leading-[0.9] mb-8 text-center drop-shadow-2xl">
+          <TextReveal as="h1" className="font-display text-5xl md:text-8xl lg:text-[12rem] text-white uppercase tracking-tighter leading-[0.9] mb-8 text-center drop-shadow-2xl">
             Identity
           </TextReveal>
           <p className="text-white/60 font-sans max-w-xl mx-auto text-xs md:text-sm leading-relaxed uppercase tracking-[0.3em] font-light">
@@ -119,7 +119,7 @@ export function Editorial() {
       <section className="py-32 px-6 md:px-12 lg:px-24 max-w-[1800px] mx-auto">
         <div className="mb-20 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div className="max-w-2xl">
-            <h2 className="font-serif text-5xl md:text-7xl text-foreground mb-8">Curated Curation</h2>
+            <h2 className="font-display text-5xl md:text-7xl text-foreground mb-8">Curated Curation</h2>
             <p className="text-foreground/50 text-sm md:text-base font-light tracking-wide leading-relaxed">
               Every piece in our collection is hand-selected to represent the pinnacle of modern luxury. From the finest fabrics to the most precise silhouettes, we redefine what it means to wear your identity.
             </p>
@@ -148,7 +148,7 @@ export function Editorial() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent md:opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
                     <p className="text-[10px] text-accent font-bold uppercase tracking-widest mb-2">View Detail</p>
-                    <h3 className="text-white text-2xl font-serif uppercase leading-none">{product.title}</h3>
+                    <h3 className="text-white text-2xl font-display uppercase leading-none">{product.title}</h3>
                   </div>
                 </div>
               </Link>
@@ -160,8 +160,8 @@ export function Editorial() {
       {/* Visual Quote Section */}
       <section className="py-40 bg-foreground/5 border-y border-white/5">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <span className="text-accent text-3xl font-serif mb-8 block font-italic">"</span>
-          <h2 className="font-serif text-2xl md:text-5xl text-foreground leading-snug mb-12 italic">
+          <span className="text-accent text-3xl font-display mb-8 block font-italic">"</span>
+          <h2 className="font-display text-2xl md:text-5xl text-foreground leading-snug mb-12 italic">
             "Fashion is not just what you wear, it's the narrative you choose to tell the world about who you are."
           </h2>
           <div className="w-12 h-px bg-accent mx-auto mb-6"></div>
@@ -177,7 +177,7 @@ export function Editorial() {
           viewport={{ once: true }}
         >
           <span className="text-[10px] uppercase tracking-[0.5em] text-accent block mb-6 font-bold">Join the Vision</span>
-          <TextReveal as="h3" className="font-serif text-4xl md:text-8xl text-foreground mb-12 uppercase tracking-tighter text-center">
+          <TextReveal as="h3" className="font-display text-4xl md:text-8xl text-foreground mb-12 uppercase tracking-tighter text-center">
             Your Journey Starts Here
           </TextReveal>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">

@@ -1,132 +1,168 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { ShoppingBag, Search, Menu, User, Heart, Sun, Moon, ChevronDown } from 'lucide-react';
+import { ShoppingBag, Search, User, Heart, Sun, Moon, X, ArrowUpRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUIStore } from '../../store/uiStore';
 import { useCartStore } from '../../store/cartStore';
 import { triggerHaptic } from '@/lib/haptics';
-import { db } from '@/lib/firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore';
 import logo from '../../assets/navbar_logo.png';
 
+const MENU_LINKS = [
+  { label: 'Home', href: '/' },
+  { label: 'Shop', href: '/shop' },
+  { label: 'Collections', href: '/editorial' },
+  { label: 'Brands', href: '/brands' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+];
+
 export function Navbar() {
-  const { openCart, openMobileMenu, isDarkMode, toggleDarkMode, toggleSearch } = useUIStore();
+  const { openCart, isDarkMode, toggleDarkMode, toggleSearch } = useUIStore();
   const { items } = useCartStore();
-  const [showBrands, setShowBrands] = useState(false);
-  const [dynamicBrands, setDynamicBrands] = useState<string[]>([]);
+  const [menuOpen, setMenuOpen] = useState(false);
   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
-  useEffect(() => {
-    async function fetchBrands() {
-      try {
-        const q = query(collection(db, "products"), where("isPublished", "==", true));
-        const snap = await getDocs(q);
-        const brandMap = new Map<string, string>();
-        snap.docs.forEach(doc => {
-          const b = doc.data().brand;
-          if (b) {
-            const normalized = b.trim().toLowerCase();
-            if (!brandMap.has(normalized)) {
-              brandMap.set(normalized, b.trim());
-            }
-          }
-        });
-        setDynamicBrands(Array.from(brandMap.values()).sort());
-      } catch (e) {
-        console.error("Error fetching brands for navbar", e);
-      }
-    }
-    fetchBrands();
-  }, []);
-
-  const handleToggleMenu = () => {
+  const handleOpenMenu = () => {
     triggerHaptic('light');
-    openMobileMenu();
-  };
-
-  const handleToggleTheme = () => {
-    triggerHaptic('medium');
-    toggleDarkMode();
+    setMenuOpen(true);
   };
 
   return (
-    <motion.header 
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 md:px-12 liquid-glass text-foreground border-none m-4 rounded-2xl shadow-2xl"
-    >
-      <div className="flex items-center gap-6">
-        <Link href="/shop" className="hidden md:block uppercase text-xs tracking-widest md:hover:opacity-70 transition-opacity">Shop</Link>
-        <Link href="/editorial" className="hidden md:block uppercase text-xs tracking-widest md:hover:opacity-70 transition-opacity">Collections</Link>
-        
-        <div className="relative hidden md:block">
-          <button 
-            onClick={() => setShowBrands(!showBrands)}
-            onMouseEnter={() => setShowBrands(true)}
-            className="uppercase text-xs tracking-widest md:hover:opacity-70 transition-opacity flex items-center gap-1"
-          >
-            Brands <ChevronDown className={`w-3 h-3 transition-transform ${showBrands ? 'rotate-180' : ''}`} />
-          </button>
-          
-          <AnimatePresence>
-            {showBrands && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                onMouseLeave={() => setShowBrands(false)}
-                className="absolute top-full left-0 mt-4 p-6 bg-background/95 backdrop-blur-xl border border-foreground/10 rounded-xl shadow-2xl grid grid-cols-2 gap-x-12 gap-y-3 min-w-[400px]"
-              >
-                {dynamicBrands.length > 0 ? (
-                  dynamicBrands.map(brand => (
-                    <Link 
-                      key={brand}
-                      href={`/brands?brand=${brand.toLowerCase()}`}
-                      onClick={() => setShowBrands(false)}
-                      className="text-[10px] uppercase tracking-widest text-foreground/60 hover:text-accent transition-colors"
-                    >
-                      {brand}
-                    </Link>
-                  ))
-                ) : (
-                  <span className="col-span-2 text-[10px] text-foreground/20 italic">Curating brands...</span>
-                )}
-                <div className="col-span-2 pt-4 border-t border-white/5 mt-2">
-                  <Link href="/brands" onClick={() => setShowBrands(false)} className="text-[9px] uppercase tracking-[0.3em] text-accent font-bold hover:opacity-70">View All Brands —&gt;</Link>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+    <>
+      <motion.header
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
+        className="fixed top-0 left-0 right-0 z-50 mix-blend-difference"
+      >
+        <div className="flex items-center justify-between px-6 py-5 md:px-12 text-white">
+          <Link href="/" className="flex items-center" aria-label="Wearition home">
+            <img
+              src={typeof logo === 'string' ? logo : logo.src}
+              alt="Wearition"
+              className="h-10 md:h-12 w-auto object-contain brightness-0 invert"
+            />
+          </Link>
+
+          <div className="flex items-center gap-5 md:gap-7">
+            <button
+              onClick={toggleSearch}
+              aria-label="Search"
+              className="hover:opacity-60 transition-opacity"
+            >
+              <Search className="w-5 h-5" />
+            </button>
+            <Link href="/account" aria-label="Account" className="hidden sm:block hover:opacity-60 transition-opacity">
+              <User className="w-5 h-5" />
+            </Link>
+            <Link href="/wishlist" aria-label="Wishlist" className="hover:opacity-60 transition-opacity">
+              <Heart className="w-5 h-5" />
+            </Link>
+            <button
+              onClick={openCart}
+              aria-label="Cart"
+              className="relative hover:opacity-60 transition-opacity"
+            >
+              <ShoppingBag className="w-5 h-5" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1.5 -right-2 bg-white text-black text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+            <button
+              onClick={handleOpenMenu}
+              className="eyebrow hover:opacity-60 transition-opacity ml-1"
+            >
+              Menu
+            </button>
+          </div>
         </div>
-        
-        <button className="md:hidden active:opacity-70" onClick={handleToggleMenu}>
-          <Menu className="w-6 h-6" />
-        </button>
-        
-        <button onClick={handleToggleTheme} className="md:hover:opacity-70 transition-opacity md:hover:text-accent">
-          {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-        </button>
-      </div>
+      </motion.header>
 
-      <Link href="/" className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center">
-        <img src={typeof logo === 'string' ? logo : logo.src} alt="Wearition" className="h-16 md:h-24 w-auto object-contain brightness-110" />
-      </Link>
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35 }}
+            className="fixed inset-0 z-[60] bg-[#030303]/95 backdrop-blur-[200px]"
+          >
+            {/* faint grid texture */}
+            <div
+              className="absolute inset-0 opacity-[0.15]"
+              style={{
+                backgroundImage:
+                  'linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)',
+                backgroundSize: '72px 72px',
+              }}
+            />
+            <div className="relative h-full flex flex-col px-6 md:px-12 py-5">
+              <div className="flex items-center justify-between text-white">
+                <img
+                  src={typeof logo === 'string' ? logo : logo.src}
+                  alt="Wearition"
+                  className="h-10 md:h-12 w-auto object-contain brightness-0 invert"
+                />
+                <button
+                  onClick={() => setMenuOpen(false)}
+                  aria-label="Close menu"
+                  className="flex items-center gap-2 eyebrow hover:opacity-60 transition-opacity"
+                >
+                  Close <X className="w-5 h-5" />
+                </button>
+              </div>
 
-      <div className="flex items-center gap-4 md:gap-6">
-        <button className="md:hover:text-accent active:text-accent" onClick={toggleSearch}><Search className="w-5 h-5" /></button>
-        <Link href="/account" className="hidden md:block md:hover:text-accent"><User className="w-5 h-5" /></Link>
-        <Link href="/wishlist" className="md:hover:text-accent active:text-accent"><Heart className="w-5 h-5" /></Link>
-        <button className="relative md:hover:text-accent active:text-accent" onClick={openCart}>
-          <ShoppingBag className="w-5 h-5" />
-          {cartCount > 0 && (
-            <span className="absolute -top-1 -right-2 bg-foreground text-background text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
-              {cartCount}
-            </span>
-          )}
-        </button>
-      </div>
-    </motion.header>
+              <nav className="flex-1 flex flex-col justify-center gap-1 md:gap-2">
+                {MENU_LINKS.map((link, i) => (
+                  <div key={link.href} className="overflow-hidden">
+                    <motion.div
+                      initial={{ y: '110%' }}
+                      animate={{ y: 0 }}
+                      exit={{ y: '110%' }}
+                      transition={{ duration: 0.55, delay: 0.06 * i, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <Link
+                        href={link.href}
+                        onClick={() => setMenuOpen(false)}
+                        className="group flex items-center gap-4 text-white font-display font-bold uppercase leading-[1.05] text-[13vw] md:text-[5.5rem] tracking-tight hover:text-accent transition-colors duration-300"
+                      >
+                        <span className="text-sm md:text-base font-sans font-normal text-white/30 tracking-[0.2em]">
+                          0{i + 1}
+                        </span>
+                        {link.label}
+                        <ArrowUpRight className="w-8 h-8 md:w-12 md:h-12 opacity-0 group-hover:opacity-100 transition-opacity text-accent" />
+                      </Link>
+                    </motion.div>
+                  </div>
+                ))}
+              </nav>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ delay: 0.4 }}
+                className="flex items-center justify-between text-white/50 text-xs uppercase tracking-[0.18em]"
+              >
+                <button
+                  onClick={() => {
+                    triggerHaptic('medium');
+                    toggleDarkMode();
+                  }}
+                  className="flex items-center gap-2 hover:text-white transition-colors"
+                >
+                  {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                  {isDarkMode ? 'Light mode' : 'Dark mode'}
+                </button>
+                <span className="hidden md:block">Wear your identity</span>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

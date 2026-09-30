@@ -11,12 +11,12 @@ export function Careers() {
       <div className="max-w-[1000px] mx-auto">
         <header className="mb-20">
           <span className="text-accent text-[10px] uppercase tracking-[0.4em] mb-4 block font-bold">Join The House</span>
-          <TextReveal as="h1" className="font-serif text-4xl sm:text-5xl md:text-7xl text-foreground mb-8">Careers</TextReveal>
+          <TextReveal as="h1" className="font-display text-4xl sm:text-5xl md:text-7xl text-foreground mb-8">Careers</TextReveal>
           <div className="h-px w-full bg-border-color/30"></div>
         </header>
 
         <div className="mb-24">
-          <h2 className="font-serif text-3xl mb-8">Shape the Future of Luxury</h2>
+          <h2 className="font-display text-3xl mb-8">Shape the Future of Luxury</h2>
           <p className="text-sm text-foreground/60 leading-loose max-w-2xl mb-12">
             At Wearition, we are a collective of visionaries, artisans, and innovators. We believe in pushing the boundaries of what's possible in fashion and technology. If you are passionate about excellence and innovation, we want to hear from you.
           </p>
@@ -38,7 +38,7 @@ export function Careers() {
         </div>
 
         <div className="bg-accent/5 p-12 text-center border border-accent/10">
-          <h2 className="font-serif text-2xl mb-6">Current Opportunities</h2>
+          <h2 className="font-display text-2xl mb-6">Current Opportunities</h2>
           <p className="text-sm text-foreground/60 mb-8">We are currently building our core team. Send your portfolio and CV to</p>
           <a href="mailto:careers@wearition.store" className="text-accent font-bold hover:underline">careers@wearition.store</a>
           <p className="mt-8 text-[10px] uppercase tracking-widest text-foreground/30 font-bold">Open Roles: Design, Marketing, Logistics, Tech</p>

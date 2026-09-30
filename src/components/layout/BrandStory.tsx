@@ -32,7 +32,7 @@ export function BrandStory() {
             The Essence of Wearition
           </h2>
           <div className="max-w-3xl mx-auto space-y-6">
-            <p className="font-serif text-xl md:text-3xl lg:text-4xl leading-tight text-foreground uppercase tracking-wider">
+            <p className="font-display text-xl md:text-3xl lg:text-4xl leading-tight text-foreground uppercase tracking-wider">
               Where heritage meets the horizon of <span className="text-accent italic font-['Great_Vibes'] capitalize tracking-normal">modernity</span>.
             </p>
             <p className="font-sans text-sm md:text-base text-foreground/60 leading-relaxed max-w-2xl mx-auto">
@@ -44,7 +44,7 @@ export function BrandStory() {
           </div>
 
           {/* Decorative Quote Mark */}
-          <div className="absolute -top-10 -left-4 md:-left-12 text-9xl text-accent/10 font-serif pointer-events-none select-none">
+          <div className="absolute -top-10 -left-4 md:-left-12 text-9xl text-accent/10 font-display pointer-events-none select-none">
             &ldquo;
           </div>
         </motion.div>

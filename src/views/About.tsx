@@ -11,7 +11,7 @@ export function About() {
       />
       <div className="max-w-[800px] mx-auto">
         <header className="mb-12 text-center">
-          <TextReveal as="h1" className="font-serif text-4xl sm:text-5xl md:text-[4rem] text-foreground mb-6 text-center">
+          <TextReveal as="h1" className="font-display text-4xl sm:text-5xl md:text-[4rem] text-foreground mb-6 text-center">
             Our Story
           </TextReveal>
         </header>

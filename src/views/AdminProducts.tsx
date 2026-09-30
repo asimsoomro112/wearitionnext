@@ -219,7 +219,7 @@ export function AdminProducts() {
     <div className="max-w-full relative">
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 pb-6 border-b border-black/10 gap-4">
         <div className="flex items-center gap-6 flex-1 max-w-xl">
-          <h1 className="text-2xl md:text-3xl font-serif text-foreground whitespace-nowrap">Products</h1>
+          <h1 className="text-2xl md:text-3xl font-display text-foreground whitespace-nowrap">Products</h1>
           <div className="relative flex-1 group">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-black/30 group-focus-within:text-accent transition-colors" />
             <input 
@@ -313,7 +313,7 @@ export function AdminProducts() {
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
             <div className="bg-white border-b border-black/10 px-8 py-6 flex items-center justify-between">
-              <h2 className="text-xl font-serif text-[#0a0a0a]">{editingId ? 'Edit Product' : 'Add New Product'}</h2>
+              <h2 className="text-xl font-display text-[#0a0a0a]">{editingId ? 'Edit Product' : 'Add New Product'}</h2>
               <button onClick={() => setIsModalOpen(false)} className="text-[#0a0a0a]/40 hover:text-[#0a0a0a] transition-colors">
                 <X className="w-6 h-6" />
               </button>

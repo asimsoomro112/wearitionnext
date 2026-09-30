@@ -129,7 +129,7 @@ export function MobileBottomBar() {
           >
             <div className="text-center mb-6">
               <span className="text-accent text-[8px] uppercase tracking-[0.4em] font-bold mb-2 block">Luxury Houses</span>
-              <h3 className="font-serif text-xl text-foreground uppercase tracking-widest">Select Brand</h3>
+              <h3 className="font-display text-xl text-foreground uppercase tracking-widest">Select Brand</h3>
             </div>
             <div className="grid grid-cols-2 gap-3 max-h-[40vh] overflow-y-auto pr-2 hide-scrollbar">
               {dynamicBrands.length > 0 ? (

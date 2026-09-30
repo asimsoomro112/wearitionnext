@@ -223,8 +223,8 @@ export function Checkout() {
   if (items.length === 0) {
     return (
       <div className="w-full pt-40 px-6 pb-32 bg-background min-h-[80vh] flex flex-col items-center justify-center">
-        <p className="font-serif text-5xl text-foreground/10 mb-6">◇</p>
-        <h1 className="font-serif text-3xl mb-4">Your Bag is Empty</h1>
+        <p className="font-display font-bold uppercase text-5xl text-foreground/10 mb-6">◇</p>
+        <h1 className="font-display font-bold uppercase text-3xl mb-4">Your Bag is Empty</h1>
         <p className="text-foreground/50 mb-10 font-sans text-sm">Add something beautiful to your bag first.</p>
         <Link href="/shop" className="px-10 py-4 bg-foreground text-background text-xs uppercase tracking-widest hover:bg-accent transition-colors">
           Explore Collection
@@ -241,7 +241,7 @@ export function Checkout() {
       <div className="max-w-[1200px] mx-auto">
         <motion.header initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
           <SEO title="Checkout" description="Complete your WEARITION order securely." />
-          <h1 className="font-serif text-4xl md:text-5xl text-foreground">Checkout</h1>
+          <h1 className="font-display font-bold uppercase text-4xl md:text-5xl text-foreground">Checkout</h1>
           <p className="text-foreground/40 text-sm font-sans mt-2">Secure & confidential</p>
         </motion.header>
 
@@ -257,7 +257,7 @@ export function Checkout() {
                   className="bg-foreground/5 p-12 rounded-2xl border border-white/5 text-center"
                 >
                   <User className="w-12 h-12 text-accent mx-auto mb-6 opacity-50" />
-                  <h2 className="font-serif text-2xl mb-4">How would you like to proceed?</h2>
+                  <h2 className="font-display font-bold uppercase text-2xl mb-4">How would you like to proceed?</h2>
                   <p className="text-foreground/40 text-sm mb-10 max-w-sm mx-auto">Sign in to track your orders and use saved addresses, or proceed as a guest.</p>
                   
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -415,7 +415,7 @@ export function Checkout() {
                   <div key={`${item.id}-${item.size}-${item.color}`} className="flex gap-4 items-center">
                     <div className="w-16 h-20 bg-foreground/5 relative overflow-hidden rounded-sm">
                       {item.image && <img src={getOptimizedImage(item.image)} alt={item.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />}
-                      <span className="absolute -top-1.5 -right-1.5 bg-accent text-black w-5 h-5 flex items-center justify-center rounded-full text-[10px] font-bold">{item.quantity}</span>
+                      <span className="absolute -top-1.5 -right-1.5 bg-accent text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] font-bold">{item.quantity}</span>
                     </div>
                     <div className="flex-1">
                       <h4 className="text-xs font-sans uppercase tracking-wide text-foreground">{item.title}</h4>

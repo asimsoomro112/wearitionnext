@@ -11,7 +11,6 @@ import { Toaster } from "sonner";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CartDrawer } from "@/components/layout/CartDrawer";
-import { MobileMenu } from "@/components/layout/MobileMenu";
 import { MobileBottomBar } from "@/components/layout/MobileBottomBar";
 import { SearchOverlay } from "@/components/layout/SearchOverlay";
 import { AIStyleAssistant } from "@/components/layout/AIStyleAssistant";
@@ -70,7 +69,6 @@ export function StoreLayout({ children }: { children: React.ReactNode }) {
     <>
       <Navbar />
       <CartDrawer />
-      <MobileMenu />
       <SearchOverlay />
       <main className="min-h-screen">{children}</main>
       <Footer />

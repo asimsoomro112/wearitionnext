@@ -18,9 +18,9 @@ const SORT_OPTIONS = [
 function ProductSkeleton() {
   return (
     <div className="animate-pulse">
-      <div className="aspect-[3/4] bg-foreground/5 mb-4 rounded-sm" />
-      <div className="h-3 bg-foreground/5 rounded mb-2 w-3/4" />
-      <div className="h-3 bg-foreground/5 rounded w-1/2" />
+      <div className="aspect-[3/4] bg-white/5 mb-4 rounded-xl" />
+      <div className="h-3 bg-white/5 rounded mb-2 w-3/4" />
+      <div className="h-3 bg-white/5 rounded w-1/2" />
     </div>
   );
 }
@@ -117,36 +117,40 @@ export function Shop() {
   };
 
   return (
-    <div className="w-full pt-40 px-6 md:px-12 pb-32 bg-background">
+    <div className="w-full pt-32 md:pt-40 px-6 md:px-12 pb-32 bg-background">
       <SEO 
         title={brandFilter ? `${brandFilter.charAt(0).toUpperCase() + brandFilter.slice(1)} Collection` : categoryFilter ? `${categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1)} Collection` : 'Shop the Collection'}
         description="Explore WEARITION's curated collection of luxury fashion. Premium menswear and womenswear designed for the modern visionary."
       />
       <div className="max-w-[1440px] mx-auto">
-        <header className="mb-12 text-center">
+        <header className="mb-12">
+          <div className="flex items-center gap-4 mb-5">
+            <span className="text-sm text-white/40 tracking-[0.2em]">[01]</span>
+            <span className="eyebrow text-accent">Shop</span>
+          </div>
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="font-serif text-4xl sm:text-5xl md:text-[4rem] leading-tight tracking-tight text-foreground mb-4"
+            className="font-display font-bold uppercase tracking-tight leading-[1.02] text-5xl md:text-7xl text-foreground mb-4"
           >
-            {brandFilter ? brandFilter.toUpperCase() : categoryFilter ? categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1) : 'The Collection'}
+            {brandFilter ? brandFilter : categoryFilter ? categoryFilter : 'The Collection'}
           </motion.h1>
-          <p className="text-foreground/50 text-sm max-w-xl mx-auto font-sans">
+          <p className="text-muted text-sm max-w-xl">
             {loading ? 'Curating your collection...' : `${products.length} piece${products.length !== 1 ? 's' : ''} available`}
           </p>
         </header>
 
         {/* Category Pills */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
+        <div className="flex flex-wrap items-center gap-3 mb-10">
           {categories.map((cat) => (
             <button
               key={cat.name}
               onClick={() => setCategory(cat.value)}
-              className={`px-5 py-2.5 rounded-full border text-xs tracking-widest uppercase font-medium transition-all duration-300 ${
+              className={`px-5 py-2.5 rounded-full border text-xs tracking-[0.14em] uppercase font-medium transition-all duration-300 ${
                 categoryFilter === cat.value
-                  ? 'bg-foreground text-background border-foreground scale-105'
-                  : 'bg-transparent border-foreground/20 text-foreground/60 hover:border-foreground/50 hover:text-foreground'
+                  ? 'bg-accent text-white border-accent shadow-[0_0_20px_var(--accent-glow)]'
+                  : 'bg-transparent border-white/15 text-white/60 hover:border-white/40 hover:text-white'
               }`}
             >
               {cat.name}
@@ -155,14 +159,14 @@ export function Shop() {
         </div>
 
         {/* Sort Bar */}
-        <div className="flex justify-between items-center border-y border-foreground/10 py-5 mb-14 text-xs uppercase tracking-widest text-foreground/60">
+        <div className="flex justify-between items-center border-y border-white/10 py-5 mb-12 text-xs uppercase tracking-[0.18em] text-white/50">
           <span>{loading ? '...' : `${sortedProducts.length} Results`}</span>
           <div className="flex items-center gap-3">
             <span className="hidden md:block">Sort:</span>
             <select
               value={sortBy}
               onChange={e => setSortBy(e.target.value)}
-              className="bg-transparent border-none outline-none text-foreground/80 cursor-pointer uppercase text-xs tracking-widest"
+              className="bg-transparent border-none outline-none text-white/80 cursor-pointer uppercase text-xs tracking-[0.18em]"
             >
               {SORT_OPTIONS.map(o => <option key={o.value} value={o.value} className="bg-[#0a0a0a]">{o.label}</option>)}
             </select>
@@ -171,7 +175,7 @@ export function Shop() {
 
         {/* Product Grid */}
         {loading ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {Array.from({ length: 8 }).map((_, i) => <ProductSkeleton key={i} />)}
           </div>
         ) : products.length === 0 ? (
@@ -180,22 +184,20 @@ export function Shop() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center py-32"
           >
-            <p className="font-serif text-5xl text-foreground/10 mb-6">◇</p>
-            <p className="font-serif text-3xl text-foreground/30 mb-4">Coming Soon</p>
-            <p className="text-foreground/40 text-sm font-sans mb-10">
+            <p className="font-display font-bold uppercase text-4xl text-white/10 mb-6">Coming soon</p>
+            <p className="text-white/40 text-sm mb-10">
               This collection is being carefully curated. Please check back soon.
             </p>
             <button onClick={() => {
-              const params = new URLSearchParams();
               router.push(`${pathname}`);
-            }} className="text-xs uppercase tracking-widest border-b border-foreground/30 pb-1 hover:text-accent hover:border-accent transition-colors">
+            }} className="text-xs uppercase tracking-[0.2em] border-b border-white/30 pb-1 hover:text-accent hover:border-accent transition-colors">
               Clear All Filters
             </button>
           </motion.div>
         ) : (
           <motion.div
             layout
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12"
+            className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
           >
             {sortedProducts.map((product, i) => (
               <ProductCard key={product.id} product={product} index={i} />

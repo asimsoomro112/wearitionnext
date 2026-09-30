@@ -24,7 +24,7 @@ export function OrderSuccess() {
           <Check className="w-10 h-10 text-green-500" />
         </div>
 
-        <h1 className="font-serif text-4xl sm:text-5xl tracking-tight text-foreground mb-6">
+        <h1 className="font-display text-4xl sm:text-5xl tracking-tight text-foreground mb-6">
           Order Confirmed!
         </h1>
 

@@ -9,7 +9,7 @@ export function Privacy() {
       <div className="max-w-[1000px] mx-auto">
         <header className="mb-20">
           <span className="text-accent text-[10px] uppercase tracking-[0.4em] mb-4 block font-bold">Legal</span>
-          <TextReveal as="h1" className="font-serif text-4xl sm:text-5xl md:text-7xl text-foreground mb-8">Privacy Policy</TextReveal>
+          <TextReveal as="h1" className="font-display text-4xl sm:text-5xl md:text-7xl text-foreground mb-8">Privacy Policy</TextReveal>
           <div className="h-px w-full bg-border-color/30"></div>
         </header>
 

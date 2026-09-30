@@ -40,7 +40,7 @@ export function Wishlist() {
     <div className="w-full pt-40 px-6 md:px-12 pb-32 bg-background min-h-screen">
       <div className="max-w-[1440px] mx-auto">
         <header className="mb-20 text-center">
-          <h1 className="font-serif text-[4rem] leading-none tracking-tight text-foreground mb-6">Your Wishlist</h1>
+          <h1 className="font-display text-[4rem] leading-none tracking-tight text-foreground mb-6">Your Wishlist</h1>
           <p className="text-foreground/60 text-sm max-w-xl mx-auto font-sans">
             {wishlistIds.length} items saved
           </p>

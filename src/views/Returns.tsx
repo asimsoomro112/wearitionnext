@@ -14,7 +14,7 @@ export function Returns() {
       <div className="max-w-[1000px] mx-auto">
         <header className="mb-20">
           <span className="text-accent text-[10px] uppercase tracking-[0.4em] mb-4 block font-bold">Policy & Care</span>
-          <TextReveal as="h1" className="font-serif text-4xl sm:text-5xl md:text-7xl text-foreground mb-8">
+          <TextReveal as="h1" className="font-display text-4xl sm:text-5xl md:text-7xl text-foreground mb-8">
             Returns & Exchanges
           </TextReveal>
           <div className="h-px w-full bg-border-color/30"></div>
@@ -76,7 +76,7 @@ export function Returns() {
         </div>
 
         <div className="bg-background-secondary/20 border border-white/5 p-10 md:p-16 rounded-sm">
-          <h3 className="font-serif text-2xl md:text-3xl mb-8 text-foreground text-center">Process for Exchange</h3>
+          <h3 className="font-display text-2xl md:text-3xl mb-8 text-foreground text-center">Process for Exchange</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               { step: "01", title: "Documentation", desc: "Take clear photos or a video of the defect immediately upon unboxing." },
@@ -84,7 +84,7 @@ export function Returns() {
               { step: "03", title: "Verification", desc: "Our team will verify the claim and arrange for a pick-up or exchange." }
             ].map((item, i) => (
               <div key={i} className="flex flex-col">
-                <span className="text-accent text-3xl font-serif mb-4">{item.step}</span>
+                <span className="text-accent text-3xl font-display mb-4">{item.step}</span>
                 <h4 className="uppercase text-[10px] tracking-widest mb-3 font-bold">{item.title}</h4>
                 <p className="text-xs text-foreground/50 leading-relaxed font-sans">{item.desc}</p>
               </div>

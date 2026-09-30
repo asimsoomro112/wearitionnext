@@ -14,7 +14,7 @@ const BrandsMarquee = () => {
     <section className="py-20 bg-background/50 overflow-hidden border-y border-border-color/30 my-20">
       <div className="container mx-auto px-6 mb-10 text-center">
         <span className="text-accent text-[9px] uppercase tracking-[0.4em] font-bold mb-4 block">Curated Excellence</span>
-        <h2 className="font-serif text-2xl md:text-4xl text-foreground uppercase tracking-widest">Our Brand Partners</h2>
+        <h2 className="font-display text-2xl md:text-4xl text-foreground uppercase tracking-widest">Our Brand Partners</h2>
       </div>
       
       <div className="flex flex-col gap-10">
@@ -25,7 +25,7 @@ const BrandsMarquee = () => {
         >
           {[...brands, ...brands].map((brand, i) => (
             <div key={i} className="flex items-center gap-6 group cursor-default">
-              <span className="text-3xl md:text-5xl font-serif text-foreground/10 group-hover:text-accent transition-colors duration-500 uppercase tracking-tighter">
+              <span className="text-3xl md:text-5xl font-display text-foreground/10 group-hover:text-accent transition-colors duration-500 uppercase tracking-tighter">
                 {brand}
               </span>
               <div className="w-1.5 h-1.5 rounded-full bg-accent/20" />
@@ -44,12 +44,12 @@ export function Sustainability() {
       <div className="max-w-[1000px] mx-auto">
         <header className="mb-20 text-center">
           <span className="text-accent text-[10px] uppercase tracking-[0.4em] mb-4 block font-bold">Maison Commitment</span>
-          <TextReveal as="h1" className="font-serif text-4xl sm:text-5xl md:text-7xl text-foreground mb-8">Sustainability</TextReveal>
+          <TextReveal as="h1" className="font-display text-4xl sm:text-5xl md:text-7xl text-foreground mb-8">Sustainability</TextReveal>
           <div className="h-px w-32 bg-accent mx-auto"></div>
         </header>
 
         <div className="max-w-3xl mx-auto mb-32 text-center">
-           <h2 className="font-serif text-3xl md:text-4xl mb-10">Conscious Reselling</h2>
+           <h2 className="font-display text-3xl md:text-4xl mb-10">Conscious Reselling</h2>
            <p className="text-base text-foreground/60 leading-loose mb-12">
              At Wearition, we believe the most sustainable garment is the one already in existence. By curating and reselling the finest Pakistani labels, we extend the lifecycle of premium fashion and reduce the environmental impact of new production.
            </p>
@@ -76,7 +76,7 @@ export function Sustainability() {
 
         <div className="bg-background-secondary/20 p-12 md:p-20 text-center border border-white/5">
           <Recycle className="w-12 h-12 text-accent mx-auto mb-8" />
-          <h2 className="font-serif text-3xl mb-6">A Circular Future</h2>
+          <h2 className="font-display text-3xl mb-6">A Circular Future</h2>
           <p className="text-sm text-foreground/60 max-w-2xl mx-auto leading-relaxed">
             Every purchase of a pre-curated brand item is a step towards a fully circular economy. We are proud to provide a second life to the craftsmanship of Pakistan's greatest fashion houses.
           </p>

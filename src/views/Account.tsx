@@ -251,7 +251,7 @@ export function Account() {
                 <div className="w-20 h-20 bg-accent/20 rounded-full flex items-center justify-center mb-8 mx-auto lg:mx-0 border border-accent/30 shadow-inner">
                   <UserCircle className="w-10 h-10 text-accent" />
                 </div>
-                <h1 className="font-serif text-3xl text-foreground mb-2 text-center lg:text-left">Welcome back</h1>
+                <h1 className="font-display text-3xl text-foreground mb-2 text-center lg:text-left">Welcome back</h1>
                 <p className="text-foreground/60 text-sm font-sans mb-10 text-center lg:text-left break-all">{user.email}</p>
                 
                 <nav className="flex flex-col gap-3">
@@ -310,7 +310,7 @@ export function Account() {
                     className="space-y-8"
                   >
                     <div className="flex items-center justify-between mb-8">
-                      <h2 className="font-serif text-3xl uppercase tracking-wider">My Orders</h2>
+                      <h2 className="font-display text-3xl uppercase tracking-wider">My Orders</h2>
                       <Link href="/shop" className="text-[10px] uppercase tracking-widest text-accent hover:underline flex items-center gap-2">
                         Continue Shopping <ChevronRight className="w-3 h-3" />
                       </Link>
@@ -324,7 +324,7 @@ export function Account() {
                     ) : userOrders.length === 0 ? (
                       <div className="text-center py-32 border border-foreground/5 rounded-3xl bg-foreground/[0.01] shadow-inner">
                         <ShoppingBag className="w-16 h-16 text-foreground/10 mx-auto mb-6" />
-                        <h3 className="font-serif text-2xl mb-4">No orders yet</h3>
+                        <h3 className="font-display text-2xl mb-4">No orders yet</h3>
                         <p className="text-foreground/40 text-sm font-sans mb-10 max-w-xs mx-auto leading-relaxed">Your journey with WEARITION begins with your first selection.</p>
                         <Link href="/shop" className="px-10 py-4 bg-foreground text-background text-xs uppercase tracking-widest hover:bg-accent transition-all inline-block rounded-full shadow-xl">
                           Start Shopping
@@ -394,17 +394,17 @@ export function Account() {
                     exit={{ opacity: 0, x: -20 }}
                     className="max-w-xl"
                   >
-                    <h2 className="font-serif text-3xl uppercase tracking-wider mb-12">Personal Information</h2>
+                    <h2 className="font-display text-3xl uppercase tracking-wider mb-12">Personal Information</h2>
                     
                     <div className="space-y-8">
                       <div className="grid grid-cols-2 gap-8">
                         <div className="bg-foreground/[0.02] p-6 rounded-xl border border-foreground/5">
                           <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-2">Display Name</p>
-                          <p className="text-lg font-serif">{user.displayName || 'Guest Member'}</p>
+                          <p className="text-lg font-display">{user.displayName || 'Guest Member'}</p>
                         </div>
                         <div className="bg-foreground/[0.02] p-6 rounded-xl border border-foreground/5">
                           <p className="text-[10px] uppercase tracking-widest text-foreground/40 mb-2">Member Since</p>
-                          <p className="text-lg font-serif">{new Date(user.metadata.creationTime || '').toLocaleDateString('en-US', { year: 'numeric' })}</p>
+                          <p className="text-lg font-display">{new Date(user.metadata.creationTime || '').toLocaleDateString('en-US', { year: 'numeric' })}</p>
                         </div>
                       </div>
                       
@@ -587,7 +587,7 @@ export function Account() {
               <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <ShieldCheck className="w-8 h-8 text-accent" />
               </div>
-              <h2 className="font-serif text-3xl mb-4">Verify Identity</h2>
+              <h2 className="font-display text-3xl mb-4">Verify Identity</h2>
               <p className="text-foreground/40 text-sm leading-relaxed px-4">
                 We've sent a unique 6-digit code to <br/>
                 <span className="text-accent font-medium">{email}</span>
@@ -636,7 +636,7 @@ export function Account() {
               <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <KeyRound className="w-8 h-8 text-accent" />
               </div>
-              <h2 className="font-serif text-3xl mb-4">Reset Access</h2>
+              <h2 className="font-display text-3xl mb-4">Reset Access</h2>
               <p className="text-foreground/40 text-sm leading-relaxed">
                 Enter your email address and we'll send <br/>
                 you a secure reset code.
@@ -687,7 +687,7 @@ export function Account() {
             onSubmit={handleCompleteReset}
           >
             <div className="text-center">
-              <h2 className="font-serif text-3xl mb-4">Set New Password</h2>
+              <h2 className="font-display text-3xl mb-4">Set New Password</h2>
               <p className="text-foreground/40 text-sm leading-relaxed">
                 Verify the code sent to your email <br/>
                 and choose a new secure password.
@@ -751,7 +751,7 @@ export function Account() {
         <div className="bg-foreground/[0.03] border border-foreground/10 backdrop-blur-3xl rounded-[2.5rem] p-8 md:p-12 shadow-2xl">
           
           <div className="text-center mb-10">
-            <h1 className="font-serif text-4xl mb-3 uppercase tracking-tighter">Wearition</h1>
+            <h1 className="font-display text-4xl mb-3 uppercase tracking-tighter">Wearition</h1>
           </div>
 
           {view === 'login' || view === 'signup' ? (

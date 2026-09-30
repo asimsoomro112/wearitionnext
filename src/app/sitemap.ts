@@ -1,6 +1,4 @@
 import { MetadataRoute } from 'next';
-import { db } from '@/lib/firebase';
-import { collection, getDocs, query, where } from 'firebase/firestore';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://wearition.store'; // Replace with your actual domain
@@ -21,16 +19,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route === '' ? 1 : 0.8,
   }));
 
-  // Dynamic product routes
+  // Dynamic product routes — Firebase is imported lazily so a missing or
+  // invalid config degrades to static routes instead of crashing the build.
   const products: MetadataRoute.Sitemap = [];
   try {
+    const { db } = await import('@/lib/firebase');
+    const { collection, getDocs, query, where } = await import('firebase/firestore');
     const q = query(collection(db, 'products'), where('isPublished', '==', true));
     const querySnapshot = await getDocs(q);
-    
+
     querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      // Prefer the product's own timestamps so Google sees real freshness.
+      const lastModified =
+        data.updatedAt?.toDate?.() ?? data.createdAt?.toDate?.() ?? new Date();
       products.push({
         url: `${baseUrl}/product/${doc.id}`,
-        lastModified: new Date(), // Google will now see fresh products
+        lastModified,
         changeFrequency: 'daily',
         priority: 0.9,
       });

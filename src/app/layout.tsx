@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
-import { Cinzel } from "next/font/google";
+import { Syne, Inter } from "next/font/google";
 import "./globals.css";
 
-const cinzel = Cinzel({
+const syne = Syne({
   subsets: ["latin"],
-  variable: "--font-cinzel",
+  variable: "--font-display",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
   display: "swap",
 });
 
@@ -55,7 +61,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
-      <body className={`${cinzel.variable} antialiased`}>
+      <body className={`${syne.variable} ${inter.variable} antialiased`}>
         {children}
       </body>
     </html>

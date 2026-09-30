@@ -113,7 +113,7 @@ export function OrderTracking() {
       <div className="w-full pt-40 px-6 md:px-12 pb-32 bg-background min-h-screen">
         <SEO title="Track Order" />
         <div className="max-w-[600px] mx-auto text-center">
-          <h1 className="font-serif text-4xl mb-8 uppercase tracking-widest">Track Your Order</h1>
+          <h1 className="font-display text-4xl mb-8 uppercase tracking-widest">Track Your Order</h1>
           <p className="text-foreground/50 mb-12 font-sans text-sm">Enter your Order ID to view live updates on your luxury selection.</p>
           
           <form onSubmit={handleTrack} className="space-y-6">
@@ -165,7 +165,7 @@ export function OrderTracking() {
         {/* Page Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
           <div>
-            <h1 className="font-serif text-3xl md:text-4xl text-foreground mb-2">{order.orderId}</h1>
+            <h1 className="font-display text-3xl md:text-4xl text-foreground mb-2">{order.orderId}</h1>
             <p className="text-foreground/40 text-sm font-sans">
               {new Date(order.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
             </p>
@@ -183,13 +183,13 @@ export function OrderTracking() {
             <div className="bg-foreground/[0.02] border border-white/5 rounded-3xl p-8 md:p-12">
               <div className="flex items-center gap-3 mb-12">
                 <Box className="w-5 h-5 text-accent" />
-                <h2 className="font-serif text-2xl uppercase tracking-wider">Order Tracking</h2>
+                <h2 className="font-display text-2xl uppercase tracking-wider">Order Tracking</h2>
               </div>
 
               {order.status === 'cancelled' ? (
                 <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-8 text-center flex flex-col items-center">
                   <XCircle className="w-12 h-12 text-red-500 mb-4" />
-                  <h3 className="font-serif text-2xl text-red-500 mb-2">Order Cancelled</h3>
+                  <h3 className="font-display text-2xl text-red-500 mb-2">Order Cancelled</h3>
                   <p className="text-foreground/60 text-sm font-sans max-w-md mx-auto">
                     This order has been successfully cancelled. The inventory has been restored. If you wish to purchase these items again, you can reorder them below.
                   </p>
@@ -237,7 +237,7 @@ export function OrderTracking() {
 
             {/* Bottom: Items List */}
             <div className="bg-foreground/[0.02] border border-white/5 rounded-3xl p-8 md:p-12">
-              <h2 className="font-serif text-2xl uppercase tracking-wider mb-8">Items</h2>
+              <h2 className="font-display text-2xl uppercase tracking-wider mb-8">Items</h2>
               <div className="space-y-6">
                 {order.items.map((item: any, i: number) => (
                   <div key={i} className="flex justify-between items-center py-4 border-b border-white/5 last:border-0">
@@ -263,7 +263,7 @@ export function OrderTracking() {
           <div className="space-y-8">
             {/* Order Summary */}
             <div className="bg-foreground/[0.02] border border-white/5 rounded-3xl p-8">
-              <h2 className="font-serif text-lg uppercase tracking-widest mb-8">Order Summary</h2>
+              <h2 className="font-display text-lg uppercase tracking-widest mb-8">Order Summary</h2>
               <div className="space-y-4 font-sans text-sm">
                 <div className="flex justify-between text-foreground/60">
                   <span>Subtotal</span>
@@ -277,7 +277,7 @@ export function OrderTracking() {
                 </div>
                 <div className="pt-4 border-t border-white/10 flex justify-between items-end">
                   <span className="text-foreground font-bold uppercase text-[10px] tracking-widest">Total</span>
-                  <span className="text-2xl font-serif text-foreground">{formatCurrency(computedTotal)}</span>
+                  <span className="text-2xl font-display text-foreground">{formatCurrency(computedTotal)}</span>
                 </div>
                 <div className="mt-4 flex items-center gap-2 text-[10px] uppercase tracking-widest text-foreground/40">
                   <Clock className="w-3 h-3" />
@@ -288,7 +288,7 @@ export function OrderTracking() {
 
             {/* Shipping Address */}
             <div className="bg-foreground/[0.02] border border-white/5 rounded-3xl p-8">
-              <h2 className="font-serif text-lg uppercase tracking-widest mb-8">Shipping Address</h2>
+              <h2 className="font-display text-lg uppercase tracking-widest mb-8">Shipping Address</h2>
               <div className="space-y-4 text-sm font-sans">
                 <div className="flex items-start gap-4">
                   <MapPin className="w-5 h-5 text-accent flex-shrink-0" />

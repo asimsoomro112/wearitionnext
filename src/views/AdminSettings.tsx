@@ -76,7 +76,7 @@ export function AdminSettings() {
     <div className="max-w-4xl mx-auto pb-24">
       <div className="flex justify-between items-center mb-10">
         <div>
-          <h1 className="text-3xl font-serif text-[#0a0a0a]">Logistics & Collections</h1>
+          <h1 className="text-3xl font-display text-[#0a0a0a]">Logistics & Collections</h1>
           <p className="text-sm text-[#0a0a0a]/50 mt-2 font-sans italic">Define your tiered shipping, taxation, and visible collections.</p>
         </div>
         <button 
@@ -98,7 +98,7 @@ export function AdminSettings() {
         >
           <div className="flex items-center gap-4 mb-8">
             <div className="p-3 bg-blue-50 text-blue-600 rounded-xl"><Truck className="w-6 h-6" /></div>
-            <h3 className="font-serif text-xl">Tiered Shipping</h3>
+            <h3 className="font-display text-xl">Tiered Shipping</h3>
           </div>
           
           <div className="space-y-6">
@@ -139,7 +139,7 @@ export function AdminSettings() {
         >
           <div className="flex items-center gap-4 mb-8">
             <div className="p-3 bg-purple-50 text-purple-600 rounded-xl"><Percent className="w-6 h-6" /></div>
-            <h3 className="font-serif text-xl">Taxation</h3>
+            <h3 className="font-display text-xl">Taxation</h3>
           </div>
           <div className="space-y-4">
             <div>
@@ -167,7 +167,7 @@ export function AdminSettings() {
           <div className="flex items-center gap-4 mb-8">
             <div className="p-3 bg-accent/10 text-accent rounded-xl"><LayoutGrid className="w-6 h-6" /></div>
             <div>
-              <h3 className="font-serif text-xl">Collection Categories</h3>
+              <h3 className="font-display text-xl">Collection Categories</h3>
               <p className="text-[10px] uppercase tracking-widest text-black/30 font-bold">Manage visible filters on the shop page</p>
             </div>
           </div>
@@ -218,7 +218,7 @@ export function AdminSettings() {
         <div className="relative z-10">
           <div className="flex justify-between items-start mb-10">
             <div>
-              <h4 className="font-serif text-3xl mb-1">Maison Ledger Preview</h4>
+              <h4 className="font-display text-3xl mb-1">Maison Ledger Preview</h4>
               <p className="text-white/40 text-[10px] uppercase tracking-[0.2em] font-sans">Simulated customer billing experience</p>
             </div>
             <div className="bg-white/10 px-4 py-2 rounded-full border border-white/10 flex items-center gap-3">

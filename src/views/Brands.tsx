@@ -121,7 +121,7 @@ export function Brands() {
             >
               <header className="mb-20 text-center">
                 <span className="text-accent text-[10px] uppercase tracking-[0.4em] mb-4 block font-bold">The Houses We Represent</span>
-                <TextReveal as="h1" className="font-serif text-5xl sm:text-6xl md:text-8xl text-foreground mb-8">Brands</TextReveal>
+                <TextReveal as="h1" className="font-display text-5xl sm:text-6xl md:text-8xl text-foreground mb-8">Brands</TextReveal>
                 <p className="text-foreground/50 text-sm max-w-xl mx-auto font-sans leading-relaxed">
                   Automatically curated collections from the most prestigious fashion houses in our inventory.
                 </p>
@@ -140,7 +140,7 @@ export function Brands() {
                         <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                         <div className="relative z-10 h-full flex flex-col justify-between">
                           <div>
-                            <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4 uppercase tracking-tighter group-hover:text-accent transition-colors">
+                            <h2 className="font-display text-3xl md:text-4xl text-foreground mb-4 uppercase tracking-tighter group-hover:text-accent transition-colors">
                               {brand}
                             </h2>
                             <p className="text-[10px] text-foreground/40 leading-loose uppercase tracking-widest">
@@ -152,7 +152,7 @@ export function Brands() {
                             <ArrowRight className="w-4 h-4" />
                           </div>
                         </div>
-                        <span className="absolute bottom-6 right-8 font-serif text-8xl text-foreground/[0.03] pointer-events-none group-hover:text-accent/[0.05] transition-colors">
+                        <span className="absolute bottom-6 right-8 font-display text-8xl text-foreground/[0.03] pointer-events-none group-hover:text-accent/[0.05] transition-colors">
                           {i + 1 < 10 ? `0${i + 1}` : i + 1}
                         </span>
                       </button>
@@ -180,7 +180,7 @@ export function Brands() {
                     Back to Brands
                   </button>
                   <span className="text-accent text-[10px] uppercase tracking-[0.4em] mb-4 block font-bold">Maison Collection</span>
-                  <h1 className="font-serif text-5xl sm:text-6xl md:text-8xl text-foreground uppercase tracking-tighter">
+                  <h1 className="font-display text-5xl sm:text-6xl md:text-8xl text-foreground uppercase tracking-tighter">
                     {selectedBrand}
                   </h1>
                 </div>
@@ -198,7 +198,7 @@ export function Brands() {
                 </div>
               ) : products.length === 0 ? (
                 <div className="py-32 text-center">
-                  <p className="font-serif text-3xl text-foreground/20 mb-4 uppercase tracking-widest">Coming Soon</p>
+                  <p className="font-display text-3xl text-foreground/20 mb-4 uppercase tracking-widest">Coming Soon</p>
                   <p className="text-sm text-foreground/40 font-sans max-w-sm mx-auto">
                     The latest collection from {selectedBrand} is currently being curated.
                   </p>

@@ -34,10 +34,13 @@ export function CartDrawer() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-full md:w-[480px] bg-background border-l border-foreground/10 z-[500] flex flex-col pt-6 pb-8 text-foreground"
+            className="fixed top-0 right-0 h-full w-full md:w-[480px] bg-[#0a0a0a]/85 backdrop-blur-2xl border-l border-white/10 z-[500] flex flex-col pt-6 pb-8 text-foreground"
           >
             <div className="px-8 flex justify-between items-center mb-10 mt-4">
-              <h2 className="font-serif tracking-widest uppercase text-2xl text-foreground">Your Bag</h2>
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-white/40 tracking-[0.2em]">[01]</span>
+                <h2 className="font-display font-bold uppercase tracking-tight text-2xl text-foreground">Your Bag</h2>
+              </div>
               <button 
                 onClick={closeCart}
                 className="p-2 hover:text-accent hover:rotate-90 transition-all duration-300"
@@ -113,7 +116,7 @@ export function CartDrawer() {
                 <button onClick={() => {
                   closeCart();
                   router.push('/checkout');
-                }} className="w-full bg-foreground text-background py-5 uppercase text-xs tracking-[0.2em] font-medium hover:bg-accent transition-colors shadow-xl rounded-full">
+                }} className="w-full bg-accent text-white py-5 uppercase text-xs tracking-[0.2em] font-semibold hover:bg-accent-hover transition-colors shadow-[0_0_28px_var(--accent-glow)] rounded-xl">
                   Checkout Securely
                 </button>
               </div>

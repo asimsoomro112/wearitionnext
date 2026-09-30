@@ -31,7 +31,7 @@ export function AdminUsers() {
 
   return (
     <div className="max-w-full">
-      <h1 className="text-2xl md:text-3xl font-serif mb-8 pb-6 border-b border-black/10 text-[#0a0a0a]">User Management</h1>
+      <h1 className="text-2xl md:text-3xl font-display mb-8 pb-6 border-b border-black/10 text-[#0a0a0a]">User Management</h1>
       
       <div className="bg-white border border-black/10 rounded-lg overflow-x-auto">
         <table className="w-full text-left min-w-[800px]">

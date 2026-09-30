@@ -28,8 +28,8 @@ export class ErrorBoundary extends React.Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 text-center">
-          <p className="font-serif text-6xl text-foreground/10 mb-8">◇</p>
-          <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">Something went wrong</h1>
+          <p className="font-display text-6xl text-foreground/10 mb-8">◇</p>
+          <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4">Something went wrong</h1>
           <p className="text-foreground/50 text-sm font-sans max-w-md mb-10 leading-relaxed">
             Our atelier is experiencing a momentary interruption. Please refresh the page or return home.
           </p>

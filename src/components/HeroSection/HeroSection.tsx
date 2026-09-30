@@ -5,8 +5,11 @@ import styles from './HeroSection.module.css'
 import { formatCurrency } from '@/lib/currency'
 import Link from 'next/link'
 
-const FALLBACK_COLLECTIONS = [
-  {
+// Fallback image used when a hero product has no image of its own —
+// prevents empty gradient-only cards.
+const HERO_FALLBACK_IMG = "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop";
+
+const FALLBACK_COLLECTIONS = [  {
     id: 'f1',
     label: 'NEW ARRIVAL',
     brand: 'WEARITION',
@@ -17,7 +20,7 @@ const FALLBACK_COLLECTIONS = [
     bg: 'linear-gradient(145deg, #F2EDE4 0%, #E8DDD0 40%, #D4C5B0 100%)',
     accent: '#8B6914',
     textAccent: '#5C4209',
-    img: '',
+    img: HERO_FALLBACK_IMG,
   }
 ]
 
@@ -40,9 +43,13 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
   const [progressKey, setProgressKey] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
 
-  const collections = products.length > 0 ? products.map((p, i) => {
+  // Only products with an actual image become hero cards — imageless
+  // products would otherwise render as empty gradient placeholders.
+  const productsWithImages = products.filter((p: any) => p.images?.[0] || p.image);
+
+  const collections = productsWithImages.length > 0 ? productsWithImages.map((p, i) => {
     const grad = BG_GRADIENTS[i % BG_GRADIENTS.length]
-    const parts = p.title.split(' ')
+    const parts = (p.title || 'Wearition Collection').split(' ')
     const line1 = parts.slice(0, Math.ceil(parts.length / 2)).join(' ')
     const line2 = parts.slice(Math.ceil(parts.length / 2)).join(' ')
 
@@ -134,15 +141,16 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                 style={{ '--depth': absOffset } as React.CSSProperties}
               >
                 <div className={styles.cardImg} style={{ background: c.bg }}>
-                  {c.img && (
-                    <img
-                      src={c.img}
-                      alt={c.brand}
-                      draggable="false"
-                      className={styles.productImg}
-                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
-                    />
-                  )}
+                  <img
+                    src={c.img || HERO_FALLBACK_IMG}
+                    alt={`${c.brand} ${c.line1} ${c.line2}`.trim() || 'Wearition collection'}
+                    draggable="false"
+                    className={styles.productImg}
+                    onError={(e) => {
+                      const t = e.target as HTMLImageElement;
+                      if (t.src !== HERO_FALLBACK_IMG) t.src = HERO_FALLBACK_IMG;
+                    }}
+                  />
                   <div className={styles.silhouette} />
                 </div>
 

@@ -92,7 +92,7 @@ export function AdminDashboard() {
   return (
     <div className="max-w-full">
       <div className="flex justify-between items-center mb-8 border-b border-black/10 pb-6">
-        <h1 className="text-2xl md:text-3xl font-serif">Overview</h1>
+        <h1 className="text-2xl md:text-3xl font-display">Overview</h1>
         <Link href="/" target="_blank" className="text-xs uppercase tracking-widest flex items-center gap-2 hover:text-accent transition-colors">
           View Live Site <ExternalLink className="w-3 h-3" />
         </Link>
@@ -133,7 +133,7 @@ export function AdminDashboard() {
         {/* Recent Orders */}
         <div className="bg-white border border-black/10 rounded-lg overflow-hidden shadow-sm">
           <div className="p-4 border-b border-black/10 flex justify-between items-center">
-            <h3 className="font-serif text-lg text-[#0a0a0a]">Recent Orders</h3>
+            <h3 className="font-display text-lg text-[#0a0a0a]">Recent Orders</h3>
             <Link href="/admin/orders" className="text-[10px] uppercase tracking-widest text-[#0a0a0a]/40 hover:text-[#0a0a0a] transition-colors">View All</Link>
           </div>
           <div className="overflow-x-auto">
@@ -164,7 +164,7 @@ export function AdminDashboard() {
         {/* Inventory Quick Status */}
         <div className="bg-white border border-black/10 rounded-lg overflow-hidden shadow-sm">
           <div className="p-4 border-b border-black/10 flex justify-between items-center">
-            <h3 className="font-serif text-lg text-[#0a0a0a]">Inventory Status</h3>
+            <h3 className="font-display text-lg text-[#0a0a0a]">Inventory Status</h3>
             <Link href="/admin/products" className="text-[10px] uppercase tracking-widest text-[#0a0a0a]/40 hover:text-[#0a0a0a] transition-colors">Manage</Link>
           </div>
           <div className="overflow-x-auto">

@@ -1,50 +1,120 @@
 import Link from 'next/link';
 import logo from '../../assets/logo.png';
-import { MagneticButton } from './MagneticButton';
+
+const SHOP_LINKS = [
+  { label: 'Shop All', href: '/shop' },
+  { label: 'Collections', href: '/editorial' },
+  { label: 'Brands', href: '/brands' },
+  { label: 'Wishlist', href: '/wishlist' },
+];
+
+const SUPPORT_LINKS = [
+  { label: 'Track Order', href: '/track-order' },
+  { label: 'Shipping', href: '/shipping' },
+  { label: 'Returns', href: '/returns' },
+  { label: 'Contact', href: '/contact' },
+];
 
 export function Footer() {
   return (
-    <footer className="px-6 md:px-12 py-24 border-t border-foreground/5 mt-auto bg-background-secondary">
-      <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 md:gap-8">
-        <div className="col-span-1 md:col-span-2">
-          <div className="mb-8 opacity-90 transition-all inline-block">
-            <img src={typeof logo === 'string' ? logo : logo.src} alt="Wearition" className="h-32 md:h-48 w-auto object-contain brightness-110" />
+    <footer
+      className="relative overflow-hidden mt-auto"
+      style={{ background: 'linear-gradient(180deg, #030303 0%, #282828 100%)' }}
+    >
+      <div className="section-shell pt-20 md:pt-28 pb-10">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
+          <div className="md:col-span-5">
+            <Link href="/" className="inline-block">
+              <img
+                src={typeof logo === 'string' ? logo : logo.src}
+                alt="Wearition"
+                className="h-16 md:h-20 w-auto object-contain brightness-0 invert"
+              />
+            </Link>
+            <p className="mt-6 text-sm text-white/50 max-w-sm leading-relaxed">
+              Wear your identity. Curated eastern and contemporary menswear,
+              delivered across Pakistan.
+            </p>
+            <a
+              href="mailto:hello@wearition.store"
+              className="mt-6 inline-block text-sm text-[#339e9b] hover:opacity-70 transition-opacity"
+            >
+              hello@wearition.store
+            </a>
           </div>
-          <p className="text-sm text-foreground/50 max-w-sm font-sans leading-relaxed">
-            Elegance redefined. Discover the latest in luxury fashion, crafted for the modern visionary.
-          </p>
+
+          <div className="md:col-span-3">
+            <h3 className="eyebrow text-white/40 mb-6">Shop</h3>
+            <ul className="space-y-4">
+              {SHOP_LINKS.map((l) => (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className="text-sm uppercase tracking-[0.14em] text-white/70 hover:text-white hover:-translate-y-0.5 inline-block transition-all"
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="md:col-span-4">
+            <h3 className="eyebrow text-white/40 mb-6">Support</h3>
+            <ul className="space-y-4">
+              {SUPPORT_LINKS.map((l) => (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className="text-sm uppercase tracking-[0.14em] text-white/70 hover:text-white hover:-translate-y-0.5 inline-block transition-all"
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <div className="flex gap-8 mt-10">
+              <a
+                href="https://www.instagram.com/_wearition?igsh=eG5obHgydGc3a2Vr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs uppercase tracking-[0.18em] text-white/50 hover:text-[#339e9b] transition-colors"
+              >
+                Instagram
+              </a>
+              <a
+                href="https://www.facebook.com/profile.php?id=61589494648557"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs uppercase tracking-[0.18em] text-white/50 hover:text-[#339e9b] transition-colors"
+              >
+                Facebook
+              </a>
+              <a
+                href="https://www.tiktok.com/@wearition3?_r=1&_t=ZS-96Byntwejln"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs uppercase tracking-[0.18em] text-white/50 hover:text-[#339e9b] transition-colors"
+              >
+                TikTok
+              </a>
+            </div>
+          </div>
         </div>
-        <div>
-          <h3 className="uppercase text-[10px] tracking-[0.2em] font-medium mb-8 text-accent">Client Services</h3>
-          <ul className="space-y-4 text-xs font-sans text-foreground/60">
-            <li><Link href="/contact" className="hover:text-foreground transition-colors">Contact Us</Link></li>
-            <li><Link href="/track-order" className="hover:text-foreground transition-colors">Track Order</Link></li>
-            <li><Link href="/returns" className="hover:text-foreground transition-colors">Returns & Exchanges</Link></li>
-            <li><Link href="/shipping" className="hover:text-foreground transition-colors">Shipping</Link></li>
-          </ul>
-        </div>
-        <div>
-          <h3 className="uppercase text-[10px] tracking-[0.2em] font-medium mb-8 text-accent">The House</h3>
-          <ul className="space-y-4 text-xs font-sans text-foreground/60">
-            <li><Link href="/about" className="hover:text-foreground transition-colors">About Us</Link></li>
-            <li><Link href="/sustainability" className="hover:text-foreground transition-colors">Sustainability</Link></li>
-            <li><Link href="/careers" className="hover:text-foreground transition-colors">Careers</Link></li>
-            <li><Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link></li>
-          </ul>
+
+        <div className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-[10px] uppercase tracking-[0.2em] text-white/40">
+          <p>&copy; 2026 Wearition. All rights reserved.</p>
+          <div className="flex gap-6">
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+            <Link href="/about" className="hover:text-white transition-colors">About</Link>
+          </div>
         </div>
       </div>
-      <div className="max-w-[1440px] mx-auto mt-24 pt-8 border-t border-foreground/5 flex flex-col md:flex-row items-center justify-between text-[10px] uppercase font-medium tracking-[0.2em] text-foreground/40">
-        <p>&copy; 2026 Wearition. All rights reserved.</p>
-        <div className="flex gap-8 mt-6 md:mt-0">
-          <MagneticButton strength={0.3} as="div">
-            <a href="https://www.instagram.com/_wearition?igsh=eG5obHgydGc3a2Vr" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors uppercase">Instagram</a>
-          </MagneticButton>
-          <MagneticButton strength={0.3} as="div">
-            <a href="https://www.facebook.com/profile.php?id=61589494648557" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors uppercase">Facebook</a>
-          </MagneticButton>
-          <MagneticButton strength={0.3} as="div">
-            <a href="https://www.tiktok.com/@wearition3?_r=1&_t=ZS-96Byntwejln" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors uppercase">TikTok</a>
-          </MagneticButton>
+
+      {/* giant bleeding wordmark */}
+      <div className="relative select-none pointer-events-none" aria-hidden="true">
+        <div className="font-display font-bold uppercase text-center leading-[0.8] text-white/[0.07] text-[clamp(80px,22vw,420px)] tracking-tight -mb-[0.12em]">
+          Wearition
         </div>
       </div>
     </footer>
