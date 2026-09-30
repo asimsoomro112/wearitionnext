@@ -91,7 +91,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           {/* bottom glass bar: name + price */}
           <div className="absolute bottom-3 left-3 right-3 z-10 glass rounded-xl px-4 py-3 flex items-center justify-between gap-3">
             <div className="min-w-0">
-              <h3 className="text-white text-sm font-medium truncate">{title}</h3>
+              <h3 className="text-white text-sm font-medium leading-snug line-clamp-2">{title}</h3>
               <p className="text-white/55 text-[11px] uppercase tracking-[0.16em] mt-0.5">
                 {product.category || 'Wearition'}
               </p>
