@@ -10,12 +10,19 @@ import { HeroRoller } from './HeroRoller';
  * always fits exactly within the viewport width — regardless of font metrics
  * (Syne is a very wide display face, so vw-only sizing overflowed and clipped
  * the word on both edges). Re-fits on resize and once webfonts finish loading.
+ *
+ * IMPORTANT: the heading must sit in a full-bleed wrapper (not inside a
+ * max-width column) — the fitted size targets viewport width, so it must
+ * also center against the viewport, otherwise it re-clips.
+ * The first measurement waits for the real Syne metrics: measuring with the
+ * fallback font under-measures the width and overshoots the size.
  */
 function useFitText(ref: React.RefObject<HTMLHeadingElement | null>, targetVw = 0.98) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     let raf = 0;
+    let cancelled = false;
     const fit = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
@@ -27,15 +34,23 @@ function useFitText(ref: React.RefObject<HTMLHeadingElement | null>, targetVw = 
         node.style.fontSize = `${Math.max(28, (100 * target) / w)}px`;
       });
     };
-    fit();
+    // Wait for Syne's real metrics (race a timeout so a font failure
+    // can never block the heading), then fit.
+    const waitForFont = () => {
+      try {
+        const p = (document as any).fonts?.load?.('800 100px "Syne"');
+        if (p && typeof p.then === 'function') return p.catch(() => {});
+      } catch {
+        /* fall through */
+      }
+      return Promise.resolve();
+    };
+    Promise.race([waitForFont(), new Promise((r) => setTimeout(r, 1500))]).then(() => {
+      if (!cancelled) fit();
+    });
     window.addEventListener('resize', fit);
-    // Syne loads async — re-measure once the real font metrics apply.
-    let cancelled = false;
-    if (document.fonts?.ready) {
-      document.fonts.ready.then(() => { if (!cancelled) fit(); }).catch(() => {});
-    }
-    // Fallback: re-fit shortly after mount in case fonts.ready resolves early.
-    const t = setTimeout(fit, 1200);
+    // Re-fit shortly after mount as a safety net for late font swaps.
+    const t = setTimeout(fit, 2500);
     return () => {
       cancelled = true;
       cancelAnimationFrame(raf);
@@ -92,8 +107,9 @@ export function HomeHero({ products }: HomeHeroProps) {
         </div>
       </motion.div>
 
-      {/* 3D curved roller strip behind content — lags vertically and pans
-          horizontally in sync with scroll, like the reference template */}
+      {/* 3D curved roller strip behind content — the reference template's
+          signature: large cards on an infinite loop, edges bending away in
+          3D, panning horizontally in sync with scroll */}
       {cards.length > 0 && (
         <motion.div style={{ y: cardsY, x: cardsX }} className="absolute inset-0 flex items-center opacity-80">
           <HeroRoller products={cards} />
@@ -116,35 +132,30 @@ export function HomeHero({ products }: HomeHeroProps) {
             Wear your identity
           </span>
         </motion.div>
+      </div>
 
-        {/* Giant wordmark — runtime-measured to fit the viewport exactly.
-            Letters rise from a mask with a stagger, the reference's
-            letter-staggered load feel. useFitText measures the h1's full
-            scrollWidth, so per-letter spans keep the exact-fit guarantee. */}
-        <span className="block overflow-hidden mt-8 w-full">
-          <h1
-            ref={h1Ref}
-            aria-label="Wearition"
-            className="font-display font-extrabold uppercase text-white leading-[0.85] tracking-tight whitespace-nowrap text-center text-[11vw]"
-            style={{
-              textShadow: '0 0 6px #ffffff38, 0 0 18px #ffffff1f',
-            }}
-          >
-            {'Wearition'.split('').map((ch, i) => (
-              <motion.span
-                key={i}
-                aria-hidden="true"
-                className="inline-block will-change-transform"
-                initial={{ y: '112%' }}
-                animate={{ y: '0%' }}
-                transition={{ duration: 0.7, delay: 0.12 + i * 0.04, ease: [0.16, 1, 0.3, 1] }}
-              >
-                {ch}
-              </motion.span>
-            ))}
-          </h1>
-        </span>
+      {/* Giant wordmark — runtime-measured to fit the viewport exactly.
+          Full-bleed wrapper (NOT inside the max-w-5xl column): the fitted
+          size targets viewport width, so it must also center against the
+          viewport — centering inside a 1024px column re-clipped it.
+          Simple whole-word mask rise, like the reference's load sequence. */}
+      <div className="overflow-hidden w-full mt-8">
+        <motion.h1
+          ref={h1Ref}
+          aria-label="Wearition"
+          className="font-display font-extrabold uppercase text-white leading-[0.85] tracking-tight whitespace-nowrap text-center text-[11vw]"
+          style={{
+            textShadow: '0 0 6px #ffffff38, 0 0 18px #ffffff1f',
+          }}
+          initial={{ y: '103%' }}
+          animate={{ y: '0%' }}
+          transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+        >
+          WEARITION
+        </motion.h1>
+      </div>
 
+      <div className="text-center px-6 max-w-5xl mx-auto">
         <motion.p
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}

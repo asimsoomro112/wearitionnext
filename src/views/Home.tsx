@@ -22,6 +22,14 @@ export function Home() {
     setIsMounted(true);
   }, []);
 
+  // Preloader is a short fixed brand beat — it never waits on the network.
+  // Product data fills in independently when Firestore resolves; sections
+  // already handle empty states.
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(t);
+  }, []);
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -38,8 +46,6 @@ export function Home() {
         setHeroProducts(fetchedHero.length > 0 ? fetchedHero : fetchedProducts);
       } catch (e: any) {
         console.error("Firestore Fetch Error:", e);
-      } finally {
-        setLoading(false);
       }
     }
     fetchData();

@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { ProductCard } from '../components/shop/ProductCard';
 import { SEO } from '../components/layout/SEO';
+import { Marquee } from '../components/home/Marquee';
 
 const SORT_OPTIONS = [
   { label: 'Recommended', value: 'recommended' },
@@ -117,12 +118,20 @@ export function Shop() {
   };
 
   return (
-    <div className="w-full pt-32 md:pt-40 px-6 md:px-12 pb-32 bg-background">
+    <div className="w-full pt-32 md:pt-40 px-6 md:px-12 pb-32 bg-background relative overflow-hidden">
       <SEO 
         title={brandFilter ? `${brandFilter.charAt(0).toUpperCase() + brandFilter.slice(1)} Collection` : categoryFilter ? `${categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1)} Collection` : 'Shop the Collection'}
         description="Explore WEARITION's curated collection of luxury fashion. Premium menswear and womenswear designed for the modern visionary."
       />
-      <div className="max-w-[1440px] mx-auto">
+      {/* giant scrolling wordmark drifting behind the collection */}
+      <div className="pointer-events-none absolute top-40 md:top-56 left-0 right-0 opacity-[0.55]" aria-hidden="true">
+        <Marquee slow>
+          <span className="font-display font-extrabold uppercase whitespace-nowrap leading-none text-[22vw] md:text-[16vw] text-outline select-none pr-16">
+            Wearition&nbsp;· Wearition&nbsp;·&nbsp;
+          </span>
+        </Marquee>
+      </div>
+      <div className="max-w-[1440px] mx-auto relative">
         <header className="mb-12">
           <div className="flex items-center gap-4 mb-5">
             <span className="text-sm text-white/40 tracking-[0.2em]">[01]</span>
@@ -175,8 +184,8 @@ export function Shop() {
 
         {/* Product Grid */}
         {loading ? (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {Array.from({ length: 8 }).map((_, i) => <ProductSkeleton key={i} />)}
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8">
+            {Array.from({ length: 6 }).map((_, i) => <ProductSkeleton key={i} />)}
           </div>
         ) : products.length === 0 ? (
           <motion.div
@@ -197,7 +206,7 @@ export function Shop() {
         ) : (
           <motion.div
             layout
-            className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
+            className="grid grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8"
           >
             {sortedProducts.map((product, i) => (
               <ProductCard key={product.id} product={product} index={i} />

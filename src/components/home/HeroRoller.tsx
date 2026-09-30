@@ -10,7 +10,7 @@ function RollerCard({ product }: { product: any }) {
   return (
     <div
       data-roller-card
-      className="relative w-[250px] md:w-[330px] h-[340px] md:h-[440px] flex-none rounded-xl overflow-hidden border border-white/10 mx-3 will-change-transform"
+      className="relative w-[270px] md:w-[380px] h-[360px] md:h-[500px] flex-none rounded-xl overflow-hidden border border-white/10 mx-3 will-change-transform"
     >
       <img
         src={getOptimizedImage(product.images?.[0]) || FALLBACK_IMG}
@@ -40,8 +40,10 @@ interface HeroRollerProps {
 /**
  * 3D curved roller strip — the reference template's signature hero treatment.
  * Cards travel on an infinite loop while each card bends away from the viewer
- * based on its distance from the container center (rotateY + push-back),
- * so the strip reads as a rotating roller rather than a flat marquee.
+ * based on its distance from the container center (gentle rotateY +
+ * push-back), so the strip reads as a rotating roller rather than a flat
+ * marquee. The curve is deliberately subtle: center card faces forward,
+ * edge cards tilt away ~38° max.
  *
  * The per-card transform is computed in a rAF loop from live bounding rects,
  * which keeps it correct under the CSS loop animation, the scroll-linked pan
@@ -81,11 +83,11 @@ export function HeroRoller({ products }: HeroRollerProps) {
       for (const el of els) {
         const r = el.getBoundingClientRect();
         const dx = (r.left + r.width / 2 - cx) / half;
-        const t = Math.max(-1.35, Math.min(1.35, dx));
+        const t = Math.max(-1.3, Math.min(1.3, dx));
         const abs = Math.abs(t);
-        const rotY = -t * 58;
-        const z = -abs * 220;
-        const scale = 1 - Math.min(abs, 1) * 0.14;
+        const rotY = -t * 38;
+        const z = -abs * 160;
+        const scale = 1 - Math.min(abs, 1) * 0.08;
         el.style.transform = `rotateY(${rotY.toFixed(2)}deg) translateZ(${z.toFixed(1)}px) scale(${scale.toFixed(3)})`;
         el.style.zIndex = `${100 - Math.round(abs * 50)}`;
       }
