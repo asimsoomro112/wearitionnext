@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ShoppingBag, Search, User, Heart, Sun, Moon, X, ArrowUpRight } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 import { useUIStore } from '../../store/uiStore';
 import { useCartStore } from '../../store/cartStore';
 import { triggerHaptic } from '@/lib/haptics';
@@ -23,6 +23,15 @@ export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
+  // Template-style header: slides away on scroll down, returns on scroll up.
+  const { scrollY } = useScroll();
+  const [navHidden, setNavHidden] = useState(false);
+  useMotionValueEvent(scrollY, 'change', (y) => {
+    const prev = scrollY.getPrevious() ?? 0;
+    if (menuOpen) return;
+    setNavHidden(y > prev && y > 160);
+  });
+
   const handleOpenMenu = () => {
     triggerHaptic('light');
     setMenuOpen(true);
@@ -32,8 +41,8 @@ export function Navbar() {
     <>
       <motion.header
         initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
+        animate={{ y: navHidden ? '-110%' : '0%' }}
+        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
         className="fixed top-0 left-0 right-0 z-50 mix-blend-difference"
       >
         <div className="flex items-center justify-between px-6 py-5 md:px-12 text-white">

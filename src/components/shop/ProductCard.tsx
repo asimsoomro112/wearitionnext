@@ -1,6 +1,5 @@
 "use client";
 import React from 'react';
-import { motion } from 'framer-motion';
 import { Heart, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 import { useWishlistStore } from '../../store/wishlistStore';
@@ -16,7 +15,7 @@ interface ProductCardProps {
 const FALLBACK_IMG =
   'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=800&auto=format&fit=crop';
 
-export function ProductCard({ product, index = 0 }: ProductCardProps) {
+export function ProductCard({ product }: ProductCardProps) {
   const { wishlistIds, toggleWishlist } = useWishlistStore();
   const isWished = wishlistIds.includes(product.id);
 
@@ -36,13 +35,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
   const title = product.title || product.name || 'Wearition product';
 
   return (
-    <motion.div
-      initial={{ y: 30, opacity: 0 }}
-      whileInView={{ y: 0, opacity: 1 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.6, delay: (index % 4) * 0.08, ease: [0.22, 1, 0.36, 1] }}
-      className="group"
-    >
+    <div className="group">
       <Link href={`/product/${product.id}`} className="block relative">
         <div className="relative aspect-[3/4] overflow-hidden rounded-xl border border-white/10 bg-white/[0.03]">
           <img
@@ -105,6 +98,6 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           </div>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 }

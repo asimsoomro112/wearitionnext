@@ -1,7 +1,6 @@
 "use client";
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { Reveal } from '@/components/Reveal';
+import { Reveal, FadeUp } from '@/components/Reveal';
 
 export function Cta() {
   return (
@@ -19,20 +18,14 @@ export function Cta() {
             Let's create something timeless.
           </h2>
         </Reveal>
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-10"
-        >
+        <FadeUp delay={0.15} y={24} className="mt-10">
           <Link
             href="/shop"
             className="inline-flex items-center justify-center bg-white text-black font-semibold uppercase tracking-[0.12em] text-sm rounded-xl min-w-[280px] h-[64px] px-10 hover:bg-[#339e9b] hover:text-white transition-colors duration-300"
           >
             Shop the collection
           </Link>
-        </motion.div>
+        </FadeUp>
       </div>
     </section>
   );

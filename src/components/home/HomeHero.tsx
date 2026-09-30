@@ -1,6 +1,7 @@
 "use client";
+import { useRef } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Marquee } from './Marquee';
 import { Reveal } from '@/components/Reveal';
@@ -41,8 +42,20 @@ function HeroCard({ product }: { product: any }) {
 export function HomeHero({ products }: HomeHeroProps) {
   const cards = (products || []).slice(0, 10);
 
+  // Scroll-linked parallax: content drifts up and fades, cards lag behind,
+  // the giant outline word slides sideways — depth while scrolling.
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  });
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 130]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const cardsY = useTransform(scrollYProgress, [0, 1], [0, -70]);
+  const styleX = useTransform(scrollYProgress, [0, 1], ['0%', '-14%']);
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section ref={sectionRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* grid backdrop */}
       <div
         className="absolute inset-0 opacity-60"
@@ -55,30 +68,32 @@ export function HomeHero({ products }: HomeHeroProps) {
         }}
       />
 
-      {/* faint giant outline text */}
-      <div
-        aria-hidden="true"
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-display font-extrabold uppercase text-outline whitespace-nowrap text-[26vw] leading-none select-none pointer-events-none"
-      >
-        Style
-      </div>
+      {/* faint giant outline text — drifts sideways on scroll */}
+      <motion.div style={{ x: styleX }} className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-display font-extrabold uppercase text-outline whitespace-nowrap text-[26vw] leading-none select-none"
+        >
+          Style
+        </div>
+      </motion.div>
 
-      {/* scrolling product marquee behind content */}
+      {/* scrolling product marquee behind content — lags on scroll */}
       {cards.length > 0 && (
-        <div className="absolute inset-0 flex items-center opacity-70">
+        <motion.div style={{ y: cardsY }} className="absolute inset-0 flex items-center opacity-70">
           <Marquee slow className="[mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]">
             {cards.map((p) => (
               <HeroCard key={p.id} product={p} />
             ))}
           </Marquee>
-        </div>
+        </motion.div>
       )}
 
       {/* dark veil so text stays readable */}
       <div className="absolute inset-0 bg-[#030303]/55 pointer-events-none" />
 
-      {/* content */}
-      <div className="relative z-10 text-center px-6 max-w-5xl mx-auto pt-28 pb-20">
+      {/* content — drifts up and fades on scroll */}
+      <motion.div style={{ y: contentY, opacity: contentOpacity }} className="relative z-10 w-full pt-28 pb-20">
+      <div className="text-center px-6 max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -90,9 +105,12 @@ export function HomeHero({ products }: HomeHeroProps) {
           </span>
         </motion.div>
 
-        <Reveal delay={0.12} immediate className="mt-8">
+        {/* Full-viewport breakout: the giant word is wider than the 5xl
+            container, so it escapes to the viewport width and scales in vw —
+            never clipped on desktop or mobile. */}
+        <Reveal delay={0.12} immediate className="mt-8 w-screen relative left-1/2 -translate-x-1/2">
           <h1
-            className="font-display font-extrabold uppercase text-white leading-[0.85] tracking-tight text-[12vw] md:text-[10rem] whitespace-nowrap"
+            className="font-display font-extrabold uppercase text-white leading-[0.85] tracking-tight text-[12vw] md:text-[10.5vw] whitespace-nowrap text-center"
             style={{
               textShadow: '0 0 6px #ffffff38, 0 0 18px #ffffff1f',
             }}
@@ -132,6 +150,7 @@ export function HomeHero({ products }: HomeHeroProps) {
           </Link>
         </motion.div>
       </div>
+      </motion.div>
 
       {/* scroll hint */}
       <motion.div
