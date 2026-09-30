@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
@@ -10,6 +10,46 @@ import { getOptimizedImage } from '@/lib/images';
 const FALLBACK_IMG =
   'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=800&auto=format&fit=crop';
 
+/**
+ * Measures the heading at a reference size, then scales it so the full word
+ * always fits exactly within the viewport width — regardless of font metrics
+ * (Syne is a very wide display face, so vw-only sizing overflowed and clipped
+ * the word on both edges). Re-fits on resize and once webfonts finish loading.
+ */
+function useFitText(ref: React.RefObject<HTMLHeadingElement | null>, targetVw = 0.98) {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let raf = 0;
+    const fit = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const node = ref.current;
+        if (!node) return;
+        node.style.fontSize = '100px';
+        const w = node.scrollWidth || 1;
+        const target = Math.min(window.innerWidth * targetVw, 2200);
+        node.style.fontSize = `${Math.max(28, (100 * target) / w)}px`;
+      });
+    };
+    fit();
+    window.addEventListener('resize', fit);
+    // Syne loads async — re-measure once the real font metrics apply.
+    let cancelled = false;
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(() => { if (!cancelled) fit(); }).catch(() => {});
+    }
+    // Fallback: re-fit shortly after mount in case fonts.ready resolves early.
+    const t = setTimeout(fit, 1200);
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', fit);
+      clearTimeout(t);
+    };
+  }, [ref, targetVw]);
+}
+
 interface HomeHeroProps {
   products: any[];
 }
@@ -17,7 +57,7 @@ interface HomeHeroProps {
 function HeroCard({ product }: { product: any }) {
   const title = product.title || product.name || 'Wearition';
   return (
-    <div className="relative w-[220px] md:w-[280px] aspect-[3/4] rounded-xl overflow-hidden border border-white/10 mx-3 shrink-0">
+    <div className="relative w-[240px] md:w-[285px] h-[320px] md:h-[380px] flex-none rounded-xl overflow-hidden border border-white/10 mx-3">
       <img
         src={getOptimizedImage(product.images?.[0]) || FALLBACK_IMG}
         alt={title}
@@ -41,6 +81,9 @@ function HeroCard({ product }: { product: any }) {
 
 export function HomeHero({ products }: HomeHeroProps) {
   const cards = (products || []).slice(0, 10);
+  const h1Ref = useRef<HTMLHeadingElement | null>(null);
+  // Bulletproof full-word fit: measured at runtime, never clipped.
+  useFitText(h1Ref, 0.97);
 
   // Scroll-linked parallax: content drifts up and fades, cards lag behind,
   // the giant outline word slides sideways — depth while scrolling.
@@ -105,12 +148,13 @@ export function HomeHero({ products }: HomeHeroProps) {
           </span>
         </motion.div>
 
-        {/* Full-viewport breakout: the giant word is wider than the 5xl
-            container, so it escapes to the viewport width and scales in vw —
-            never clipped on desktop or mobile. */}
-        <Reveal delay={0.12} immediate className="mt-8 w-screen relative left-1/2 -translate-x-1/2">
+        {/* Giant wordmark — runtime-measured to fit the viewport exactly.
+            The old vw-only sizing overflowed because Syne is a very wide face,
+            clipping the W and N at the viewport edges. */}
+        <Reveal delay={0.12} immediate className="mt-8 w-full">
           <h1
-            className="font-display font-extrabold uppercase text-white leading-[0.85] tracking-tight text-[12vw] md:text-[10.5vw] whitespace-nowrap text-center"
+            ref={h1Ref}
+            className="font-display font-extrabold uppercase text-white leading-[0.85] tracking-tight whitespace-nowrap text-center text-[11vw]"
             style={{
               textShadow: '0 0 6px #ffffff38, 0 0 18px #ffffff1f',
             }}
