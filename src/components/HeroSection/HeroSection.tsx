@@ -156,11 +156,14 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
         </motion.div>
       </div>
 
-      {/* Signature XODEX Curved Runway Carousel */}
-      <div className="relative w-full overflow-hidden mt-8 md:mt-14 lg:mt-20">
+      {/* Signature XODEX Curved Runway Carousel — pulled up behind the title (XODEX overlap) */}
+      <div className="relative w-full overflow-hidden -mt-56 md:-mt-80 lg:-mt-96">
         
         {/* Top Inverted Oval Curve Horizon */}
         <div className="outer-curve-top" />
+
+        {/* Readability fade where the title/buttons overlap the images */}
+        <div className="absolute top-0 left-0 right-0 h-72 md:h-[28rem] bg-gradient-to-b from-[#030303] via-[#030303]/55 to-transparent pointer-events-none" />
 
         {/* Left & Right Gradient Shadows */}
         <div className="grandientmarqueeleft" />
