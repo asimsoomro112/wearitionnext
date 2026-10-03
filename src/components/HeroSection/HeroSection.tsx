@@ -81,7 +81,7 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
     <section id="home" className="relative w-full overflow-hidden bg-[#030303] text-[#fafafa] pt-36 md:pt-48 pb-20">
       
       {/* Hero Center Text & Actions Suite (Desktop Expansive) */}
-      <div className="w-full px-6 md:px-12 xl:px-20 relative z-10 text-center max-w-[1440px] mx-auto mb-16 lg:mb-24">
+      <div className="w-full px-6 md:px-12 xl:px-20 relative z-20 text-center max-w-[1440px] mx-auto mb-16 lg:mb-24">
         
         {/* Eyebrow Label with 4px Letter Spacing */}
         <motion.div
@@ -164,6 +164,9 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
 
         {/* Readability fade where the title/buttons overlap the images */}
         <div className="absolute top-0 left-0 right-0 h-72 md:h-[28rem] bg-gradient-to-b from-[#030303] via-[#030303]/55 to-transparent pointer-events-none" />
+
+        {/* Dim the runway photos so the title stays dominant */}
+        <div className="absolute inset-0 bg-[#030303]/45 pointer-events-none" />
 
         {/* Left & Right Gradient Shadows */}
         <div className="grandientmarqueeleft" />
