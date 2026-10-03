@@ -110,7 +110,7 @@ export function Footer() {
         {/* Giant Viewport-Width Typographic Watermark (XODEX footerwordmark) */}
         <div className="w-full text-center overflow-hidden pt-10 select-none pointer-events-none">
           <span 
-            className="block font-light uppercase tracking-[0.08em] text-white/[0.10] text-[18vw] leading-[0.8]"
+            className="block font-light uppercase tracking-[0.08em] text-white/[0.10] text-[12vw] leading-[0.8] whitespace-nowrap"
             style={{ fontFamily: "var(--font-cinzel), 'Cinzel', serif" }}
           >
             WEARITION
