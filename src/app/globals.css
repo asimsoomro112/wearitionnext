@@ -336,19 +336,16 @@ html.lenis, html.lenis body {
   will-change: transform;
 }
 
-.animate-marquee-infinite:hover {
-  animation-play-state: paused;
+@keyframes marquee-scroll-reverse {
+  0% { transform: translate3d(-50%, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
 }
 
 .animate-marquee-logos {
   display: flex;
   width: max-content;
-  animation: marquee-scroll 35s linear infinite;
+  animation: marquee-scroll-reverse 35s linear infinite;
   will-change: transform;
-}
-
-.animate-marquee-logos:hover {
-  animation-play-state: paused;
 }
 
 /* ─── BODY & BASE ────────────────────────────────────────────────────────── */

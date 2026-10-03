@@ -74,11 +74,11 @@ export function BrandManifesto() {
           {marqueeBrands.map((brand, i) => (
             <div key={`${brand}-${i}`} className="flex items-center gap-12 sm:gap-16 shrink-0 group">
               <span 
-                className="text-lg sm:text-xl font-mono tracking-[0.22em] uppercase text-[#adadad]/60 group-hover:text-white transition-colors duration-300 select-none"
+                className="text-sm sm:text-base font-sans font-semibold tracking-[0.18em] uppercase text-[#adadad] select-none"
               >
                 {brand}
               </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-white/60 transition-colors" />
+              <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
             </div>
           ))}
         </div>
