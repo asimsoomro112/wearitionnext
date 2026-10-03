@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
@@ -61,8 +60,6 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ products = [] }: HeroSectionProps) {
-  const [isPaused, setIsPaused] = useState(false);
-
   // Blend live Firestore products with fallback editorial visuals
   const showcaseItems = products.length >= 4 
     ? products.map((p, idx) => ({
@@ -173,14 +170,8 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
         <div className="gradientmarqueeright" />
 
         {/* Infinite Horizontal Carousel */}
-        <div 
-          className="flex overflow-hidden py-6"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-        >
-          <div 
-            className={`flex gap-6 sm:gap-8 shrink-0 ${isPaused ? '' : 'animate-marquee-infinite'}`}
-          >
+        <div className="flex overflow-hidden py-6">
+          <div className="flex gap-6 sm:gap-8 shrink-0 animate-marquee-infinite">
             {loopedItems.map((item, index) => (
               <div
                 key={`${item.id}-${index}`}
