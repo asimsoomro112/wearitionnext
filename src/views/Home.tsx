@@ -13,7 +13,6 @@ import { BrandManifesto } from "../components/home/BrandManifesto";
 import { SelectedDrops } from "../components/home/SelectedDrops";
 import { AtelierDisciplines } from "../components/home/AtelierDisciplines";
 import { ParallaxVignette } from "../components/home/ParallaxVignette";
-import { VipTiers } from "../components/home/VipTiers";
 import { FaqSection, FAQS } from "../components/home/FaqSection";
 import { GrandCta } from "../components/home/GrandCta";
 
@@ -106,9 +105,6 @@ export function Home() {
       {/* Parallax Vignette: Emotion in Every Silhouette */}
       <ParallaxVignette />
 
-
-      {/* [04] Pricing: High-Contrast Standard vs Bespoke Tiers */}
-      <VipTiers />
 
       {/* [05] FAQ: Clear Answers & Interactive Accordion */}
       <FaqSection />
