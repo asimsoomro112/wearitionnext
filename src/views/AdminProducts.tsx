@@ -28,6 +28,8 @@ interface Product {
 export function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   
@@ -197,15 +199,22 @@ export function AdminProducts() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
-      try {
-        await deleteDoc(doc(db, 'products', id));
-        toast.success('Product deleted successfully');
-      } catch (err: any) {
-        console.error(err);
-        toast.error('Error deleting product: ' + err.message);
-      }
+  const handleDelete = (id: string) => {
+    setDeleteId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteId) return;
+    setIsDeleting(true);
+    try {
+      await deleteDoc(doc(db, 'products', deleteId));
+      toast.success('Product deleted successfully');
+      setDeleteId(null);
+    } catch (err: any) {
+      console.error(err);
+      toast.error('Error deleting product: ' + err.message);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -504,6 +513,32 @@ export function AdminProducts() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {deleteId && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
+            <h2 className="text-xl font-serif text-[#0a0a0a] mb-3">Delete product?</h2>
+            <p className="text-sm text-[#0a0a0a]/60 mb-8">
+              This will permanently remove the product from the store. This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setDeleteId(null)}
+                disabled={isDeleting}
+                className="px-8 py-3 rounded-full uppercase text-[10px] tracking-[0.2em] font-bold text-[#0a0a0a]/60 hover:text-[#0a0a0a] transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                disabled={isDeleting}
+                className="px-8 py-3 rounded-full uppercase text-[10px] tracking-[0.2em] font-bold bg-red-600 text-white hover:bg-red-700 transition-colors disabled:opacity-50"
+              >
+                {isDeleting ? 'Deleting…' : 'Delete'}
+              </button>
+            </div>
           </div>
         </div>
       )}
