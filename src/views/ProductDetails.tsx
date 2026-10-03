@@ -635,7 +635,7 @@ export function ProductDetails() {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -8 }}
-                      className="text-white/60 text-xs md:text-sm leading-relaxed font-sans mb-6"
+                      className="text-white/60 text-xs md:text-sm leading-relaxed font-sans mb-6 whitespace-pre-line"
                     >
                       {product.description || 'Premium bespoke silhouette from WEARITION\'s curated collection. Handcrafted by master artisans with intricate detail and precision tailoring.'}
                     </motion.div>
