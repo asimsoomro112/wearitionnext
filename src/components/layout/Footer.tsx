@@ -53,9 +53,9 @@ export function Footer() {
               </span>
               <a
                 href="mailto:wearition.80@gmail.com"
-                className="text-lg sm:text-2xl md:text-3xl font-display font-medium text-white hover:underline transition-all block tracking-tight"
+                className="text-base sm:text-lg font-sans font-medium text-white tracking-wide hover:text-white/70 transition-colors block"
               >
-                WEARITION.80@GMAIL.COM
+                wearition.80@gmail.com
               </a>
             </div>
 
