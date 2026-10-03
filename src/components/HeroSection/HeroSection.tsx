@@ -90,8 +90,10 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
           transition={{ duration: 0.6 }}
           className="mb-4"
         >
-          <span className="text-[11px] md:text-xs font-mono uppercase tracking-[0.3em] text-[#adadad] letterspacing4px">
-            WEAR YOUR IDENTITY &bull; PAKISTAN&apos;S PREMIER LUXURY ATELIER
+          <span className="text-[11px] md:text-xs font-mono uppercase tracking-[0.3em] text-[#adadad] inline-block mr-[-0.3em]">
+            <span className="block sm:inline">Wear Your Identity</span>
+            <span className="hidden sm:inline"> &bull; </span>
+            <span className="block sm:inline mt-2 sm:mt-0">Pakistan&apos;s Premier Luxury Atelier</span>
           </span>
         </motion.div>
 
@@ -112,8 +114,12 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
           transition={{ duration: 0.7, delay: 0.2 }}
           className="max-w-3xl mx-auto"
         >
-          <div className="subheading-xodex mt-4">
-            CURATED DESIGNER COUTURE &bull; BESPOKE BRIDAL CREATIONS &bull; TIMELESS PRELOVED LUXURY
+          <div className="subheading-xodex mt-4 mr-[-0.22em]">
+            <span className="inline-block whitespace-nowrap">Curated Designer Couture</span>
+            <span> &bull; </span>
+            <span className="inline-block whitespace-nowrap">Bespoke Bridal Creations</span>
+            <span> &bull; </span>
+            <span className="inline-block whitespace-nowrap">Timeless Preloved Luxury</span>
           </div>
 
           <div className="dividerhero" />
