@@ -40,6 +40,19 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       transition={{ duration: 0.6, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
       className="group relative flex flex-col bg-[#0a0a0a]/70 border border-white/5 hover:border-white/20 transition-all duration-500 rounded-sm p-3 overflow-hidden"
     >
+      {/* Wishlist button — outside the card link for valid HTML/a11y */}
+      <button 
+        onClick={handleWishlistToggle}
+        aria-label="Save to Wishlist"
+        className={`absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 md:hover:scale-110 backdrop-blur-md ${
+          isWished 
+            ? 'bg-white text-black shadow-lg' 
+            : 'bg-black/40 border border-white/15 text-white/80 hover:text-white hover:border-white/30'
+        }`}
+      >
+        <Heart className={`w-3.5 h-3.5 ${isWished ? 'fill-black text-black' : 'text-white'}`} strokeWidth={1.5} />
+      </button>
+
       <Link href={`/product/${product.id}`} className="block relative flex-grow" data-cursor="VIEW">
         <PerspectiveContainer strength={8} className="mb-4">
           <div className="relative aspect-[3/4] overflow-hidden bg-neutral-900 cursor-pointer rounded-sm">
@@ -85,19 +98,6 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             )}
           </div>
         </PerspectiveContainer>
-
-        {/* Wishlist button */}
-        <button 
-          onClick={handleWishlistToggle}
-          aria-label="Save to Wishlist"
-          className={`absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 md:hover:scale-110 backdrop-blur-md ${
-            isWished 
-              ? 'bg-white text-black shadow-lg' 
-              : 'bg-black/40 border border-white/15 text-white/80 hover:text-white hover:border-white/30'
-          }`}
-        >
-          <Heart className={`w-3.5 h-3.5 ${isWished ? 'fill-black text-black' : 'text-white'}`} strokeWidth={1.5} />
-        </button>
 
         {/* Product Info */}
         <div className="flex flex-col items-start px-1 pt-1">

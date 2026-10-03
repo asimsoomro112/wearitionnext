@@ -114,6 +114,13 @@ export function Shop() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
+  const clearSearch = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('search');
+    const qs = params.toString();
+    router.push(qs ? `${pathname}?${qs}` : pathname);
+  };
+
   return (
     <div className="w-full pt-36 md:pt-44 px-6 md:px-12 lg:px-16 pb-36 bg-[#030303] text-[#fafafa] min-h-screen">
       <SEO 
@@ -162,7 +169,18 @@ export function Shop() {
         <div className="flex justify-between items-center border-y border-white/10 py-4 mb-12 text-[10px] uppercase font-mono tracking-[0.22em] text-[#adadad]">
           <span className="flex items-center gap-2">
             <span className="inline-block w-1 h-1 rounded-full bg-[#339e9b]" />
-            {loading ? 'CALCULATING...' : `${sortedProducts.length} ARCHIVE PIECES`}
+            {loading ? 'CALCULATING...' : searchString ? (
+              <>{sortedProducts.length} RESULT{sortedProducts.length === 1 ? '' : 'S'} FOR &ldquo;{searchString.toUpperCase()}&rdquo;</>
+            ) : `${sortedProducts.length} ARCHIVE PIECES`}
+            {searchString && !loading && (
+              <button
+                onClick={clearSearch}
+                className="ml-1 px-2.5 py-1 rounded-full border border-white/15 text-white/60 hover:text-white hover:border-white/40 transition-colors text-[9px] tracking-[0.2em]"
+                aria-label="Clear search"
+              >
+                ✕ CLEAR
+              </button>
+            )}
           </span>
           <div className="flex items-center gap-3">
             <span className="hidden md:inline text-white/30">SORT BY:</span>

@@ -66,7 +66,7 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="hover:text-white transition-colors"
               >
-                Instagram &nearr;
+                Instagram ↗
               </a>
               <a
                 href="https://www.tiktok.com/@wearition3?_r=1&_t=ZS-96Byntwejln"
@@ -74,7 +74,7 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="hover:text-white transition-colors"
               >
-                TikTok &nearr;
+                TikTok ↗
               </a>
               <a
                 href="https://www.facebook.com/profile.php?id=61589494648557"
@@ -82,7 +82,7 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="hover:text-white transition-colors"
               >
-                Facebook &nearr;
+                Facebook ↗
               </a>
               <Link href="/track-order" className="hover:text-white transition-colors">
                 Track Order

@@ -119,7 +119,7 @@ export function Editorial() {
       <section className="py-32 px-6 md:px-12 lg:px-24 max-w-[1800px] mx-auto">
         <div className="mb-20 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div className="max-w-2xl">
-            <h2 className="font-serif text-5xl md:text-7xl text-foreground mb-8">Curated Curation</h2>
+            <h2 className="font-serif text-5xl md:text-7xl text-foreground mb-8">The Curation</h2>
             <p className="text-foreground/50 text-sm md:text-base font-light tracking-wide leading-relaxed">
               Every piece in our collection is hand-selected to represent the pinnacle of modern luxury. From the finest fabrics to the most precise silhouettes, we redefine what it means to wear your identity.
             </p>

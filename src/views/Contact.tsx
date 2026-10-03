@@ -84,7 +84,7 @@ export function Contact() {
           <div className="flex flex-col items-center text-center p-8 bg-background-secondary/5 border border-white/5 rounded-sm">
             <Mail className="w-6 h-6 mb-4 text-accent" />
             <h3 className="uppercase text-[10px] tracking-widest mb-2 font-bold">Email Concierge</h3>
-            <p className="text-sm text-foreground/60">care@wearition.store</p>
+            <p className="text-sm text-foreground/60">wearition.80@gmail.com</p>
           </div>
           <div className="flex flex-col items-center text-center p-8 bg-background-secondary/5 border border-white/5 rounded-sm">
             <Globe className="w-6 h-6 mb-4 text-accent" />

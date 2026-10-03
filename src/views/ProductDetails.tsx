@@ -675,9 +675,9 @@ export function ProductDetails() {
                 <span>Speak with an Atelier Stylist ↗</span>
               </a>
 
-              {/* ── Tax Note ─────────────────────────────────────────── */}
+              {/* ── Shipping Note ─────────────────────────────────────────── */}
               <p className="text-[9px] text-white/20 uppercase tracking-[0.2em] text-center mb-4">
-                Complimentary Worldwide Express Courier & Luxury Box Included
+                Nationwide Delivery Across Pakistan · Rs. 250 Shipping · Free Over Rs. 10,000
               </p>
 
             </motion.div>
