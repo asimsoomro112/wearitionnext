@@ -49,7 +49,7 @@ export function OrderSuccess() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <Link
               href={`/track-order?id=${orderId}`}
-              className="w-full sm:w-auto px-8 py-3.5 bg-white text-black text-[10px] uppercase font-mono tracking-[0.25em] font-semibold hover:bg-white/90 transition-all rounded-full shadow-xl flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-3.5 bg-accent text-white text-[10px] uppercase font-mono tracking-[0.25em] font-semibold hover:bg-[#3ab0ad] transition-all rounded-full shadow-xl flex items-center justify-center gap-2"
             >
               <span>Track Consignment</span>
               <ArrowRight className="w-3.5 h-3.5" />

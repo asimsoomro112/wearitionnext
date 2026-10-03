@@ -19,8 +19,8 @@
   --bg-card-hover: #141414;
   --fg: #fafafa;
   --fg-muted: #adadad;
-  --accent: #ffffff;
-  --accent-rgb: 255, 255, 255;
+  --accent: #339e9b;
+  --accent-rgb: 51, 158, 155;
   --green: #339e9b;
   --border-color: rgba(255, 255, 255, 0.08);
   --border-hover: rgba(255, 255, 255, 0.22);
@@ -36,13 +36,18 @@
   --bg-card-hover: #141414;
   --fg: #fafafa;
   --fg-muted: #adadad;
-  --accent: #ffffff;
-  --accent-rgb: 255, 255, 255;
+  --accent: #339e9b;
+  --accent-rgb: 51, 158, 155;
   --green: #339e9b;
   --border-color: rgba(255, 255, 255, 0.08);
   --border-hover: rgba(255, 255, 255, 0.22);
   --glass-bg: rgba(3, 3, 3, 0.85);
   --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+::selection {
+  background: #339e9b;
+  color: #ffffff;
 }
 
 /* ─── MOBILE FIT GUARD ────────────────────────────────────────────────────
@@ -219,8 +224,8 @@ html.lenis, html.lenis body {
 
 /* ─── XODEX EXACT 8PX RECTANGULAR BUTTONS ─────────────────────────────────── */
 .buttonprimary {
-  background-color: #fafafa;
-  color: #030303;
+  background-color: #339e9b;
+  color: #ffffff;
   font-family: var(--font-sans), 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 600;
@@ -239,9 +244,9 @@ html.lenis, html.lenis body {
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .buttonprimary:hover {
-  background-color: #ffffff;
+  background-color: #3ab0ad;
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 35px rgba(67, 200, 203, 0.28);
 }
 
 .buttonsecondary {
@@ -265,7 +270,8 @@ html.lenis, html.lenis body {
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .buttonsecondary:hover {
-  border-color: #ffffff;
+  border-color: #339e9b;
+  color: #7fd1ce;
   background-color: rgba(255, 255, 255, 0.08);
   transform: translateY(-2px);
 }

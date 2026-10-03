@@ -37,19 +37,19 @@ export function Navbar() {
 
       {/* Center Micro Navigation (Desktop) */}
       <nav className="hidden md:flex items-center gap-8 text-[11px] uppercase tracking-[0.25em] font-mono font-medium text-white/60">
-        <Link href="/shop" className="hover:text-white transition-colors">
+        <Link href="/shop" className="hover:text-accent transition-colors">
           Archive
         </Link>
-        <Link href="/brands" className="hover:text-white transition-colors">
+        <Link href="/brands" className="hover:text-accent transition-colors">
           Brands
         </Link>
-        <Link href="/editorial" className="hover:text-white transition-colors">
+        <Link href="/editorial" className="hover:text-accent transition-colors">
           Couture
         </Link>
-        <Link href="/about" className="hover:text-white transition-colors">
+        <Link href="/about" className="hover:text-accent transition-colors">
           Studio
         </Link>
-        <Link href="/contact" className="hover:text-white transition-colors">
+        <Link href="/contact" className="hover:text-accent transition-colors">
           Contact
         </Link>
       </nav>
@@ -60,7 +60,7 @@ export function Navbar() {
         <button
           onClick={toggleSearch}
           aria-label="Search"
-          className="p-2 text-white/70 hover:text-white transition-colors cursor-pointer"
+          className="p-2 text-white/70 hover:text-accent transition-colors cursor-pointer"
         >
           <Search className="w-4 h-4" />
         </button>
@@ -69,7 +69,7 @@ export function Navbar() {
         <Link
           href="/wishlist"
           aria-label="Wishlist"
-          className="p-2 text-white/70 hover:text-white transition-colors"
+          className="p-2 text-white/70 hover:text-accent transition-colors"
         >
           <Heart className="w-4 h-4" />
         </Link>
@@ -78,11 +78,11 @@ export function Navbar() {
         <button
           onClick={openCart}
           aria-label="Shopping Bag"
-          className="relative p-2 text-white/70 hover:text-white transition-colors cursor-pointer"
+          className="relative p-2 text-white/70 hover:text-accent transition-colors cursor-pointer"
         >
           <ShoppingBag className="w-4 h-4" />
           {cartCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-white text-black text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-mono font-bold">
+            <span className="absolute -top-1 -right-1 bg-accent text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-mono font-bold">
               {cartCount}
             </span>
           )}
@@ -91,7 +91,7 @@ export function Navbar() {
         {/* XODEX Menu Pill */}
         <button
           onClick={handleToggleMenu}
-          className="flex items-center gap-2 px-5 py-2 rounded-full border border-white/20 bg-black/40 backdrop-blur-xl hover:bg-white hover:text-black transition-all duration-300 text-white cursor-pointer group"
+          className="flex items-center gap-2 px-5 py-2 rounded-full border border-white/20 bg-black/40 backdrop-blur-xl hover:bg-accent hover:border-accent hover:text-white transition-all duration-300 text-white cursor-pointer group"
         >
           <span className="text-[11px] font-mono font-semibold tracking-[0.22em] uppercase">MENU</span>
         </button>

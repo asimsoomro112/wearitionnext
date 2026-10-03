@@ -89,7 +89,7 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
         >
           <span className="text-[11px] md:text-xs font-mono uppercase tracking-[0.3em] text-[#adadad] inline-block mr-[-0.3em]">
             <span className="block sm:inline">Wear Your Identity</span>
-            <span className="hidden sm:inline"> &bull; </span>
+            <span className="hidden sm:inline text-accent"> &bull; </span>
             <span className="block sm:inline mt-2 sm:mt-0">Pakistan&apos;s Premier Luxury Atelier</span>
           </span>
         </motion.div>

@@ -32,7 +32,7 @@ export function GrandCta() {
         >
           WEAR YOUR<br />
           IDENTITY<br />
-          TIMELESSLY.
+          <span className="text-accent">TIMELESSLY.</span>
         </motion.h2>
 
         <p className="text-xs sm:text-sm font-sans text-[#adadad] max-w-xl mx-auto mb-12 sm:mb-16 leading-relaxed">
@@ -54,7 +54,7 @@ export function GrandCta() {
             <svg
               viewBox="0 0 24 24"
               fill="none"
-              className="w-4 h-4 text-black group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+              className="w-4 h-4 text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
             >
               <path
                 d="M7 17L17 7M17 7H8M17 7V16"

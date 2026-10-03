@@ -97,7 +97,7 @@ export function SelectedDrops({ products = [] }: SelectedDropsProps) {
             >
               <Link
                 href={drop.href}
-                className="group block relative overflow-hidden rounded-xl border border-white/10 bg-[#0d0d0d] aspect-[16/11] md:aspect-[4/3] lg:min-h-[480px] shadow-2xl"
+                className="group block relative overflow-hidden rounded-xl border border-white/10 hover:border-accent/50 bg-[#0d0d0d] aspect-[16/11] md:aspect-[4/3] lg:min-h-[480px] shadow-2xl transition-colors duration-500"
               >
                 {/* Full Bleed Fashion Image with Zoom */}
                 <img
@@ -112,7 +112,7 @@ export function SelectedDrops({ products = [] }: SelectedDropsProps) {
 
                 {/* Central Hover Pill */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="opacity-0 group-hover:opacity-100 group-hover:scale-100 scale-90 transition-all duration-300 px-7 py-3 rounded-full bg-white text-black font-semibold text-xs tracking-[0.22em] uppercase shadow-2xl flex items-center gap-2">
+                  <div className="opacity-0 group-hover:opacity-100 group-hover:scale-100 scale-90 transition-all duration-300 px-7 py-3 rounded-full bg-accent text-white font-semibold text-xs tracking-[0.22em] uppercase shadow-2xl flex items-center gap-2">
                     <span>VIEW PROJECT</span>
                     <ArrowUpRight className="w-4 h-4" />
                   </div>
@@ -127,7 +127,7 @@ export function SelectedDrops({ products = [] }: SelectedDropsProps) {
                     >
                       {drop.title}
                     </h3>
-                    <div className="w-10 h-10 lg:w-11 lg:h-11 rounded-full border border-white/20 flex items-center justify-center text-white/70 group-hover:bg-white group-hover:text-black group-hover:border-white transition-all duration-300 shrink-0 ml-4">
+                    <div className="w-10 h-10 lg:w-11 lg:h-11 rounded-full border border-white/20 flex items-center justify-center text-white/70 group-hover:bg-accent group-hover:text-white group-hover:border-accent transition-all duration-300 shrink-0 ml-4">
                       <ArrowUpRight className="w-4 h-4 lg:w-5 lg:h-5 group-hover:rotate-45 transition-transform duration-300" />
                     </div>
                   </div>

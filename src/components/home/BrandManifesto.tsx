@@ -45,11 +45,11 @@ export function BrandManifesto() {
           className="text-2xl sm:text-4xl md:text-5xl lg:text-[4.2rem] font-light text-center leading-[1.22] tracking-tight text-[#fafafa] max-w-5xl mx-auto"
         >
           Founded on the philosophy of{' '}
-          <span className="text-white underline decoration-white/40 decoration-1 underline-offset-8 font-normal">
+          <span className="text-white underline decoration-accent/60 decoration-1 underline-offset-8 font-normal">
             Wear Your Identity
           </span>
           . We bridge ancestral South Asian needlecraft with contemporary haute couture, curating certified luxury that remains{' '}
-          <span className="text-white underline decoration-white/40 decoration-1 underline-offset-8 font-normal">
+          <span className="text-white underline decoration-accent/60 decoration-1 underline-offset-8 font-normal">
             timeless
           </span>
           .
@@ -78,7 +78,7 @@ export function BrandManifesto() {
               >
                 {brand}
               </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
+              <span className="w-1.5 h-1.5 rounded-full bg-accent/50" />
             </div>
           ))}
         </div>

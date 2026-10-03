@@ -290,7 +290,7 @@ export function Account() {
                     onClick={() => setActiveTab('orders')}
                     className={`w-full flex items-center justify-between px-4 py-3 rounded-sm transition-all ${
                       activeTab === 'orders' 
-                        ? 'bg-white text-black font-semibold shadow-lg' 
+                        ? 'bg-accent text-white font-semibold shadow-lg' 
                         : 'text-white/60 hover:text-white hover:bg-white/[0.03]'
                     }`}
                   >
@@ -305,7 +305,7 @@ export function Account() {
                     onClick={() => setActiveTab('profile')}
                     className={`w-full flex items-center justify-between px-4 py-3 rounded-sm transition-all ${
                       activeTab === 'profile' 
-                        ? 'bg-white text-black font-semibold shadow-lg' 
+                        ? 'bg-accent text-white font-semibold shadow-lg' 
                         : 'text-white/60 hover:text-white hover:bg-white/[0.03]'
                     }`}
                   >
@@ -387,7 +387,7 @@ export function Account() {
                         </p>
                         <Link 
                           href="/shop" 
-                          className="inline-flex items-center gap-2 bg-white text-black px-8 py-3.5 rounded-full text-[10px] uppercase tracking-[0.2em] font-semibold hover:bg-white/90 transition-all shadow-xl"
+                          className="inline-flex items-center gap-2 bg-accent text-white px-8 py-3.5 rounded-full text-[10px] uppercase tracking-[0.2em] font-semibold hover:bg-[#3ab0ad] transition-all shadow-xl"
                         >
                           <span>Browse Atelier Collection ↗</span>
                         </Link>
@@ -588,7 +588,7 @@ export function Account() {
             <button
               type="submit"
               disabled={isLoadingAction}
-              className="w-full mt-4 bg-white text-black py-4 rounded-full text-[10px] uppercase font-mono tracking-[0.25em] font-semibold hover:bg-white/90 transition-all shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full mt-4 bg-accent text-white py-4 rounded-full text-[10px] uppercase font-mono tracking-[0.25em] font-semibold hover:bg-[#3ab0ad] transition-all shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {isLoadingAction ? 'Verifying...' : (
                 <>
@@ -676,7 +676,7 @@ export function Account() {
             <button
               type="submit"
               disabled={isLoadingAction}
-              className="w-full mt-4 bg-white text-black py-4 rounded-full text-[10px] uppercase font-mono tracking-[0.25em] font-semibold hover:bg-white/90 transition-all shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full mt-4 bg-accent text-white py-4 rounded-full text-[10px] uppercase font-mono tracking-[0.25em] font-semibold hover:bg-[#3ab0ad] transition-all shadow-xl active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {isLoadingAction ? 'Preparing Access...' : (
                 <>
@@ -722,7 +722,7 @@ export function Account() {
               <button
                 type="submit"
                 disabled={isLoadingAction || otp.length < 6}
-                className="w-full bg-white text-black py-4 rounded-full text-[10px] uppercase font-mono tracking-[0.25em] font-semibold hover:bg-white/90 transition-all shadow-xl disabled:opacity-30"
+                className="w-full bg-accent text-white py-4 rounded-full text-[10px] uppercase font-mono tracking-[0.25em] font-semibold hover:bg-[#3ab0ad] transition-all shadow-xl disabled:opacity-30"
               >
                 {isLoadingAction ? 'Verifying...' : 'Complete Registration'}
               </button>
@@ -777,7 +777,7 @@ export function Account() {
               <button
                 type="submit"
                 disabled={isLoadingAction}
-                className="w-full bg-white text-black py-4 rounded-full text-[10px] uppercase font-mono tracking-[0.25em] font-semibold hover:bg-white/90 transition-all shadow-xl disabled:opacity-50"
+                className="w-full bg-accent text-white py-4 rounded-full text-[10px] uppercase font-mono tracking-[0.25em] font-semibold hover:bg-[#3ab0ad] transition-all shadow-xl disabled:opacity-50"
               >
                 {isLoadingAction ? 'Sending Code...' : 'Dispatch Reset Code'}
               </button>
@@ -847,7 +847,7 @@ export function Account() {
             <button
               type="submit"
               disabled={isLoadingAction || otp.length < 6}
-              className="w-full bg-white text-black py-4 rounded-full text-[10px] uppercase font-mono tracking-[0.25em] font-semibold hover:bg-white/90 transition-all shadow-xl disabled:opacity-30"
+              className="w-full bg-accent text-white py-4 rounded-full text-[10px] uppercase font-mono tracking-[0.25em] font-semibold hover:bg-[#3ab0ad] transition-all shadow-xl disabled:opacity-30"
             >
               {isLoadingAction ? 'Updating...' : 'Update Password'}
             </button>
@@ -886,7 +886,7 @@ export function Account() {
                 onClick={() => { setView('login'); setError(null); }}
                 className={`flex-1 py-2.5 rounded-full text-[9px] uppercase font-mono tracking-[0.2em] font-semibold transition-all ${
                   view === 'login' 
-                    ? 'bg-white text-black shadow-md' 
+                    ? 'bg-accent text-white shadow-md' 
                     : 'text-white/40 hover:text-white'
                 }`}
               >
@@ -897,7 +897,7 @@ export function Account() {
                 onClick={() => { setView('signup'); setError(null); }}
                 className={`flex-1 py-2.5 rounded-full text-[9px] uppercase font-mono tracking-[0.2em] font-semibold transition-all ${
                   view === 'signup' 
-                    ? 'bg-white text-black shadow-md' 
+                    ? 'bg-accent text-white shadow-md' 
                     : 'text-white/40 hover:text-white'
                 }`}
               >

@@ -156,7 +156,7 @@ export function Shop() {
               onClick={() => setCategory(cat.value)}
               className={`px-5 py-2 rounded-full text-[10px] tracking-[0.2em] uppercase font-mono font-medium transition-all duration-300 cursor-pointer ${
                 categoryFilter === cat.value
-                  ? 'bg-white text-black shadow-xl scale-105 border border-white font-semibold'
+                  ? 'bg-accent text-white shadow-xl scale-105 border border-accent font-semibold'
                   : 'bg-white/[0.03] border border-white/10 text-[#adadad] hover:border-white/30 hover:text-white hover:bg-white/[0.06]'
               }`}
             >
@@ -215,7 +215,7 @@ export function Shop() {
                 const params = new URLSearchParams();
                 router.push(`${pathname}`);
               }} 
-              className="px-6 py-3 rounded-full bg-white text-black text-[10px] uppercase font-mono tracking-[0.2em] font-bold hover:bg-white/80 transition-colors shadow-xl cursor-pointer"
+              className="px-6 py-3 rounded-full bg-accent text-white text-[10px] uppercase font-mono tracking-[0.2em] font-bold hover:bg-[#3ab0ad] transition-colors shadow-xl cursor-pointer"
             >
               Reset Filters
             </button>

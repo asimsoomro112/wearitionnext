@@ -161,7 +161,7 @@ function StickyMobileCTA({
                      transition-all duration-300 border ${
                        isOutOfStock
                          ? 'border-white/10 text-white/30 cursor-not-allowed'
-                         : 'bg-white text-black active:scale-95 shadow-xl'
+                         : 'bg-accent text-white active:scale-95 shadow-xl'
                      }`}
         >
           {isOutOfStock ? 'Sold Out' : 'Add to Bag'}
@@ -473,7 +473,7 @@ export function ProductDetails() {
                           onClick={() => { setSelectedColor(color); triggerHaptic('light'); }}
                           className={`px-4 py-2 rounded-full border text-[10px] uppercase tracking-[0.18em] font-medium transition-all duration-200 ${
                             selectedColor === color
-                              ? 'border-white bg-white text-black shadow-lg scale-105'
+                              ? 'border-accent bg-accent text-white shadow-lg scale-105'
                               : 'border-white/15 bg-white/[0.02] text-white/50 hover:border-white/30 hover:text-white'
                           }`}
                         >
@@ -507,7 +507,7 @@ export function ProductDetails() {
                             onClick={() => { setSelectedSize(size); triggerHaptic('light'); }}
                             className={`min-w-12 h-11 px-3 rounded-full border font-mono text-xs uppercase tracking-wider transition-all duration-200 ${
                               selectedSize === size
-                                ? 'border-white bg-white text-black shadow-lg scale-105 font-bold'
+                                ? 'border-accent bg-accent text-white shadow-lg scale-105 font-bold'
                                 : 'border-white/15 bg-white/[0.02] text-white/60 hover:border-white/40 hover:text-white'
                             }`}
                           >
@@ -555,7 +555,7 @@ export function ProductDetails() {
                 className={`relative w-full py-4.5 rounded-full font-bold uppercase text-xs tracking-[0.25em] transition-all duration-300 mb-3 shadow-2xl flex items-center justify-center gap-2.5 ${
                   isOutOfStock
                     ? 'bg-white/10 text-white/30 cursor-not-allowed border border-white/10'
-                    : 'bg-white text-black hover:bg-white/90 hover:scale-[1.01]'
+                    : 'bg-accent text-white hover:bg-[#3ab0ad] hover:scale-[1.01]'
                 }`}
               >
                 <ShoppingBag className="w-4 h-4" />
@@ -568,11 +568,11 @@ export function ProductDetails() {
                   onClick={handleWishlistToggle}
                   className={`flex-1 py-3.5 rounded-full border text-[10px] font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all duration-300 ${
                     isWished
-                      ? 'border-white bg-white text-black'
+                      ? 'border-accent bg-accent text-white'
                       : 'border-white/15 bg-white/[0.02] text-white/60 hover:border-white/40 hover:text-white'
                   }`}
                 >
-                  <Heart className={`w-3.5 h-3.5 ${isWished ? 'fill-black' : ''}`} />
+                  <Heart className={`w-3.5 h-3.5 ${isWished ? 'fill-white' : ''}`} />
                   {isWished ? 'Saved to Wishlist' : 'Add to Wishlist'}
                 </button>
                 <button
@@ -621,7 +621,7 @@ export function ProductDetails() {
                       {activeTab === tab && (
                         <motion.div
                           layoutId="tab-underline"
-                          className="absolute bottom-0 left-0 right-0 h-0.5 bg-white rounded-full"
+                          className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent rounded-full"
                         />
                       )}
                     </button>

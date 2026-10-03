@@ -24,22 +24,22 @@ export function Footer() {
             </p>
 
             <nav className="flex flex-wrap lg:flex-nowrap gap-x-6 xl:gap-x-8 gap-y-3 text-xs uppercase font-mono tracking-[0.2em] font-medium text-white/70">
-              <Link href="/" className="hover:text-white transition-colors">
+              <Link href="/" className="hover:text-accent transition-colors">
                 HOME
               </Link>
-              <Link href="/shop" className="hover:text-white transition-colors">
+              <Link href="/shop" className="hover:text-accent transition-colors">
                 ARCHIVE
               </Link>
-              <Link href="/brands" className="hover:text-white transition-colors">
+              <Link href="/brands" className="hover:text-accent transition-colors">
                 BRANDS
               </Link>
-              <Link href="/editorial" className="hover:text-white transition-colors">
+              <Link href="/editorial" className="hover:text-accent transition-colors">
                 COUTURE
               </Link>
-              <Link href="/about" className="hover:text-white transition-colors">
+              <Link href="/about" className="hover:text-accent transition-colors">
                 STUDIO
               </Link>
-              <Link href="/contact" className="hover:text-white transition-colors">
+              <Link href="/contact" className="hover:text-accent transition-colors">
                 CONTACT
               </Link>
             </nav>
@@ -64,7 +64,7 @@ export function Footer() {
                 href="https://www.instagram.com/_wearition?igsh=eG5obHgydGc3a2Vr"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-white transition-colors"
+                className="hover:text-accent transition-colors"
               >
                 Instagram ↗
               </a>
@@ -72,7 +72,7 @@ export function Footer() {
                 href="https://www.tiktok.com/@wearition3?_r=1&_t=ZS-96Byntwejln"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-white transition-colors"
+                className="hover:text-accent transition-colors"
               >
                 TikTok ↗
               </a>
@@ -80,11 +80,11 @@ export function Footer() {
                 href="https://www.facebook.com/profile.php?id=61589494648557"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-white transition-colors"
+                className="hover:text-accent transition-colors"
               >
                 Facebook ↗
               </a>
-              <Link href="/track-order" className="hover:text-white transition-colors">
+              <Link href="/track-order" className="hover:text-accent transition-colors">
                 Track Order
               </Link>
             </div>
@@ -95,13 +95,13 @@ export function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between text-[10px] uppercase font-mono tracking-[0.25em] text-[#adadad] py-8 gap-4 border-b border-white/5">
           <span>&copy; 2026 WEARITION. ALL RIGHTS RESERVED.</span>
           <div className="flex items-center gap-6">
-            <Link href="/privacy" className="hover:text-white transition-colors">
+            <Link href="/privacy" className="hover:text-accent transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/shipping" className="hover:text-white transition-colors">
+            <Link href="/shipping" className="hover:text-accent transition-colors">
               Shipping Policy
             </Link>
-            <Link href="/returns" className="hover:text-white transition-colors">
+            <Link href="/returns" className="hover:text-accent transition-colors">
               Returns &amp; Exchanges
             </Link>
           </div>

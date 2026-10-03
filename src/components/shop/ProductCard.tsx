@@ -38,7 +38,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       initial={{ y: 30, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
-      className="group relative flex flex-col bg-[#0a0a0a]/70 border border-white/5 hover:border-white/20 transition-all duration-500 rounded-sm p-3 overflow-hidden"
+      className="group relative flex flex-col bg-[#0a0a0a]/70 border border-white/5 hover:border-accent/40 transition-all duration-500 rounded-sm p-3 overflow-hidden"
     >
       {/* Wishlist button — outside the card link for valid HTML/a11y */}
       <button 
@@ -46,11 +46,11 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         aria-label="Save to Wishlist"
         className={`absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 md:hover:scale-110 backdrop-blur-md ${
           isWished 
-            ? 'bg-white text-black shadow-lg' 
+            ? 'bg-accent text-white shadow-lg' 
             : 'bg-black/40 border border-white/15 text-white/80 hover:text-white hover:border-white/30'
         }`}
       >
-        <Heart className={`w-3.5 h-3.5 ${isWished ? 'fill-black text-black' : 'text-white'}`} strokeWidth={1.5} />
+        <Heart className={`w-3.5 h-3.5 ${isWished ? 'fill-white text-white' : 'text-white'}`} strokeWidth={1.5} />
       </button>
 
       <Link href={`/product/${product.id}`} className="block relative flex-grow" data-cursor="VIEW">
@@ -75,7 +75,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             
             {/* Dark gradient overlay on hover */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 flex items-end justify-center pb-6 pointer-events-none">
-              <span className="bg-white text-black px-5 py-2.5 text-[10px] uppercase tracking-[0.22em] font-semibold pointer-events-auto rounded-full shadow-2xl flex items-center gap-1.5 transition-transform duration-300 hover:scale-105">
+              <span className="bg-accent text-white px-5 py-2.5 text-[10px] uppercase tracking-[0.22em] font-semibold pointer-events-auto rounded-full shadow-2xl flex items-center gap-1.5 transition-transform duration-300 hover:scale-105">
                 <Eye className="w-3.5 h-3.5" />
                 Quick View
               </span>
@@ -94,7 +94,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
               <span className="bg-black/80 backdrop-blur-md border border-white/10 text-white/50 text-[8px] uppercase tracking-[0.2em] px-2.5 py-1 font-semibold rounded-full pointer-events-auto">Sold Out</span>
             )}
             {product.isNew && (
-              <span className="bg-white text-black text-[8px] uppercase tracking-[0.2em] px-2.5 py-1 font-bold rounded-full pointer-events-auto">New</span>
+              <span className="bg-accent text-white text-[8px] uppercase tracking-[0.2em] px-2.5 py-1 font-bold rounded-full pointer-events-auto">New</span>
             )}
           </div>
         </PerspectiveContainer>

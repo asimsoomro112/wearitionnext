@@ -70,7 +70,7 @@ export function Wishlist() {
             </p>
             <Link 
               href="/shop" 
-              className="inline-flex items-center gap-2 bg-white text-black px-8 py-3.5 rounded-full text-[10px] uppercase font-mono tracking-[0.2em] font-semibold hover:bg-white/90 transition-all shadow-xl"
+              className="inline-flex items-center gap-2 bg-accent text-white px-8 py-3.5 rounded-full text-[10px] uppercase font-mono tracking-[0.2em] font-semibold hover:bg-[#3ab0ad] transition-all shadow-xl"
             >
               <span>Explore Atelier Archive ↗</span>
             </Link>

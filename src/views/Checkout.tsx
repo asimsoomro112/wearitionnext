@@ -226,14 +226,14 @@ export function Checkout() {
         <p className="font-serif text-5xl text-white/10 mb-6">◇</p>
         <h1 className="font-serif text-3xl md:text-4xl uppercase tracking-tight text-white mb-3">Your Atelier Bag is Empty</h1>
         <p className="text-white/40 mb-8 font-sans text-xs tracking-wide">Acquire exclusive haute couture pieces to proceed with checkout.</p>
-        <Link href="/shop" className="px-8 py-3.5 bg-white text-black text-[10px] uppercase tracking-[0.22em] font-semibold hover:bg-white/80 transition-colors rounded-full shadow-xl">
+        <Link href="/shop" className="px-8 py-3.5 bg-accent text-white text-[10px] uppercase tracking-[0.22em] font-semibold hover:bg-[#3ab0ad] transition-colors rounded-full shadow-xl">
           Discover Collections ↗
         </Link>
       </div>
     );
   }
 
-  const inputClass = "w-full bg-white/[0.03] border border-white/10 px-4 py-3 text-sm focus:outline-none focus:border-white transition-colors text-white placeholder-white/25 rounded-sm font-sans";
+  const inputClass = "w-full bg-white/[0.03] border border-white/10 px-4 py-3 text-sm focus:outline-none focus:border-accent transition-colors text-white placeholder-white/25 rounded-sm font-sans";
   const labelClass = "block text-[10px] uppercase tracking-[0.2em] text-white/50 mb-2 font-medium";
 
   return (
@@ -242,7 +242,7 @@ export function Checkout() {
         <motion.header initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
           <SEO title="Checkout • WEARITION" description="Complete your WEARITION order securely." />
           <div className="flex items-center gap-2 text-[9px] uppercase tracking-[0.25em] text-white/40 mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
             <span>SECURE ATELIER ACQUISITION</span>
           </div>
           <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl uppercase tracking-tight text-white">Checkout</h1>
@@ -269,7 +269,7 @@ export function Checkout() {
                   </p>
                   
                   <div className="flex flex-col sm:flex-row gap-3.5 justify-center">
-                    <Link href="/account" className="flex-1 max-w-[240px] bg-white text-black py-3.5 px-6 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white/80 transition-all flex items-center justify-center gap-2 shadow-xl">
+                    <Link href="/account" className="flex-1 max-w-[240px] bg-accent text-white py-3.5 px-6 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-[#3ab0ad] transition-all flex items-center justify-center gap-2 shadow-xl">
                       <LogIn className="w-3.5 h-3.5" />
                       Sign In / Register
                     </Link>
@@ -311,7 +311,7 @@ export function Checkout() {
                                 exit={{ opacity: 0, height: 0 }}
                                 className="mt-3 p-3 bg-white/[0.04] border border-white/15 rounded-sm flex items-center gap-3 overflow-hidden"
                               >
-                                <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                                <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
                                 <div className="flex-1">
                                   <p className="text-[10px] text-white font-bold uppercase tracking-widest">Account Registered</p>
                                   <p className="text-[10px] text-white/60 leading-relaxed font-sans">This email is already registered. <Link href="/account" className="text-white underline hover:text-white/80">Sign in</Link> for faster checkout.</p>
@@ -377,7 +377,7 @@ export function Checkout() {
                           { value: 'easypaisa', label: 'EasyPaisa Wallet', desc: 'Instant mobile wallet payment.' },
                           { value: 'jazzcash', label: 'JazzCash Wallet', desc: 'Instant mobile wallet payment.' },
                         ].map(opt => (
-                          <label key={opt.value} className={`flex items-start gap-4 cursor-pointer p-4 rounded-sm border transition-all ${paymentMethod === opt.value ? 'border-white bg-white/[0.06]' : 'border-white/5 hover:border-white/15 bg-white/[0.01]'}`}>
+                          <label key={opt.value} className={`flex items-start gap-4 cursor-pointer p-4 rounded-sm border transition-all ${paymentMethod === opt.value ? 'border-accent bg-accent/[0.08]' : 'border-white/5 hover:border-white/15 bg-white/[0.01]'}`}>
                             <input type="radio" name="payment" value={opt.value} checked={paymentMethod === opt.value} onChange={() => setPaymentMethod(opt.value)} className="mt-1 accent-white" />
                             <div>
                               <p className="text-xs font-medium uppercase tracking-wide text-white">{opt.label}</p>
@@ -396,7 +396,7 @@ export function Checkout() {
                     <button
                       type="submit"
                       disabled={isProcessing}
-                      className="w-full bg-white text-black py-4.5 uppercase text-[10px] tracking-[0.25em] font-bold hover:bg-white/90 transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-3 rounded-full shadow-2xl"
+                      className="w-full bg-accent text-white py-4.5 uppercase text-[10px] tracking-[0.25em] font-bold hover:bg-[#3ab0ad] transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-3 rounded-full shadow-2xl"
                     >
                       {isProcessing ? (
                         <>
@@ -423,7 +423,7 @@ export function Checkout() {
                   <div key={`${item.id}-${item.size}-${item.color}`} className="flex gap-4 items-center border-b border-white/5 pb-4">
                     <div className="w-16 h-20 bg-neutral-900 relative overflow-hidden rounded-sm border border-white/10 flex-shrink-0">
                       {item.image && <img src={getOptimizedImage(item.image)} alt={item.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />}
-                      <span className="absolute -top-1 -right-1 bg-white text-black w-4.5 h-4.5 flex items-center justify-center rounded-full text-[9px] font-mono font-bold">{item.quantity}</span>
+                      <span className="absolute -top-1 -right-1 bg-accent text-white w-4.5 h-4.5 flex items-center justify-center rounded-full text-[9px] font-mono font-bold">{item.quantity}</span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="text-xs font-sans uppercase tracking-wide text-white truncate">{item.title}</h4>
