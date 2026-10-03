@@ -59,7 +59,6 @@ export function VipTiers() {
                 >
                   PKR 25,000
                 </span>
-                <span className="text-xs font-mono uppercase tracking-widest text-black/50 ml-2">/ $90 USD</span>
               </div>
 
               {/* Features List in 2 Columns on Desktop */}

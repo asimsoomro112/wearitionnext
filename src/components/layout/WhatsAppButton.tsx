@@ -10,7 +10,7 @@ interface WhatsAppButtonProps {
 }
 
 export function WhatsAppButton({ 
-  phoneNumber = '923000000000',
+  phoneNumber = '923333744318',
   message,
   productTitle
 }: WhatsAppButtonProps) {

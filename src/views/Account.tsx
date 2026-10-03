@@ -338,7 +338,7 @@ export function Account() {
                       Need bespoke tailoring or order assistance?
                     </p>
                     <a
-                      href="https://wa.me/923000000000?text=Hello%20WEARITION%20Concierge"
+                      href="https://wa.me/923333744318?text=Hello%20WEARITION%20Concierge"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 text-[10px] uppercase font-mono tracking-[0.2em] text-white hover:underline"

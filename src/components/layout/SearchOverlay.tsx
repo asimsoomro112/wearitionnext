@@ -69,7 +69,7 @@ export function SearchOverlay() {
               <div className="w-full mt-12 flex flex-col items-center opacity-0 animate-[fadeIn_1s_ease_0.3s_forwards]">
                 <p className="uppercase text-[10px] tracking-[0.3em] text-foreground/40 mb-6 font-bold">Trending Searches</p>
                 <div className="flex flex-wrap justify-center gap-3">
-                  {['Sculpted Gown', 'Velvet', 'Tech-Noir', 'Cashmere', 'Unstitched', 'Accessories'].map((term) => (
+                  {['Embroidered Lawn', 'Chiffon', 'Luxury Pret', 'Unstitched', 'Festive', 'Silk'].map((term) => (
                     <button
                       key={term}
                       onClick={() => {

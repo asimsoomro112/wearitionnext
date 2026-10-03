@@ -19,98 +19,11 @@ import {
   Eye, AlertCircle, ShoppingBag, Truck, ShieldCheck,
   Banknote, Share2, Heart, Star, ChevronRight, X,
   ZoomIn, MessageCircle, Clock, Package, RotateCcw,
-  CheckCircle2, Users, Flame, ChevronDown
+  CheckCircle2, ChevronDown
 } from "lucide-react";
 import { WearitionSpinner } from '../components/layout/WearitionSpinner';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-interface Review {
-  name: string;
-  rating: number;
-  comment: string;
-  date: string;
-  verified: boolean;
-  location: string;
-}
-
-// ─── Static Mock Reviews (replace with Firestore sub-collection later) ────────
-const MOCK_REVIEWS: Review[] = [
-  { name: "Ayesha M.", rating: 5, comment: "Absolutely stunning quality. The fabric is luxurious and the fit is perfect. Will definitely order again!", date: "2 days ago", verified: true, location: "Lahore" },
-  { name: "Fatima K.", rating: 5, comment: "Received so many compliments. Fast delivery and packaging was premium.", date: "1 week ago", verified: true, location: "Karachi" },
-  { name: "Sana R.", rating: 4, comment: "Beautiful piece, exactly as shown. Slightly bigger than expected but overall very happy.", date: "2 weeks ago", verified: true, location: "Islamabad" },
-];
-
 // ─── Sub-Components ───────────────────────────────────────────────────────────
-
-/** Floating real-time social proof badge */
-function ViewersBadge({ count }: { count: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: -8 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 
-                 rounded-full px-3 py-1.5 mb-4"
-    >
-      <span className="relative flex h-2 w-2">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-      </span>
-      <span className="text-[10px] text-emerald-400 font-semibold uppercase tracking-widest">
-        {count} people viewing right now
-      </span>
-    </motion.div>
-  );
-}
-
-/** Recent purchase notification (pops up from bottom-left) */
-function PurchaseNotification() {
-  const [visible, setVisible] = useState(false);
-  const notifications = [
-    { city: "Lahore", item: "just purchased this", time: "2 min ago" },
-    { city: "Karachi", item: "just added to wishlist", time: "5 min ago" },
-    { city: "Islamabad", item: "just purchased this", time: "8 min ago" },
-  ];
-  const [current, setCurrent] = useState(0);
-
-  useEffect(() => {
-    const show = setTimeout(() => setVisible(true), 4000);
-    return () => clearTimeout(show);
-  }, []);
-
-  useEffect(() => {
-    if (!visible) return;
-    const hide = setTimeout(() => setVisible(false), 4500);
-    const next = setTimeout(() => {
-      setCurrent(c => (c + 1) % notifications.length);
-      setVisible(true);
-    }, 12000);
-    return () => { clearTimeout(hide); clearTimeout(next); };
-  }, [visible, current]);
-
-  return (
-    <AnimatePresence>
-      {visible && (
-        <motion.div
-          initial={{ opacity: 0, x: -40, y: 0 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -40 }}
-          className="fixed bottom-24 left-4 z-50 bg-background border border-foreground/10 
-                     rounded-xl px-4 py-3 flex items-center gap-3 shadow-2xl max-w-[260px]"
-        >
-          <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
-            <ShoppingBag className="w-4 h-4 text-accent" />
-          </div>
-          <div>
-            <p className="text-[11px] text-foreground font-semibold">
-              Someone from <span className="text-accent">{notifications[current].city}</span>
-            </p>
-            <p className="text-[10px] text-foreground/50">{notifications[current].item} · {notifications[current].time}</p>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-}
 
 /** Image lightbox / zoom modal */
 function ImageLightbox({ images, activeIndex, onClose }: {
@@ -165,21 +78,6 @@ function ImageLightbox({ images, activeIndex, onClose }: {
         ))}
       </div>
     </motion.div>
-  );
-}
-
-/** Star rating display */
-function StarRating({ rating, size = 'sm' }: { rating: number; size?: 'sm' | 'md' }) {
-  const s = size === 'sm' ? 'w-3 h-3' : 'w-4 h-4';
-  return (
-    <div className="flex items-center gap-0.5">
-      {[1, 2, 3, 4, 5].map(i => (
-        <Star
-          key={i}
-          className={`${s} ${i <= rating ? 'text-amber-400 fill-amber-400' : 'text-foreground/20'}`}
-        />
-      ))}
-    </div>
   );
 }
 
@@ -286,8 +184,7 @@ export function ProductDetails() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'description' | 'reviews' | 'care'>('description');
-  const [viewerCount] = useState(() => Math.floor(Math.random() * 12) + 4);
+  const [activeTab, setActiveTab] = useState<'description' | 'care'>('description');
 
   const addItem = useCartStore(state => state.addItem);
   const openCart = useUIStore(state => state.openCart);
@@ -326,8 +223,6 @@ export function ProductDetails() {
   const isWished = product ? wishlistIds.includes(product.id) : false;
   const isOutOfStock = product?.stock === 0;
   const isLowStock = product?.stock > 0 && product?.stock <= 5;
-  const avgRating = 4.8;
-  const reviewCount = 47;
 
   // Filter images strictly based on color if available
   const displayImages = useMemo(() => {
@@ -354,7 +249,7 @@ export function ProductDetails() {
     });
     triggerHaptic('success');
     toast.success(`${quantity}x ${product.title} added to your bag`, {
-      description: 'Free delivery on orders above Rs. 3000',
+      description: 'Free delivery on orders above PKR 10,000',
       icon: '🛍️',
     });
     openCart();
@@ -406,7 +301,7 @@ export function ProductDetails() {
     </div>
   );
 
-  const whatsappHref = `https://wa.me/923000000000?text=${encodeURIComponent('Hello WEARITION Concierge, I would like to inquire about ' + product.title)}`;
+  const whatsappHref = `https://wa.me/923333744318?text=${encodeURIComponent('Hello WEARITION Concierge, I would like to inquire about ' + product.title)}`;
 
   // ─── Render ────────────────────────────────────────────────────────────────
   return (
@@ -510,24 +405,12 @@ export function ProductDetails() {
                 <span>ATELIER HAUTE COUTURE • WEARITION</span>
               </div>
 
-              {/* ── Viewers Badge ─────────────────────────────────────── */}
-              <ViewersBadge count={viewerCount} />
 
               {/* ── Title ─────────────────────────────────────────────── */}
               <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-white uppercase tracking-tight leading-[1.1] mb-4">
                 {product.title}
               </h1>
 
-              {/* ── Rating Row ────────────────────────────────────────── */}
-              <div className="flex items-center gap-3 mb-5 cursor-pointer group"
-                onClick={() => setActiveTab('reviews')}>
-                <StarRating rating={Math.round(avgRating)} />
-                <span className="text-white text-xs font-mono font-medium">{avgRating}</span>
-                <span className="text-white/20 text-xs">|</span>
-                <span className="text-white/40 text-xs underline underline-offset-4 group-hover:text-white transition-colors">
-                  {reviewCount} verified patrons
-                </span>
-              </div>
 
               {/* ── Price Block ───────────────────────────────────────── */}
               <div className="flex items-baseline gap-4 mb-6">
@@ -724,7 +607,7 @@ export function ProductDetails() {
               {/* ── Tabs: Description / Reviews / Care ────────────────── */}
               <div className="border-t border-white/10">
                 <div className="flex gap-0 border-b border-white/10 mb-6 mt-4">
-                  {(['description', 'reviews', 'care'] as const).map(tab => (
+                  {(['description', 'care'] as const).map(tab => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
@@ -734,7 +617,7 @@ export function ProductDetails() {
                           : 'text-white/40 hover:text-white/70'
                       }`}
                     >
-                      {tab === 'reviews' ? `Patron Reviews (${reviewCount})` : tab === 'description' ? 'Atelier Notes' : 'Care & Maintenance'}
+                      {tab === 'description' ? 'Atelier Notes' : 'Care & Maintenance'}
                       {activeTab === tab && (
                         <motion.div
                           layoutId="tab-underline"
@@ -758,63 +641,6 @@ export function ProductDetails() {
                     </motion.div>
                   )}
 
-                  {activeTab === 'reviews' && (
-                    <motion.div
-                      key="reviews"
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      className="flex flex-col gap-4 mb-6"
-                    >
-                      {/* Rating summary */}
-                      <div className="flex items-center gap-5 bg-[#0a0a0a] rounded-sm p-4 border border-white/5">
-                        <div className="text-center">
-                          <p className="text-3xl font-mono font-medium text-white">{avgRating}</p>
-                          <StarRating rating={5} size="sm" />
-                          <p className="text-[9px] text-white/30 uppercase tracking-widest mt-1">{reviewCount} reviews</p>
-                        </div>
-                        <div className="flex-1 flex flex-col gap-1.5">
-                          {[5, 4, 3, 2, 1].map(star => {
-                            const pct = star === 5 ? 72 : star === 4 ? 20 : star === 3 ? 5 : 2;
-                            return (
-                              <div key={star} className="flex items-center gap-2">
-                                <span className="text-[9px] text-white/30 w-3">{star}</span>
-                                <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
-                                  <div
-                                    className="h-full bg-white rounded-full"
-                                    style={{ width: `${pct}%` }}
-                                  />
-                                </div>
-                                <span className="text-[9px] text-white/30 w-6 font-mono">{pct}%</span>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      {/* Reviews List */}
-                      {MOCK_REVIEWS.map((rev, i) => (
-                        <div key={i} className="flex flex-col gap-1.5 pb-4 border-b border-white/5 last:border-0">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white text-[10px] font-mono">
-                                {rev.name[0]}
-                              </div>
-                              <span className="text-xs text-white font-medium">{rev.name}</span>
-                              {rev.verified && (
-                                <span className="text-[8px] text-white/60 uppercase tracking-widest flex items-center gap-0.5 border border-white/10 px-1.5 py-0.5 rounded-full">
-                                  Verified Patron
-                                </span>
-                              )}
-                            </div>
-                            <span className="text-[9px] text-white/30">{rev.date} · {rev.location}</span>
-                          </div>
-                          <StarRating rating={rev.rating} size="sm" />
-                          <p className="text-xs text-white/60 leading-relaxed font-sans">{rev.comment}</p>
-                        </div>
-                      ))}
-                    </motion.div>
-                  )}
 
                   {activeTab === 'care' && (
                     <motion.div
