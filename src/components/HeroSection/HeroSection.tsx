@@ -174,7 +174,7 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
 
         {/* Infinite Horizontal Carousel */}
         <div 
-          className="flex overflow-hidden py-6 cursor-grab active:cursor-grabbing"
+          className="flex overflow-hidden py-6"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
@@ -182,17 +182,18 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
             className={`flex gap-6 sm:gap-8 shrink-0 ${isPaused ? '' : 'animate-marquee-infinite'}`}
           >
             {loopedItems.map((item, index) => (
-              <Link
+              <div
                 key={`${item.id}-${index}`}
-                href={item.href}
-                className="project-card-2 group block bg-[#0d0d0d] shadow-2xl transition-transform duration-500 hover:scale-[1.02] shrink-0"
+                aria-hidden="true"
+                className="project-card-2 block bg-[#0d0d0d] shadow-2xl shrink-0 select-none"
               >
                 {/* Image */}
                 <img
                   src={item.image}
-                  alt={item.title}
+                  alt=""
                   loading="lazy"
-                  className="w-full h-full object-cover grayscale-[15%] contrast-[1.05] group-hover:scale-105 group-hover:grayscale-0 transition-all duration-700 ease-out"
+                  draggable={false}
+                  className="w-full h-full object-cover grayscale-[15%] contrast-[1.05]"
                 />
 
                 {/* Dark Vignette Bottom Overlay */}
@@ -203,7 +204,7 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                   <div className="projectname">{item.title}</div>
                   <div className="textcategory">{item.category}</div>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         </div>
