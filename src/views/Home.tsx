@@ -13,7 +13,6 @@ import { BrandManifesto } from "../components/home/BrandManifesto";
 import { SelectedDrops } from "../components/home/SelectedDrops";
 import { AtelierDisciplines } from "../components/home/AtelierDisciplines";
 import { ParallaxVignette } from "../components/home/ParallaxVignette";
-import { ClientTestimonials } from "../components/home/ClientTestimonials";
 import { VipTiers } from "../components/home/VipTiers";
 import { FaqSection, FAQS } from "../components/home/FaqSection";
 import { GrandCta } from "../components/home/GrandCta";
@@ -107,16 +106,14 @@ export function Home() {
       {/* Parallax Vignette: Emotion in Every Silhouette */}
       <ParallaxVignette />
 
-      {/* [04] Testimonials: 4.9★ Client Reviews & Slider */}
-      <ClientTestimonials />
 
-      {/* [05] Pricing: High-Contrast Standard vs Bespoke Tiers */}
+      {/* [04] Pricing: High-Contrast Standard vs Bespoke Tiers */}
       <VipTiers />
 
-      {/* [06] FAQ: Clear Answers & Interactive Accordion */}
+      {/* [05] FAQ: Clear Answers & Interactive Accordion */}
       <FaqSection />
 
-      {/* [07] Grand CTA: let's create SOMETHING timeless */}
+      {/* [06] Grand CTA: let's create SOMETHING timeless */}
       <GrandCta />
     </div>
   );
