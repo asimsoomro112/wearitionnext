@@ -10,7 +10,7 @@ export function Footer() {
         {/* Top Split Section */}
         <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-12 sm:gap-16 pb-16 border-b border-white/10">
           {/* Left: Brand Identity & Primary Links */}
-          <div className="flex flex-col gap-6 max-w-md">
+          <div className="flex flex-col gap-6">
             <Link href="/" className="inline-block">
               <img
                 src={typeof logo === 'string' ? logo : logo.src}
@@ -19,11 +19,11 @@ export function Footer() {
               />
             </Link>
 
-            <p className="text-xs sm:text-sm font-sans text-[#adadad] leading-relaxed">
+            <p className="text-xs sm:text-sm font-sans text-[#adadad] leading-relaxed max-w-md">
               Maison WEARITION &mdash; Curators of bespoke women&apos;s haute couture, heritage craftsmanship, and certified luxury designer collections.
             </p>
 
-            <nav className="flex flex-wrap gap-x-8 gap-y-3 text-xs uppercase font-mono tracking-[0.2em] font-medium text-white/70">
+            <nav className="flex flex-wrap lg:flex-nowrap gap-x-6 xl:gap-x-8 gap-y-3 text-xs uppercase font-mono tracking-[0.2em] font-medium text-white/70">
               <Link href="/" className="hover:text-white transition-colors">
                 HOME
               </Link>
@@ -110,7 +110,7 @@ export function Footer() {
         {/* Giant Viewport-Width Typographic Watermark (XODEX footerwordmark) */}
         <div className="w-full text-center overflow-hidden pt-10 select-none pointer-events-none">
           <span 
-            className="block font-light uppercase tracking-[0.08em] text-white/[0.05] text-[18vw] leading-[0.8]"
+            className="block font-light uppercase tracking-[0.08em] text-white/[0.10] text-[18vw] leading-[0.8]"
             style={{ fontFamily: "var(--font-cinzel), 'Cinzel', serif" }}
           >
             WEARITION
