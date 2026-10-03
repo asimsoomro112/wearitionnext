@@ -17,6 +17,9 @@ export function AdminOrders() {
   const [courierName, setCourierName] = useState('');
   const [estimatedDelivery, setEstimatedDelivery] = useState('');
 
+  // Order detail modal state
+  const [detailOrder, setDetailOrder] = useState<any | null>(null);
+
   useEffect(() => {
     setLoading(true);
     const q = query(collection(db, 'orders'), orderBy('date', 'desc'));
@@ -144,7 +147,15 @@ export function AdminOrders() {
           <tbody className="divide-y divide-black/5">
             {orders.map((order) => (
               <tr key={order.id} className="hover:bg-black/[0.02] border-b border-black/5 last:border-0">
-                <td className="p-4 text-xs font-mono font-bold text-[#0a0a0a]">{order.orderId}</td>
+                <td className="p-4">
+                  <button
+                    onClick={() => setDetailOrder(order)}
+                    className="text-xs font-mono font-bold text-[#0a0a0a] underline underline-offset-2 decoration-[#0a0a0a]/20 hover:decoration-[#0a0a0a] transition-all"
+                    title="View order details"
+                  >
+                    {order.orderId}
+                  </button>
+                </td>
                 <td className="p-4 text-sm text-[#0a0a0a]/60">
                   {new Date(order.date).toLocaleDateString()}
                 </td>
@@ -199,6 +210,142 @@ export function AdminOrders() {
           </tbody>
         </table>
       </div>
+
+      {/* ORDER DETAIL MODAL */}
+      {detailOrder && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => setDetailOrder(null)}>
+          <div
+            className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-black/10 px-6 py-4 sticky top-0 bg-white">
+              <div>
+                <h2 className="text-lg font-serif text-[#0a0a0a]">Order {detailOrder.orderId}</h2>
+                <p className="text-xs text-[#0a0a0a]/50">
+                  {detailOrder.date ? new Date(detailOrder.date).toLocaleString() : '—'}
+                </p>
+              </div>
+              <button onClick={() => setDetailOrder(null)} className="text-[#0a0a0a]/40 hover:text-[#0a0a0a]">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6 flex flex-col gap-6">
+              {/* Status + payment */}
+              <div className="flex flex-wrap gap-3 items-center">
+                <span className={`px-3 py-1 rounded text-[10px] uppercase font-bold tracking-wider ${
+                  detailOrder.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                  detailOrder.status === 'processing' ? 'bg-blue-100 text-blue-800' :
+                  detailOrder.status === 'shipped' ? 'bg-purple-100 text-purple-800' :
+                  detailOrder.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                  'bg-green-100 text-green-800'
+                }`}>
+                  {detailOrder.status}
+                </span>
+                <span className="text-xs text-[#0a0a0a]/60 uppercase tracking-wider">
+                  {detailOrder.paymentMethod || '—'}
+                </span>
+              </div>
+
+              {/* Customer */}
+              <div>
+                <h3 className="text-xs uppercase tracking-[0.2em] text-[#0a0a0a]/50 font-bold mb-3">Customer</h3>
+                <div className="text-sm text-[#0a0a0a] flex flex-col gap-1">
+                  <p className="font-medium">{detailOrder.shippingAddress?.name || detailOrder.email}</p>
+                  <p className="text-[#0a0a0a]/60">{detailOrder.email}</p>
+                  {detailOrder.shippingAddress?.phone && (
+                    <p className="text-[#0a0a0a]/60">{detailOrder.shippingAddress.phone}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Shipping address */}
+              {detailOrder.shippingAddress && (
+                <div>
+                  <h3 className="text-xs uppercase tracking-[0.2em] text-[#0a0a0a]/50 font-bold mb-3">Shipping Address</h3>
+                  <p className="text-sm text-[#0a0a0a]/70 leading-relaxed">
+                    {[
+                      detailOrder.shippingAddress.address,
+                      detailOrder.shippingAddress.city,
+                      detailOrder.shippingAddress.postalCode,
+                      detailOrder.shippingAddress.country,
+                    ].filter(Boolean).join(', ') || '—'}
+                  </p>
+                </div>
+              )}
+
+              {/* Items */}
+              <div>
+                <h3 className="text-xs uppercase tracking-[0.2em] text-[#0a0a0a]/50 font-bold mb-3">
+                  Items ({detailOrder.items?.length || 0})
+                </h3>
+                <div className="flex flex-col gap-3">
+                  {(detailOrder.items || []).map((item: any, i: number) => (
+                    <div key={i} className="flex items-center gap-4 p-3 rounded-lg border border-black/5 bg-[#fcfcfc]">
+                      <div className="w-14 h-[72px] rounded overflow-hidden bg-black/5 shrink-0">
+                        {item.image ? (
+                          <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-black/20 text-xs">—</div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-[#0a0a0a] truncate">{item.title}</p>
+                        <p className="text-xs text-[#0a0a0a]/50">
+                          Qty {item.quantity}
+                          {item.size ? ` · Size ${item.size}` : ''}
+                          {item.color ? ` · ${item.color}` : ''}
+                        </p>
+                      </div>
+                      <p className="text-sm font-mono font-bold text-[#0a0a0a]">
+                        {formatCurrency((item.price || 0) * (item.quantity || 1))}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Totals */}
+              <div className="border-t border-black/10 pt-4 flex flex-col gap-2 text-sm">
+                {detailOrder.subtotal != null && (
+                  <div className="flex justify-between text-[#0a0a0a]/60">
+                    <span>Subtotal</span>
+                    <span className="font-mono">{formatCurrency(detailOrder.subtotal)}</span>
+                  </div>
+                )}
+                {detailOrder.shippingCost != null && (
+                  <div className="flex justify-between text-[#0a0a0a]/60">
+                    <span>Shipping</span>
+                    <span className="font-mono">{formatCurrency(detailOrder.shippingCost)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between items-baseline">
+                  <span className="font-medium text-[#0a0a0a]">Total</span>
+                  <span className="font-mono text-lg font-bold text-[#0a0a0a]">{formatCurrency(detailOrder.total)}</span>
+                </div>
+              </div>
+
+              {/* Tracking */}
+              {(detailOrder.trackingNumber || detailOrder.courierName) && (
+                <div>
+                  <h3 className="text-xs uppercase tracking-[0.2em] text-[#0a0a0a]/50 font-bold mb-3">Tracking</h3>
+                  <div className="text-sm text-[#0a0a0a] flex flex-col gap-1">
+                    {detailOrder.trackingNumber && (
+                      <p className="font-mono font-bold">{detailOrder.trackingNumber}</p>
+                    )}
+                    {detailOrder.courierName && (
+                      <p className="text-[#0a0a0a]/60">{detailOrder.courierName}</p>
+                    )}
+                    {detailOrder.estimatedDelivery && (
+                      <p className="text-[#0a0a0a]/60 text-xs">Est. delivery: {detailOrder.estimatedDelivery}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* SHIPPING MODAL — Enter Tracking Number */}
       {shippingModal && (
