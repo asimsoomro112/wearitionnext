@@ -45,6 +45,17 @@
   --glass-border: rgba(255, 255, 255, 0.1);
 }
 
+/* ─── MOBILE FIT GUARD ────────────────────────────────────────────────────
+   Prevents mobile browsers from zooming out when any element overflows
+   horizontally. `clip` (not `hidden`) keeps position:sticky working and
+   plays safe with Lenis smooth scroll. Must be on BOTH html and body —
+   body-only is ignored by mobile Safari/Chrome, which then shrinks the
+   whole page to fit the widest element. */
+html {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
 /* ─── LENIS SMOOTH SCROLLING ──────────────────────────────────────────────── */
 html.lenis, html.lenis body {
   height: auto;
@@ -345,7 +356,8 @@ body {
   background-color: var(--bg);
   color: var(--fg);
   font-family: var(--font-sans), 'Inter', system-ui, -apple-system, sans-serif;
-  overflow-x: hidden;
+  overflow-x: clip;
+  max-width: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
