@@ -57,14 +57,6 @@ export function SelectedDrops({ products = [] }: SelectedDropsProps) {
 
   return (
     <section id="drops" className="relative w-full bg-[#030303] text-[#fafafa] py-24 md:py-36 px-6 md:px-12 border-t border-white/5 overflow-hidden">
-      
-      {/* Background Giant Watermark Marquee */}
-      <div 
-        aria-hidden="true"
-        className="absolute top-12 left-0 right-0 pointer-events-none select-none opacity-[0.03] whitespace-nowrap font-display text-7xl sm:text-9xl md:text-[13rem] tracking-tighter uppercase"
-      >
-        WEARITION &bull; COUTURE &bull; ATELIER &bull; PAKISTAN &bull;
-      </div>
 
       <div className="container mx-auto max-w-7xl relative z-10">
         {/* Section [02] Header Bar */}
@@ -79,8 +71,22 @@ export function SelectedDrops({ products = [] }: SelectedDropsProps) {
           </span>
         </div>
 
-        {/* 2-Column Showcase Grid (Desktop Optimized) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16">
+        {/* Cards with giant watermark sliding behind them (XODEX: upper half above, lower half behind) */}
+        <div className="relative">
+          <div
+            aria-hidden="true"
+            className="absolute -top-12 md:-top-28 left-0 right-0 z-0 overflow-hidden pointer-events-none select-none"
+          >
+            <div className="animate-watermark whitespace-nowrap font-display font-bold uppercase tracking-tighter leading-none text-white opacity-[0.08] text-[6rem] sm:text-[9rem] md:text-[14rem]">
+              <span className="pr-10">WEARITION &bull;</span>
+              <span className="pr-10">WEARITION &bull;</span>
+              <span className="pr-10">WEARITION &bull;</span>
+              <span className="pr-10">WEARITION &bull;</span>
+            </div>
+          </div>
+
+          {/* 2-Column Showcase Grid (Desktop Optimized) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 relative z-10">
           {drops.map((drop, idx) => (
             <motion.div
               key={`${drop.id}-${idx}`}
@@ -134,6 +140,7 @@ export function SelectedDrops({ products = [] }: SelectedDropsProps) {
               </Link>
             </motion.div>
           ))}
+          </div>
         </div>
 
         {/* Section Bottom Context & Button */}

@@ -341,6 +341,13 @@ html.lenis, html.lenis body {
   100% { transform: translate3d(0, 0, 0); }
 }
 
+.animate-watermark {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 60s linear infinite;
+  will-change: transform;
+}
+
 .animate-marquee-logos {
   display: flex;
   width: max-content;
