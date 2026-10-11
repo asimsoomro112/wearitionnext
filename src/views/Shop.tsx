@@ -73,6 +73,19 @@ export function Shop() {
         const querySnapshot = await getDocs(q);
         let fetched = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as any }));
 
+        // Dedupe: Firestore contains duplicate product documents (same title
+        // entered multiple times, e.g. "BEECHTREE LATEST COLLECTION 2026" x7).
+        // Keep the first occurrence per normalized title so the grid does not
+        // show the same product repeatedly. Permanent fix = delete the dupes
+        // in the admin panel; this keeps the storefront clean meanwhile.
+        const seen = new Set<string>();
+        fetched = fetched.filter(p => {
+          const key = (p.title || '').trim().toLowerCase();
+          if (!key || seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
+
         if (searchString) {
           fetched = fetched.filter(p =>
             p.title?.toLowerCase().includes(searchString) ||

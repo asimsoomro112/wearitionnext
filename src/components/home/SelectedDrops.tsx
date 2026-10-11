@@ -17,7 +17,7 @@ const FEATURED_DROPS = [
     id: 'elan-organza-peshwas',
     title: 'Élan Handcrafted Silk Peshwas Suite',
     category: 'Haute Couture',
-    season: 'Gold Tilla & Dabka • Certified Authentic',
+    season: 'Gold Tilla & Dabka • Curated Drop',
     image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1200&auto=format&fit=crop',
     href: '/shop',
   },
@@ -49,7 +49,7 @@ export function SelectedDrops({ products = [] }: SelectedDropsProps) {
         id: p.id,
         title: p.title || 'Maison Couture Creation',
         category: p.category || p.brand || 'Bespoke Couture',
-        season: p.isNew ? 'New Archive Drop' : 'Certified Authentic',
+        season: p.isNew ? 'New Archive Drop' : 'Curated Drop',
         image: p.images?.[0] || p.image || FEATURED_DROPS[idx % FEATURED_DROPS.length].image,
         href: `/product/${p.id}`,
       }))

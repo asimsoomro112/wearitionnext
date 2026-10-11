@@ -16,8 +16,8 @@ const ATELIER_DISCIPLINES = [
   {
     number: '02',
     title: 'Curated Designer Resale',
-    subtitle: '100% physically authenticated preloved and archive collections from Pakistan’s most revered luxury houses at transparent value.',
-    tag: 'Certified Authentic',
+    subtitle: 'Curated preloved and archive-inspired collections from Pakistan’s most loved design houses at transparent value.',
+    tag: 'Curated',
     href: '/shop',
   },
   {

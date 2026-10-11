@@ -49,7 +49,7 @@ const FALLBACK_SHOWCASE_ITEMS = [
     id: 'suffuse-mukesh-organza',
     title: 'Suffuse Hand-Embellished Formal',
     category: 'Prestige Resale',
-    tag: 'Certified Authentic',
+    tag: 'Curated Drop',
     image: 'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?q=80&w=1200&auto=format&fit=crop',
     href: '/shop',
   },

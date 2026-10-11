@@ -590,7 +590,7 @@ export function ProductDetails() {
                   { icon: <Banknote className="w-4 h-4 text-white" />, label: 'Cash on Delivery', sub: 'Nationwide' },
                   { icon: <Truck className="w-4 h-4 text-white" />, label: 'Express Delivery', sub: 'DHL / TCS Express' },
                   { icon: <RotateCcw className="w-4 h-4 text-white" />, label: 'Atelier Exchange', sub: 'Hassle-free policy' },
-                  { icon: <ShieldCheck className="w-4 h-4 text-white" />, label: '100% Authentic', sub: 'Verified original' },
+                  { icon: <ShieldCheck className="w-4 h-4 text-white" />, label: 'Quality Checked', sub: 'Inspected before dispatch' },
                 ].map(({ icon, label, sub }) => (
                   <div key={label}
                     className="flex items-center gap-3 bg-[#0a0a0a] border border-white/5 rounded-sm p-3 hover:border-white/15 transition-colors"
