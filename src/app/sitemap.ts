@@ -1,10 +1,23 @@
 import { MetadataRoute } from 'next';
-import { db } from '@/lib/firebase';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import { initializeFirestore, collection, getDocs, query, where } from 'firebase/firestore';
+import { firebaseConfig } from '@/lib/firebase';
 
-// Regenerate daily instead of build-only: if the build-time Firestore fetch
-// ever fails, the sitemap self-heals within 24h instead of staying empty.
+// Regenerate daily instead of build-only: if a generation ever fails, the
+// sitemap self-heals within 24h instead of staying empty.
 export const revalidate = 86400;
+
+// Dedicated server-side Firestore instance.
+//
+// The shared `db` from @/lib/firebase is initialized with
+// experimentalForceLongPolling (needed for client-side networks where
+// WebChannel is blocked). That transport hangs/throws inside Node.js, which
+// is exactly why the sitemap silently shipped with 0 product URLs. A separate
+// named app + default transport is reliable for server-side fetches.
+function getServerDb() {
+  const serverApp = initializeApp(firebaseConfig, 'sitemap-server');
+  return initializeFirestore(serverApp, {});
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://wearition.store';
@@ -25,13 +38,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route === '' ? 1 : 0.8,
   }));
 
-  // Dynamic product routes.
-  // NOTE: no env-var guard here on purpose — firebase.ts already falls back to a
-  // baked-in key, so gating on NEXT_PUBLIC_FIREBASE_API_KEY silently emptied the
-  // sitemap whenever the build env lacked that variable. Failures now log loudly.
+  // Dynamic product routes. Failures log loudly — a silent empty sitemap is
+  // what hid this bug for weeks.
   const products: MetadataRoute.Sitemap = [];
   try {
-    const q = query(collection(db, 'products'), where('isPublished', '==', true));
+    const serverDb = getServerDb();
+    const q = query(collection(serverDb, 'products'), where('isPublished', '==', true));
     const querySnapshot = await getDocs(q);
 
     querySnapshot.forEach((doc) => {
