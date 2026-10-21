@@ -2,7 +2,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { db } from '@/lib/firebase';
-import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { ProductCard } from '../components/shop/ProductCard';
@@ -13,6 +13,15 @@ const SORT_OPTIONS = [
   { label: 'Price: Low to High', value: 'price_asc' },
   { label: 'Price: High to Low', value: 'price_desc' },
   { label: 'Newest', value: 'newest' },
+];
+
+// Price filter buckets (catalog range is roughly Rs. 2,599–6,299).
+const PRICE_BUCKETS = [
+  { label: 'All Prices', value: '' },
+  { label: 'Under Rs. 3,000', value: 'under3000', test: (p: number) => p < 3000 },
+  { label: 'Rs. 3,000 – 4,000', value: '3000-4000', test: (p: number) => p >= 3000 && p < 4000 },
+  { label: 'Rs. 4,000 – 5,000', value: '4000-5000', test: (p: number) => p >= 4000 && p < 5000 },
+  { label: 'Above Rs. 5,000', value: 'over5000', test: (p: number) => p >= 5000 },
 ];
 
 function ProductSkeleton() {
@@ -28,7 +37,6 @@ function ProductSkeleton() {
 
 export function Shop() {
   const [products, setProducts] = useState<any[]>([]);
-  const [categories, setCategories] = useState<{name: string, value: string}[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState('recommended');
   const router = useRouter();
@@ -37,31 +45,11 @@ export function Shop() {
   const searchString = searchParams.get('search')?.toLowerCase() || '';
   const categoryFilter = searchParams.get('category')?.toLowerCase() || '';
   const brandFilter = searchParams.get('brand')?.toLowerCase() || '';
+  const priceFilter = searchParams.get('price') || '';
 
-  useEffect(() => {
-    async function fetchSettings() {
-      try {
-        const docRef = doc(db, 'settings', 'store');
-        const snap = await getDoc(docRef);
-        if (snap.exists() && snap.data().collections) {
-          const fetchedCats = snap.data().collections.map((c: string) => ({
-            name: c,
-            value: c.toLowerCase()
-          }));
-          setCategories([{ name: 'All Pieces', value: '' }, ...fetchedCats]);
-        } else {
-          const defaults = ['Lawn', 'Chiffon', 'Embroidery', 'Luxury Pret', 'Festive'].map(c => ({
-            name: c, value: c.toLowerCase()
-          }));
-          setCategories([{ name: 'All Pieces', value: '' }, ...defaults]);
-        }
-      } catch (e) {
-        console.error("Error fetching shop settings:", e);
-      }
-    }
-    fetchSettings();
-  }, []);
-
+  // Products are fetched ONCE; every filter (search, category, brand,
+  // price) applies instantly on the client — no refetch, no skeleton
+  // flash on each filter click.
   useEffect(() => {
     async function fetchProducts() {
       setLoading(true);
@@ -86,21 +74,6 @@ export function Shop() {
           return true;
         });
 
-        if (searchString) {
-          fetched = fetched.filter(p =>
-            p.title?.toLowerCase().includes(searchString) ||
-            (p.description && p.description.toLowerCase().includes(searchString))
-          );
-        }
-
-        if (categoryFilter) {
-          fetched = fetched.filter(p => p.category?.toLowerCase() === categoryFilter);
-        }
-
-        if (brandFilter) {
-          fetched = fetched.filter(p => p.brand?.toLowerCase() === brandFilter);
-        }
-
         setProducts(fetched);
       } catch (e) {
         console.error("Error fetching products", e);
@@ -109,30 +82,83 @@ export function Shop() {
       }
     }
     fetchProducts();
-  }, [searchString, categoryFilter, brandFilter]);
+  }, []);
+
+  // Filter options are derived from the actual catalog, so they can never
+  // drift from what is really in the store (previously categories came
+  // from a settings document that could be empty or stale).
+  const brandOptions = useMemo(() => {
+    const map = new Map<string, { name: string; value: string; count: number }>();
+    products.forEach(p => {
+      const b = (p.brand || '').trim();
+      if (!b) return;
+      const key = b.toLowerCase();
+      const existing = map.get(key);
+      if (existing) existing.count += 1;
+      else map.set(key, { name: b, value: key, count: 1 });
+    });
+    return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name));
+  }, [products]);
+
+  const categoryOptions = useMemo(() => {
+    const map = new Map<string, { name: string; value: string }>();
+    products.forEach(p => {
+      const c = (p.category || '').trim();
+      if (!c) return;
+      const key = c.toLowerCase();
+      if (!map.has(key)) map.set(key, { name: c, value: key });
+    });
+    return [{ name: 'All', value: '' }, ...Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name))];
+  }, [products]);
+
+  const filteredProducts = useMemo(() => {
+    let out = products;
+    if (searchString) {
+      out = out.filter(p =>
+        p.title?.toLowerCase().includes(searchString) ||
+        (p.description && p.description.toLowerCase().includes(searchString))
+      );
+    }
+    if (categoryFilter) {
+      out = out.filter(p => p.category?.toLowerCase() === categoryFilter);
+    }
+    if (brandFilter) {
+      out = out.filter(p => p.brand?.toLowerCase() === brandFilter);
+    }
+    if (priceFilter) {
+      const bucket = PRICE_BUCKETS.find(b => b.value === priceFilter);
+      if (bucket?.test) {
+        out = out.filter(p => typeof p.price === 'number' && bucket.test!(p.price));
+      }
+    }
+    return out;
+  }, [products, searchString, categoryFilter, brandFilter, priceFilter]);
 
   const sortedProducts = useMemo(() => {
-    const sorted = [...products];
+    const sorted = [...filteredProducts];
     if (sortBy === 'price_asc') sorted.sort((a, b) => a.price - b.price);
     else if (sortBy === 'price_desc') sorted.sort((a, b) => b.price - a.price);
     else if (sortBy === 'newest') sorted.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
     return sorted;
-  }, [products, sortBy]);
+  }, [filteredProducts, sortBy]);
 
-  const setCategory = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value) params.set('category', value);
-    else params.delete('category');
-    params.delete('brand');
-    router.push(`${pathname}?${params.toString()}`);
-  };
+  const hasActiveFilters = Boolean(searchString || categoryFilter || brandFilter || priceFilter);
 
-  const clearSearch = () => {
+  const updateParam = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.delete('search');
+    if (value) params.set(key, value);
+    else params.delete(key);
     const qs = params.toString();
-    router.push(qs ? `${pathname}?${qs}` : pathname);
+    router.push(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
   };
+
+  const setCategory = (value: string) => updateParam('category', value);
+  const setBrand = (value: string) => updateParam('brand', value);
+  const setPrice = (value: string) => updateParam('price', value);
+
+  const clearSearch = () => updateParam('search', '');
+
+  const clearAllFilters = () => router.push(pathname);
 
   return (
     <div className="w-full pt-36 md:pt-44 px-6 md:px-12 lg:px-16 pb-36 bg-[#030303] text-[#fafafa] min-h-screen">
@@ -157,26 +183,76 @@ export function Shop() {
             {brandFilter ? brandFilter.toUpperCase() : categoryFilter ? categoryFilter.toUpperCase() : 'SHOP ALL'}
           </motion.h1>
           <p className="text-[#adadad] text-xs md:text-sm max-w-xl mx-auto font-sans tracking-wide">
-            {loading ? 'Loading products...' : `${products.length} product${products.length !== 1 ? 's' : ''} from the latest collections.`}
+            {loading ? 'Loading products...' : `${sortedProducts.length} product${sortedProducts.length !== 1 ? 's' : ''} from the latest collections.`}
           </p>
         </header>
 
-        {/* Category Filter Pills */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5 mb-14">
-          {categories.map((cat) => (
-            <button
-              key={cat.name}
-              onClick={() => setCategory(cat.value)}
-              className={`px-5 py-2 rounded-full text-[10px] tracking-[0.2em] uppercase font-mono font-medium transition-all duration-300 cursor-pointer ${
-                categoryFilter === cat.value
-                  ? 'bg-accent text-white shadow-xl scale-105 border border-accent font-semibold'
-                  : 'bg-white/[0.03] border border-white/10 text-[#adadad] hover:border-white/30 hover:text-white hover:bg-white/[0.06]'
-              }`}
-            >
-              {cat.name}
-            </button>
-          ))}
-        </div>
+        {/* Category Filter Pills — derived from the catalog itself; the row
+            hides when the catalog has fewer than two real categories. */}
+        {!loading && categoryOptions.length > 2 && (
+          <div className="flex flex-wrap items-center justify-center gap-2.5 mb-10">
+            {categoryOptions.map((cat) => (
+              <button
+                key={cat.value || 'all'}
+                onClick={() => setCategory(cat.value)}
+                className={`px-5 py-2 rounded-full text-[10px] tracking-[0.2em] uppercase font-mono font-medium transition-all duration-300 cursor-pointer ${
+                  categoryFilter === cat.value
+                    ? 'bg-accent text-white shadow-xl scale-105 border border-accent font-semibold'
+                    : 'bg-white/[0.03] border border-white/10 text-[#adadad] hover:border-white/30 hover:text-white hover:bg-white/[0.06]'
+                }`}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Brand & Price Filters */}
+        {!loading && (
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-8 mb-14">
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] uppercase font-mono tracking-[0.22em] text-white/30">Brand:</span>
+              <select
+                value={brandFilter}
+                onChange={e => setBrand(e.target.value)}
+                className="bg-[#0d0d0d] border border-white/10 rounded-full px-3 py-2 outline-none text-white/80 cursor-pointer uppercase text-[10px] tracking-[0.18em] hover:border-white/30 transition-colors font-mono max-w-[240px]"
+                aria-label="Filter by brand"
+              >
+                <option value="" className="bg-[#0d0d0d] text-white">All Brands</option>
+                {brandOptions.map(b => (
+                  <option key={b.value} value={b.value} className="bg-[#0d0d0d] text-white">
+                    {b.name} ({b.count})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {PRICE_BUCKETS.map(bucket => (
+                <button
+                  key={bucket.value || 'all-prices'}
+                  onClick={() => setPrice(bucket.value)}
+                  className={`px-4 py-2 rounded-full text-[10px] tracking-[0.16em] uppercase font-mono font-medium transition-all duration-300 cursor-pointer ${
+                    priceFilter === bucket.value
+                      ? 'bg-accent text-white border border-accent font-semibold'
+                      : 'bg-white/[0.03] border border-white/10 text-[#adadad] hover:border-white/30 hover:text-white hover:bg-white/[0.06]'
+                  }`}
+                >
+                  {bucket.label}
+                </button>
+              ))}
+            </div>
+
+            {hasActiveFilters && (
+              <button
+                onClick={clearAllFilters}
+                className="text-[10px] uppercase font-mono tracking-[0.2em] text-white/50 underline underline-offset-4 hover:text-white transition-colors cursor-pointer"
+              >
+                Clear all filters ✕
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Sort & Metric Bar */}
         <div className="flex justify-between items-center border-y border-white/10 py-4 mb-12 text-[10px] uppercase font-mono tracking-[0.22em] text-[#adadad]">
@@ -212,7 +288,7 @@ export function Shop() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {Array.from({ length: 8 }).map((_, i) => <ProductSkeleton key={i} />)}
           </div>
-        ) : products.length === 0 ? (
+        ) : sortedProducts.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
