@@ -23,7 +23,7 @@ export async function generateMetadata(
       const product = docSnap.data();
       return {
         title: `${product.title} | WEARITION`,
-        description: product.description || `Shop ${product.title} at WEARITION — Premium luxury fashion.`,
+        description: product.description || `Shop ${product.title} at WEARITION.`,
         openGraph: {
           title: `${product.title} | WEARITION`,
           description: product.description || `Shop ${product.title} at WEARITION.`,
@@ -35,8 +35,12 @@ export async function generateMetadata(
     console.error("Error generating metadata:", error);
   }
 
+  // Neutral fallback: this branch also runs when the server-side fetch is
+  // merely slow/unreachable, and the client corrects the title once the
+  // product loads — it must never flash "Product Not Found" for a product
+  // that exists.
   return {
-    title: 'Product Not Found | WEARITION',
+    title: 'Shop | WEARITION',
   };
 }
 

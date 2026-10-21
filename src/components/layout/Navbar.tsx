@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ShoppingBag, Search, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -13,6 +13,16 @@ export function Navbar() {
   const { openCart, openMobileMenu, toggleSearch } = useUIStore();
   const { items } = useCartStore();
   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Once the page scrolls, the header gets a solid background so its text
+  // never overlaps the content moving underneath it.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const handleToggleMenu = () => {
     triggerHaptic('light');
@@ -24,7 +34,11 @@ export function Navbar() {
       initial={{ y: -40, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-6 pointer-events-auto"
+      className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 pointer-events-auto transition-all duration-300 ${
+        scrolled
+          ? 'py-4 bg-[#030303]/90 backdrop-blur-xl border-b border-white/5 shadow-[0_10px_40px_rgba(0,0,0,0.45)]'
+          : 'py-6 bg-transparent border-b border-transparent'
+      }`}
     >
       {/* Brand Logo - XODEX style Left Anchor */}
       <Link href="/" className="flex items-center gap-3 group z-50">

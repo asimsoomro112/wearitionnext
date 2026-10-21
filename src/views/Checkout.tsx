@@ -98,32 +98,16 @@ export function Checkout() {
     loadUserData();
   }, [user]);
 
-  const [baseShipping, setBaseShipping] = useState(250);
-  const [incrementalShipping, setIncrementalShipping] = useState(100);
-  const [taxPercent, setTaxPercent] = useState(4); // Default to 4% as per request
-
-  useEffect(() => {
-    async function fetchStoreSettings() {
-      try {
-        const docRef = doc(db, 'settings', 'store');
-        const snap = await getDoc(docRef);
-        if (snap.exists()) {
-          const data = snap.data();
-          setBaseShipping(data.baseShipping ?? 250);
-          setIncrementalShipping(data.incrementalShipping ?? 100);
-          setTaxPercent(data.taxPercentage ?? 0);
-        }
-      } catch (e) {
-        console.error("Error fetching checkout settings:", e);
-      }
-    }
-    fetchStoreSettings();
-  }, []);
-
-  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
-  const shippingCost = totalQuantity > 0 ? baseShipping + (totalQuantity - 1) * incrementalShipping : 0;
-  const taxAmount = (subtotal * taxPercent) / 100;
-  const total = subtotal + taxAmount + shippingCost;
+  // Pricing follows the published shipping policy exactly (see Shipping
+  // page): flat Rs. 250 nationwide, FREE on orders of Rs. 10,000 or more,
+  // and no tax. Deliberately NOT settings-driven — previously a settings
+  // fetch supplied a per-item shipping increment and a 4% tax, so checkout
+  // contradicted the policy page customers had read.
+  const FLAT_SHIPPING = 250;
+  const FREE_SHIPPING_THRESHOLD = 10000;
+  const shippingCost = items.length === 0 ? 0 : subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : FLAT_SHIPPING;
+  const taxAmount = 0;
+  const total = subtotal + shippingCost;
 
   const handleShippingChange = (field: keyof ShippingAddress) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setShipping(prev => ({ ...prev, [field]: e.target.value }));
@@ -441,17 +425,10 @@ export function Checkout() {
                 </div>
                 <div className="flex justify-between text-white/60">
                   <div className="flex flex-col">
-                    <span className="uppercase tracking-wider text-[10px]">Express Courier</span>
-                    <span className="text-[9px] text-white/35 font-normal">Nationwide express transit</span>
+                    <span className="uppercase tracking-wider text-[10px]">Shipping</span>
+                    <span className="text-[9px] text-white/35 font-normal">Flat nationwide — free over Rs. 10,000</span>
                   </div>
-                  <span className="font-mono text-white">{formatCurrency(shippingCost)}</span>
-                </div>
-                <div className="flex justify-between text-white/60">
-                  <div className="flex flex-col">
-                    <span className="uppercase tracking-wider text-[10px]">Govt. Tax (4%)</span>
-                    <span className="text-[9px] text-white/35 font-normal">Standard tariff</span>
-                  </div>
-                  <span className="font-mono text-white">{formatCurrency(taxAmount)}</span>
+                  <span className="font-mono text-white">{shippingCost === 0 ? 'FREE' : formatCurrency(shippingCost)}</span>
                 </div>
                 <div className="border-t border-white/10 pt-4 flex justify-between items-baseline font-medium text-white">
                   <span className="uppercase tracking-[0.2em] text-xs">Total</span>

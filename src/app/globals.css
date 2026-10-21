@@ -78,18 +78,24 @@ html.lenis, html.lenis body {
   pointer-events: none;
 }
 
-/* ─── HERO DISPLAY HEADLINE (Clean Luxury Haute Couture) ─────────────────── */
+/* ─── HERO DISPLAY HEADLINE ────────────────────────────────────────────── */
 .headinghero {
   font-family: var(--font-cinzel), 'Cinzel', serif;
   color: #fafafa;
-  font-size: clamp(3.2rem, 11vw, 10.5rem);
+  /* Sized so the 9-letter wordmark always fits inside the padded mobile
+     viewport (at 11vw/3.2rem min it overflowed ~40px on a 390px phone and
+     looked shifted/clipped). text-indent offsets the trailing
+     letter-spacing so the word sits optically centered. */
+  font-size: clamp(2.4rem, 11.5vw, 10.5rem);
   line-height: 0.92;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  text-indent: 0.06em;
   filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.18));
   margin: 0;
   white-space: nowrap;
+  max-width: 100%;
 }
 
 @media (max-width: 640px) {

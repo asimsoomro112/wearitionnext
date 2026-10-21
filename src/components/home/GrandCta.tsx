@@ -17,7 +17,7 @@ export function GrandCta() {
           className="mb-8"
         >
           <span className="text-[12px] font-mono uppercase tracking-[0.28em] text-[#adadad] block letterspacing4px">
-            [07] NEW ARRIVALS
+            [05] NEW ARRIVALS
           </span>
         </motion.div>
 

@@ -44,7 +44,7 @@ export function FaqSection() {
         {/* Section [06] Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-6 mb-12 sm:mb-16">
           <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#adadad]">
-            [06]
+            [04]
           </span>
           <h2 className="text-xl sm:text-2xl md:text-3xl font-display font-medium text-white tracking-tight">
             Clear answers. No surprises.
