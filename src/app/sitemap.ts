@@ -1,24 +1,16 @@
 import { MetadataRoute } from 'next';
-import { initializeApp } from 'firebase/app';
-import { initializeFirestore, collection, getDocs, query, where } from 'firebase/firestore';
-import { firebaseConfig } from '@/lib/firebase';
+import { adminDb } from '@/lib/firebase-admin';
 
 // Regenerate daily instead of build-only: if a generation ever fails, the
 // sitemap self-heals within 24h instead of staying empty.
 export const revalidate = 86400;
 
-// Dedicated server-side Firestore instance.
-//
-// The shared `db` from @/lib/firebase is initialized with
-// experimentalForceLongPolling (needed for client-side networks where
-// WebChannel is blocked). That transport hangs/throws inside Node.js, which
-// is exactly why the sitemap silently shipped with 0 product URLs. A separate
-// named app + default transport is reliable for server-side fetches.
-function getServerDb() {
-  const serverApp = initializeApp(firebaseConfig, 'sitemap-server');
-  return initializeFirestore(serverApp, {});
-}
-
+// Product URLs come through the Firebase Admin SDK. Every client-SDK /
+// public-key route fails server-side (the web API key's restrictions reject
+// non-browser calls), which is why this sitemap shipped with 0 product URLs
+// for weeks despite multiple "fixes". The Admin SDK authenticates with the
+// service account (FIREBASE_CLIENT_EMAIL + FIREBASE_PRIVATE_KEY on Vercel)
+// and is not subject to API-key restrictions.
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://wearition.store';
 
@@ -42,23 +34,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // what hid this bug for weeks.
   const products: MetadataRoute.Sitemap = [];
   try {
-    const serverDb = getServerDb();
-    const q = query(collection(serverDb, 'products'), where('isPublished', '==', true));
-    const querySnapshot = await getDocs(q);
-
-    querySnapshot.forEach((doc) => {
-      products.push({
-        url: `${baseUrl}/product/${doc.id}`,
-        lastModified: new Date(),
-        changeFrequency: 'daily',
-        priority: 0.9,
-      });
-    });
-
-    if (products.length === 0) {
-      console.error('[sitemap] WARNING: Firestore returned 0 published products — check product data / isPublished flags / Firestore rules.');
+    if (!adminDb) {
+      console.error('[sitemap] Firebase Admin not initialized — FIREBASE_CLIENT_EMAIL / FIREBASE_PRIVATE_KEY missing from environment. Returning static routes only.');
     } else {
-      console.log(`[sitemap] Generated with ${products.length} product URLs.`);
+      const snap = await adminDb
+        .collection('products')
+        .where('isPublished', '==', true)
+        .get();
+
+      snap.forEach((doc) => {
+        const data = doc.data();
+        const updated = data.updatedAt?.toDate?.() ?? data.createdAt?.toDate?.();
+        products.push({
+          url: `${baseUrl}/product/${doc.id}`,
+          lastModified: updated instanceof Date ? updated : new Date(),
+          changeFrequency: 'daily',
+          priority: 0.9,
+        });
+      });
+
+      if (products.length === 0) {
+        console.error('[sitemap] WARNING: Firestore returned 0 published products — check product data / isPublished flags.');
+      } else {
+        console.log(`[sitemap] Generated with ${products.length} product URLs.`);
+      }
     }
   } catch (error) {
     console.error('[sitemap] FAILED to fetch products from Firestore:', error);

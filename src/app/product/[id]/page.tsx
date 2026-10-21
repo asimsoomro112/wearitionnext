@@ -1,6 +1,5 @@
 import { ClientShell, StoreLayout } from "@/components/ClientShell";
-import { db } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore/lite";
+import { adminDb } from "@/lib/firebase-admin";
 import type { Metadata, ResolvingMetadata } from "next";
 import { ProductClient } from "./ProductClient";
 
@@ -15,21 +14,26 @@ export async function generateMetadata(
   const params = await props.params;
   const id = params.id;
   
+  // Server-side metadata goes through the Admin SDK: the public web API
+  // key's restrictions reject non-browser Firestore calls, so the previous
+  // client-SDK fetch failed on the server and real product titles rarely
+  // reached search engines / link previews.
   try {
-    const docRef = doc(db, "products", id);
-    const docSnap = await getDoc(docRef);
-    
-    if (docSnap.exists()) {
-      const product = docSnap.data();
-      return {
-        title: `${product.title} | WEARITION`,
-        description: product.description || `Shop ${product.title} at WEARITION.`,
-        openGraph: {
+    if (adminDb) {
+      const docSnap = await adminDb.collection("products").doc(id).get();
+
+      if (docSnap.exists) {
+        const product = docSnap.data() as { title: string; description?: string; images?: string[] };
+        return {
           title: `${product.title} | WEARITION`,
           description: product.description || `Shop ${product.title} at WEARITION.`,
-          images: product.images && product.images.length > 0 ? [product.images[0]] : [],
-        },
-      };
+          openGraph: {
+            title: `${product.title} | WEARITION`,
+            description: product.description || `Shop ${product.title} at WEARITION.`,
+            images: product.images && product.images.length > 0 ? [product.images[0]] : [],
+          },
+        };
+      }
     }
   } catch (error) {
     console.error("Error generating metadata:", error);
