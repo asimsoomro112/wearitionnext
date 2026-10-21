@@ -57,7 +57,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         <PerspectiveContainer strength={8} className="mb-4">
           <div className="relative aspect-[3/4] overflow-hidden bg-neutral-900 cursor-pointer rounded-sm">
             <img 
-              src={getOptimizedImage(product.images?.[0])} 
+              src={getOptimizedImage(product.images?.[0], 700)} 
               alt={product.title}
               loading="lazy"
               referrerPolicy="no-referrer"
@@ -65,7 +65,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             />
             {product.images && product.images.length > 1 && (
               <img 
-                src={getOptimizedImage(product.images[1])} 
+                src={getOptimizedImage(product.images[1], 700)} 
                 alt={`${product.title} alternate`}
                 loading="lazy"
                 referrerPolicy="no-referrer"

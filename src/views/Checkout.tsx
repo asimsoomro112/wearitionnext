@@ -422,7 +422,7 @@ export function Checkout() {
                 {items.map(item => (
                   <div key={`${item.id}-${item.size}-${item.color}`} className="flex gap-4 items-center border-b border-white/5 pb-4">
                     <div className="w-16 h-20 bg-neutral-900 relative overflow-hidden rounded-sm border border-white/10 flex-shrink-0">
-                      {item.image && <img src={getOptimizedImage(item.image)} alt={item.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />}
+                      {item.image && <img src={getOptimizedImage(item.image, 300)} alt={item.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />}
                       <span className="absolute -top-1 -right-1 bg-accent text-white w-4.5 h-4.5 flex items-center justify-center rounded-full text-[9px] font-mono font-bold">{item.quantity}</span>
                     </div>
                     <div className="flex-1 min-w-0">

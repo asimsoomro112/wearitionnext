@@ -21,7 +21,6 @@ import {
   ZoomIn, MessageCircle, Clock, Package, RotateCcw,
   CheckCircle2, ChevronDown
 } from "lucide-react";
-import { WearitionSpinner } from '../components/layout/WearitionSpinner';
 
 // ─── Sub-Components ───────────────────────────────────────────────────────────
 
@@ -59,7 +58,7 @@ function ImageLightbox({ images, activeIndex, onClose }: {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.3 }}
-        src={getOptimizedImage(images[idx])}
+        src={getOptimizedImage(images[idx], 1400)}
         className="max-h-[90vh] max-w-[90vw] object-contain"
         onClick={e => e.stopPropagation()}
       />
@@ -73,7 +72,7 @@ function ImageLightbox({ images, activeIndex, onClose }: {
               i === idx ? 'border-accent' : 'border-white/20 opacity-50 hover:opacity-80'
             }`}
           >
-            <img src={getOptimizedImage(img)} className="w-full h-full object-cover" />
+            <img src={getOptimizedImage(img, 200)} className="w-full h-full object-cover" />
           </button>
         ))}
       </div>
@@ -294,7 +293,23 @@ export function ProductDetails() {
     } catch { /* user cancelled */ }
   }, [product]);
 
-  if (loading) return <WearitionSpinner />;
+  if (loading) return (
+    <div className="min-h-screen bg-[#050505] pt-36 md:pt-40 px-6 md:px-12 pb-24">
+      <div className="max-w-[1600px] mx-auto">
+        <div className="h-3 w-48 bg-white/10 animate-pulse mb-10" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-16">
+          <div className="aspect-[3/4] bg-white/5 animate-pulse rounded-sm" />
+          <div>
+            <div className="h-3 w-40 bg-white/10 animate-pulse mb-5" />
+            <div className="h-10 w-3/4 bg-white/10 animate-pulse mb-4" />
+            <div className="h-7 w-28 bg-white/10 animate-pulse mb-10" />
+            <div className="h-12 w-full bg-white/5 animate-pulse mb-3" />
+            <div className="h-12 w-full bg-white/5 animate-pulse" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
   if (!product) return (
     <div className="min-h-screen flex items-center justify-center pt-24 text-white/40 text-sm bg-[#050505]">
       Product not found.
@@ -367,7 +382,7 @@ export function ProductDetails() {
                 style={idx === 0 ? { y: imageY } as any : undefined}
               >
                 <img
-                  src={getOptimizedImage(img)}
+                  src={getOptimizedImage(img, 1100)}
                   alt={`${product.title} – view ${idx + 1}`}
                   referrerPolicy="no-referrer"
                   loading={idx === 0 ? 'eager' : 'lazy'}

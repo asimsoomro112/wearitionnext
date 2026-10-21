@@ -8,7 +8,6 @@ import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { ProductCard } from '../components/shop/ProductCard';
 import { ArrowLeft, ArrowRight, Grid } from 'lucide-react';
-import { WearitionSpinner } from '../components/layout/WearitionSpinner';
 import { PerspectiveContainer } from '../components/layout/PerspectiveContainer';
 
 export function Brands() {
@@ -100,7 +99,19 @@ export function Brands() {
     router.push('/brands', { scroll: false });
   };
 
-  if (loading) return <WearitionSpinner />;
+  if (loading) return (
+    <div className="w-full pt-40 px-6 md:px-12 pb-32 bg-background min-h-screen">
+      <div className="max-w-[1440px] mx-auto">
+        <div className="h-3 w-40 bg-white/10 animate-pulse mx-auto mb-6" />
+        <div className="h-12 w-72 max-w-full bg-white/10 animate-pulse mx-auto mb-16" />
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="aspect-[4/5] bg-white/5 animate-pulse rounded-sm" />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="w-full pt-40 px-6 md:px-12 pb-32 bg-background min-h-screen">
@@ -194,7 +205,7 @@ export function Brands() {
 
               {productsLoading ? (
                 <div className="py-32 flex justify-center">
-                  <WearitionSpinner />
+                  <p className="text-white/40 text-[11px] uppercase tracking-[0.25em] animate-pulse">Loading products...</p>
                 </div>
               ) : products.length === 0 ? (
                 <div className="py-32 text-center">

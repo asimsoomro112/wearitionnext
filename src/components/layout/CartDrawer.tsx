@@ -78,7 +78,7 @@ export function CartDrawer() {
                 items.map((item) => (
                   <div key={`${item.id}-${item.size}-${item.color}`} className="flex gap-5 border-b border-white/5 pb-6">
                     <div className="w-24 h-32 bg-neutral-900 border border-white/10 overflow-hidden rounded-sm flex-shrink-0">
-                      <img src={getOptimizedImage(item.image)} alt={item.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                      <img src={getOptimizedImage(item.image, 300)} alt={item.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                     </div>
                     <div className="flex flex-col flex-grow">
                       <div className="flex justify-between items-start mb-1.5">

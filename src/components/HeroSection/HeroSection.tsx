@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { getOptimizedImage } from '@/lib/images';
 
 interface HeroSectionProps {
   products?: any[];
@@ -130,7 +131,7 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
               >
                 {/* Image */}
                 <img
-                  src={item.image}
+                  src={getOptimizedImage(item.image, 700)}
                   alt=""
                   loading="lazy"
                   draggable={false}

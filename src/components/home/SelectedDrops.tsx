@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { getOptimizedImage } from '@/lib/images';
 
 interface SelectedDropsProps {
   products?: any[];
@@ -65,7 +66,7 @@ export function SelectedDrops({ products = [] }: SelectedDropsProps) {
               >
                 {/* Full Bleed Fashion Image with Zoom */}
                 <img
-                  src={drop.image}
+                  src={getOptimizedImage(drop.image, 1000)}
                   alt={drop.title}
                   loading="lazy"
                   className="w-full h-full object-cover grayscale-[10%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"

@@ -6,7 +6,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { db } from "@/lib/firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { SEO } from "../components/layout/SEO";
-import { WearitionSpinner } from "../components/layout/WearitionSpinner";
 
 import HeroSection from "../components/HeroSection/HeroSection";
 import { BrandManifesto } from "../components/home/BrandManifesto";
@@ -83,8 +82,9 @@ export function Home() {
     return () => ctx.revert();
   }, [loading, isMounted]);
 
-  if (!isMounted || loading) return <WearitionSpinner />;
-
+  // No full-page loading gate: the page renders immediately and the
+  // product-driven sections (hero carousel, featured drops) fill in as
+  // soon as Firestore responds.
   return (
     <div className="w-full relative bg-[#030303] text-[#fafafa] selection:bg-white selection:text-black" ref={containerRef}>
       <SEO faqs={FAQS} />
