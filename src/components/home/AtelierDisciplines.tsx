@@ -8,24 +8,24 @@ import { motion } from 'framer-motion';
 const ATELIER_DISCIPLINES = [
   {
     number: '01',
-    title: 'Bespoke Bridal & Couture',
-    subtitle: 'Private fitting sessions, bespoke bridal ensembles, and master artisan hand-embroidery (zardozi, tilla, mukesh) tailored to your exact measurements.',
-    tag: 'Made-to-Order',
-    href: '/contact',
+    title: 'Shop by Brand',
+    subtitle: 'Maria B, Asim Jofa, Hussain Rehar, Baroque and 40+ more Pakistani brands — every latest collection in one store.',
+    tag: '40+ Brands',
+    href: '/brands',
   },
   {
     number: '02',
-    title: 'Curated Designer Resale',
-    subtitle: 'Curated preloved and archive-inspired collections from Pakistan’s most loved design houses at transparent value.',
-    tag: 'Curated',
+    title: 'Cash on Delivery',
+    subtitle: 'Order online and pay at your doorstep. Flat Rs. 250 shipping across Pakistan — free on orders above Rs. 10,000.',
+    tag: 'Nationwide',
     href: '/shop',
   },
   {
     number: '03',
-    title: 'White-Glove Global Concierge',
-    subtitle: 'Worldwide insured express dispatch via DHL to patrons across the US, UK, UAE, Canada, and Europe with custom tailoring and styling support.',
-    tag: 'Worldwide Dispatch',
-    href: '/contact',
+    title: 'Order on WhatsApp',
+    subtitle: 'Need help choosing a size or checking stock? Message us on WhatsApp and we\u2019ll sort it out quickly.',
+    tag: 'Quick Help',
+    href: 'https://wa.me/923333744318',
   },
 ];
 
@@ -38,7 +38,7 @@ export function AtelierDisciplines() {
         {/* XODEX Top Section Header */}
         <div className="flex items-center justify-between border-b border-white/10 pb-6 mb-12 sm:mb-16">
           <span className="text-[11px] uppercase tracking-[0.3em] font-mono text-[#adadad]">
-            OUR DISCIPLINES &bull; MAISON EXPERTISE
+            WHY SHOP WITH US
           </span>
           <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#adadad]">
             [03]

@@ -38,7 +38,7 @@ export function OrderSuccess() {
           </h1>
 
           <p className="text-white/60 text-xs font-sans mb-8 leading-relaxed px-2">
-            Your couture selection has entered our atelier preparation queue. A comprehensive receipt and manifest confirmation has been dispatched to your email.
+            Your order is confirmed and is being prepared. A receipt has been sent to your email.
           </p>
 
           <div className="bg-white/[0.02] border border-white/5 p-6 rounded-sm mb-10 w-full">
@@ -58,7 +58,7 @@ export function OrderSuccess() {
               href="/shop"
               className="w-full sm:w-auto px-8 py-3.5 border border-white/15 text-white/80 hover:text-white hover:border-white/30 text-[10px] uppercase font-mono tracking-[0.25em] font-medium transition-all rounded-full"
             >
-              Browse Atelier
+              Continue Shopping
             </Link>
           </div>
         </div>

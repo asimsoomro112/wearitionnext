@@ -6,28 +6,28 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export const FAQS = [
   {
-    q: 'How do I place an order or commission a bespoke bridal ensemble?',
-    a: 'Ready-to-wear and curated archive pieces can be acquired directly through our online store. For bespoke bridal or formal couture, contact our atelier concierge via WhatsApp or through our Contact page to schedule an in-person fitting in Karachi or a virtual consultation worldwide.',
+    q: 'How do I place an order?',
+    a: 'Add your favourite suits to the bag and check out — or message us on WhatsApp and we\u2019ll place the order for you. You can pay with Cash on Delivery, EasyPaisa, JazzCash, or direct bank transfer.',
   },
   {
-    q: 'Are all designer resale and preloved collections 100% authentic?',
-    a: 'Yes, unequivocally. Every garment undergoes rigorous multi-point physical verification by our in-house textile specialists, verifying fabric weave, designer hallmarks, zardozi embroidery quality, and brand provenance before being listed.',
+    q: 'Are the suits stitched or unstitched?',
+    a: 'Most of our suits are unstitched 3-piece sets — every product page lists exactly what\u2019s included (shirt, trouser, dupatta and embroidery details). If a piece is stitched / ready-to-wear, it\u2019s clearly mentioned on its product page.',
   },
   {
-    q: 'What are your delivery timelines across Pakistan and internationally?',
-    a: 'Ready-to-wear and archive drops ship within 24–48 hours, arriving in 3–5 business days across Pakistan via express courier. International orders ship via DHL Express (4–7 business days). Custom bespoke bridal ensembles require 3–6 weeks depending on hand embroidery.',
+    q: 'What are your delivery timelines across Pakistan?',
+    a: 'Orders are processed within 24\u201348 hours and delivered in 3\u20135 business days anywhere in Pakistan. Shipping is a flat Rs. 250, and free on orders above Rs. 10,000. You\u2019ll receive a tracking number by SMS/email once your order is dispatched.',
   },
   {
     q: 'What payment methods do you accept?',
-    a: 'We accept Cash on Delivery (COD) for domestic orders across Pakistan, direct Online Bank Transfers, all major Credit/Debit Cards, and international remittances/wire transfers for our global patrons.',
+    a: 'We accept Cash on Delivery (COD) anywhere in Pakistan, EasyPaisa, JazzCash, and direct bank transfer.',
   },
   {
-    q: 'Can I provide my own measurements for custom stitching?',
-    a: 'Yes. Our master atelier tailors provide personalized custom sizing. You can submit your exact bust, waist, hip, and length measurements during checkout or coordinate directly with our team via WhatsApp for custom fittings.',
+    q: 'How do I track my order?',
+    a: 'Once your order is dispatched, you\u2019ll get a tracking number by SMS and email. You can also enter your order ID on our Track Order page to see the latest status.',
   },
   {
     q: 'What is your return and exchange policy?',
-    a: 'Ready-to-wear garments in original unworn condition with intact security tags can be exchanged within 7 days in case of verified defects. Custom bespoke bridal creations are altered to perfection until complete patron satisfaction.',
+    a: 'If your item arrives defective, damaged, or you received the wrong item, contact us within 7 days of delivery with a photo or video of the issue. Items must be unused, unworn, and in their original packaging with tags intact. Sale items are only eligible if there\u2019s a manufacturing defect.',
   },
 ];
 

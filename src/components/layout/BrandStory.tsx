@@ -15,7 +15,7 @@ export function BrandStory() {
         >
           <img 
             src={typeof logo === 'string' ? logo : logo.src} 
-            alt="Wearition Maison" 
+            alt="Wearition" 
             className="h-32 md:h-64 w-auto object-contain brightness-110" 
           />
         </motion.div>

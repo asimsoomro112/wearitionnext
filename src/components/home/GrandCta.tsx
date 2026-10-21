@@ -17,7 +17,7 @@ export function GrandCta() {
           className="mb-8"
         >
           <span className="text-[12px] font-mono uppercase tracking-[0.28em] text-[#adadad] block letterspacing4px">
-            [07] PRIVATE COMMISSIONS
+            [07] NEW ARRIVALS
           </span>
         </motion.div>
 
@@ -31,12 +31,11 @@ export function GrandCta() {
           style={{ fontFamily: "var(--font-cinzel), 'Cinzel', serif" }}
         >
           WEAR YOUR<br />
-          IDENTITY<br />
-          <span className="text-accent">TIMELESSLY.</span>
+          <span className="text-accent">IDENTITY.</span>
         </motion.h2>
 
         <p className="text-xs sm:text-sm font-sans text-[#adadad] max-w-xl mx-auto mb-12 sm:mb-16 leading-relaxed">
-          Whether acquiring a certified preloved designer heirloom or commissioning a bespoke bridal masterpiece, our Karachi master artisans are at your service.
+          New branded suits are added regularly. Browse the latest collections &mdash; or message us on WhatsApp and we&apos;ll help you pick the right one.
         </p>
 
         {/* Action Button (Exact XODEX 8px geometry) */}
@@ -47,10 +46,10 @@ export function GrandCta() {
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <Link
-            href="/contact"
+            href="/shop"
             className="buttonprimary group inline-flex items-center gap-3 cursor-pointer"
           >
-            <span>BOOK A CONSULTATION</span>
+            <span>SHOP NEW ARRIVALS</span>
             <svg
               viewBox="0 0 24 24"
               fill="none"

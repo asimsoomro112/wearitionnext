@@ -60,9 +60,9 @@ export function CartDrawer() {
                   <div className="w-14 h-14 rounded-full border border-white/10 flex items-center justify-center text-white/20 mb-2">
                     <ShoppingBag className="w-6 h-6" strokeWidth={1.5} />
                   </div>
-                  <p className="uppercase text-[11px] tracking-[0.25em] text-white/60">Your atelier bag is empty</p>
+                  <p className="uppercase text-[11px] tracking-[0.25em] text-white/60">Your bag is empty</p>
                   <p className="text-xs text-white/40 max-w-[260px] text-center font-sans">
-                    Explore our curated drops to acquire exclusive haute couture silhouettes.
+                    Browse the latest branded suits and find your favourite.
                   </p>
                   <button 
                     onClick={() => {
@@ -142,7 +142,7 @@ export function CartDrawer() {
                 </div>
                 <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-white/40 mb-6 bg-white/[0.02] border border-white/5 px-3 py-2 rounded-sm">
                   <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                  <span>Complimentary express courier & custom packaging</span>
+                  <span>Flat Rs. 250 shipping — free on orders above Rs. 10,000</span>
                 </div>
                 <button 
                   onClick={() => {

@@ -9,7 +9,7 @@ export function ParallaxVignette() {
       <div className="absolute inset-0">
         <img
           src="https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=2000&auto=format&fit=crop"
-          alt="Luxury Haute Couture"
+          alt="Wearition — Wear Your Identity"
           loading="lazy"
           className="w-full h-full object-cover grayscale-[25%] contrast-[1.1] scale-105"
         />
@@ -38,7 +38,7 @@ export function ParallaxVignette() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-xs sm:text-base md:text-lg font-mono uppercase tracking-[0.3em] text-[#adadad]"
         >
-          ANCESTRAL HERITAGE &bull; UNCOMPROMISING COUTURE &bull; GLOBAL DISPATCH
+          NEW COLLECTIONS &bull; TOP BRANDS &bull; NATIONWIDE DELIVERY
         </motion.p>
       </div>
     </section>

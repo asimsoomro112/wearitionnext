@@ -101,7 +101,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
 
         {/* Product Info */}
         <div className="flex flex-col items-start px-1 pt-1">
-          <p className="text-[10px] uppercase tracking-[0.22em] text-white/40 mb-1">{product.category || 'Atelier Collection'}</p>
+          <p className="text-[10px] uppercase tracking-[0.22em] text-white/40 mb-1">{product.category || 'New Collection'}</p>
           <h3 className="font-sans font-medium text-sm tracking-wide text-white group-hover:text-white/80 transition-colors duration-300 line-clamp-1 mb-1.5">{product.title}</h3>
           <div className="flex items-center gap-2.5 mb-2">
             {product.isOnSale && product.salePrice ? (

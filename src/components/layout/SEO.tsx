@@ -11,11 +11,11 @@ interface SEOProps {
 }
 
 const DEFAULTS = {
-  title: 'WEARITION — Wear Your Identity | Luxury Fashion Atelier & Designer Resale',
-  description: "Pakistan's premier luxury fashion atelier & authenticated designer resale. Discover bespoke bridal couture, hand-embroidered silhouettes, and curated archive pieces from elite design houses.",
+  title: 'WEARITION — Wear Your Identity | Branded Suits Online in Pakistan',
+  description: "Shop the latest branded suits from Pakistan's top fashion houses — Maria B, Asim Jofa, Hussain Rehar, Baroque and more. New collections with cash on delivery and nationwide shipping.",
   image: 'https://wearition.store/logo.png',
   url: 'https://wearition.store',
-  keywords: 'WEARITION, luxury fashion Pakistan, Pakistani designer clothes, bespoke bridal couture, designer resale Pakistan, Faraz Manan, Elan, Sana Safinaz, Maria B, Hussain Rehar, Zara Shahjahan, preloved couture Pakistan, Karachi atelier',
+  keywords: 'WEARITION, branded suits online Pakistan, lawn suits Pakistan, 3 piece suits online, Maria B suits, Asim Jofa collection, Sana Safinaz, Hussain Rehar, Baroque suits, women\u2019s fashion Pakistan, cash on delivery clothing Pakistan',
 };
 
 export function SEO({ 

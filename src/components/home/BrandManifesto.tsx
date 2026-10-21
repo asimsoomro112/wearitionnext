@@ -3,18 +3,19 @@
 import { motion } from 'framer-motion';
 
 const PARTNER_BRANDS = [
-  'FARAZ MANAN',
-  'SANA SAFINAZ',
-  'ÉLAN',
-  'MARIA.B',
-  'ZARA SHAHJAHAN',
-  'HUSSAIN REHAR',
-  'SUFFUSE',
-  'FAIZA SAQLAIN',
-  'REPUBLIC WOMENSWEAR',
-  'ALI XEESHAN',
+  'MARIA B',
   'ASIM JOFA',
-  'BAREEZE',
+  'HUSSAIN REHAR',
+  'BAROQUE',
+  'ELAAF',
+  'QALAMKAR',
+  'JAZMIN',
+  'IZEL',
+  'BEECHTREE',
+  'CROSS STITCH',
+  'MOHANGI',
+  'LULUSAR',
+  'SEREENE',
 ];
 
 export function BrandManifesto() {
@@ -32,7 +33,7 @@ export function BrandManifesto() {
           className="mb-8 lg:mb-12"
         >
           <span className="text-[11px] md:text-xs font-mono uppercase tracking-[0.3em] text-[#adadad] block letterspacing4px">
-            [01] MAISON WEARITION &bull; ATELIER PHILOSOPHY
+            [01] ABOUT WEARITION
           </span>
         </motion.div>
 
@@ -44,15 +45,15 @@ export function BrandManifesto() {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="text-2xl sm:text-4xl md:text-5xl lg:text-[4.2rem] font-light text-center leading-[1.22] tracking-tight text-[#fafafa] max-w-5xl mx-auto"
         >
-          Founded on the philosophy of{' '}
+          Pakistan&apos;s most loved clothing brands,{' '}
           <span className="text-white underline decoration-accent/60 decoration-1 underline-offset-8 font-normal">
-            Wear Your Identity
+            one store
           </span>
-          . We bridge ancestral South Asian needlecraft with contemporary haute couture, curating certified luxury that remains{' '}
+          . The latest suits from top design houses &mdash;{' '}
           <span className="text-white underline decoration-accent/60 decoration-1 underline-offset-8 font-normal">
-            timeless
+            delivered to your doorstep
           </span>
-          .
+          , anywhere in Pakistan.
         </motion.h2>
 
         {/* Exact XODEX 100px Divider */}
@@ -60,7 +61,7 @@ export function BrandManifesto() {
 
         {/* Trusted By Label */}
         <span className="text-[11px] md:text-xs uppercase tracking-[0.28em] text-[#adadad] block font-mono mb-10">
-          REVERED HOUSES &bull; CURATED COLLECTIONS
+          TOP BRANDS &bull; LATEST COLLECTIONS
         </span>
       </div>
 

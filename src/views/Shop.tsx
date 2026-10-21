@@ -50,7 +50,7 @@ export function Shop() {
           }));
           setCategories([{ name: 'All Pieces', value: '' }, ...fetchedCats]);
         } else {
-          const defaults = ['Couture', 'Ready-to-Wear', 'Silks & Chiffon', 'Embroidery', 'Bridal', 'Accessories'].map(c => ({
+          const defaults = ['Lawn', 'Chiffon', 'Embroidery', 'Luxury Pret', 'Festive'].map(c => ({
             name: c, value: c.toLowerCase()
           }));
           setCategories([{ name: 'All Pieces', value: '' }, ...defaults]);
@@ -137,15 +137,15 @@ export function Shop() {
   return (
     <div className="w-full pt-36 md:pt-44 px-6 md:px-12 lg:px-16 pb-36 bg-[#030303] text-[#fafafa] min-h-screen">
       <SEO 
-        title={brandFilter ? `${brandFilter.toUpperCase()} Collection • WEARITION` : categoryFilter ? `${categoryFilter.toUpperCase()} • WEARITION` : 'Atelier Archive • WEARITION'}
-        description="Explore WEARITION's curated collection of luxury haute couture and ready-to-wear pieces designed for the modern visionary."
+        title={brandFilter ? `${brandFilter.toUpperCase()} Collection • WEARITION` : categoryFilter ? `${categoryFilter.toUpperCase()} • WEARITION` : 'Shop All Products • WEARITION'}
+        description="Browse the full WEARITION collection — the latest branded suits from Pakistan's top fashion houses, with cash on delivery nationwide."
       />
       <div className="max-w-[1440px] mx-auto">
         {/* Editorial Section Header */}
         <header className="mb-14 text-center">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.03] text-[9px] uppercase tracking-[0.25em] text-[#adadad] font-mono mb-5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#339e9b]" />
-            <span>ATELIER ARCHIVE &bull; CATALOGUE</span>
+            <span>SHOP &bull; FULL CATALOGUE</span>
           </div>
 
           <motion.h1
@@ -154,10 +154,10 @@ export function Shop() {
             transition={{ duration: 0.8 }}
             className="font-display text-4xl sm:text-6xl md:text-7xl font-bold leading-none tracking-tight text-white uppercase mb-4"
           >
-            {brandFilter ? brandFilter.toUpperCase() : categoryFilter ? categoryFilter.toUpperCase() : 'THE ARCHIVE'}
+            {brandFilter ? brandFilter.toUpperCase() : categoryFilter ? categoryFilter.toUpperCase() : 'SHOP ALL'}
           </motion.h1>
           <p className="text-[#adadad] text-xs md:text-sm max-w-xl mx-auto font-sans tracking-wide">
-            {loading ? 'Curating your atelier selection...' : `${products.length} bespoke piece${products.length !== 1 ? 's' : ''} available for immediate acquisition.`}
+            {loading ? 'Loading products...' : `${products.length} product${products.length !== 1 ? 's' : ''} from the latest collections.`}
           </p>
         </header>
 
@@ -182,9 +182,9 @@ export function Shop() {
         <div className="flex justify-between items-center border-y border-white/10 py-4 mb-12 text-[10px] uppercase font-mono tracking-[0.22em] text-[#adadad]">
           <span className="flex items-center gap-2">
             <span className="inline-block w-1 h-1 rounded-full bg-[#339e9b]" />
-            {loading ? 'CALCULATING...' : searchString ? (
+            {loading ? 'LOADING...' : searchString ? (
               <>{sortedProducts.length} RESULT{sortedProducts.length === 1 ? '' : 'S'} FOR &ldquo;{searchString.toUpperCase()}&rdquo;</>
-            ) : `${sortedProducts.length} ARCHIVE PIECES`}
+            ) : `${sortedProducts.length} PRODUCTS`}
             {searchString && !loading && (
               <button
                 onClick={clearSearch}
@@ -219,9 +219,9 @@ export function Shop() {
             className="text-center py-28 px-4 border border-white/5 bg-[#0d0d0d] rounded-sm"
           >
             <p className="font-display text-5xl text-white/10 mb-6">◇</p>
-            <h3 className="font-display text-2xl md:text-3xl text-white/80 uppercase tracking-wide mb-3">Curating New Silhouettes</h3>
+            <h3 className="font-display text-2xl md:text-3xl text-white/80 uppercase tracking-wide mb-3">Nothing Found</h3>
             <p className="text-[#adadad] text-xs md:text-sm max-w-md mx-auto font-sans mb-8">
-              No pieces currently match this specific atelier filter. Our master tailors are releasing new drops weekly.
+              No products match this filter right now. New suits are added regularly — try a different search or browse the full collection.
             </p>
             <button 
               onClick={() => {

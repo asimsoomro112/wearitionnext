@@ -10,11 +10,11 @@ import logo from '../../assets/navbar_logo.png';
 
 const navItems = [
   { number: "01", label: "HOME", href: "/" },
-  { number: "02", label: "ARCHIVE & SHOP", href: "/shop" },
-  { number: "03", label: "DESIGNER BRANDS", href: "/brands" },
-  { number: "04", label: "COUTURE & EDITORIAL", href: "/editorial" },
-  { number: "05", label: "HERITAGE & STUDIO", href: "/about" },
-  { number: "06", label: "CONCIERGE & FITTINGS", href: "/contact" },
+  { number: "02", label: "SHOP", href: "/shop" },
+  { number: "03", label: "BRANDS", href: "/brands" },
+  { number: "04", label: "EDITORIAL", href: "/editorial" },
+  { number: "05", label: "ABOUT US", href: "/about" },
+  { number: "06", label: "CONTACT & HELP", href: "/contact" },
   { number: "07", label: "ORDER TRACKING", href: "/track-order" },
 ];
 
@@ -134,17 +134,17 @@ export function MobileMenu() {
 
               <div>
                 <span className="text-[10px] uppercase tracking-[0.3em] text-white/40 block mb-2 font-mono">
-                  [Atelier Concierge]
+                  [Customer Support]
                 </span>
                 <p className="text-sm text-white/80 leading-relaxed font-light">
                   Mon — Sat: 10:00 - 20:00 PKT<br />
-                  Bespoke fittings by appointment.
+                  You can also reach us on WhatsApp.
                 </p>
               </div>
 
               <div>
                 <span className="text-[10px] uppercase tracking-[0.3em] text-white/40 block mb-3 font-mono">
-                  [Client Portal]
+                  [My Account]
                 </span>
                 <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs uppercase tracking-[0.2em]">
                   <Link href="/account" onClick={handleClose} className="hover:text-white transition-colors">
@@ -166,7 +166,7 @@ export function MobileMenu() {
 
           {/* Footer Ribbon */}
           <div className="flex flex-col sm:flex-row items-center justify-between border-t border-white/10 pt-6 text-[10px] uppercase tracking-[0.25em] text-white/40 gap-3">
-            <span>Maison WEARITION &copy; 2026</span>
+            <span>WEARITION &copy; 2026</span>
             <span>Wear Your Identity</span>
           </div>
         </motion.div>

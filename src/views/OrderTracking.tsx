@@ -98,7 +98,7 @@ export function OrderTracking() {
 
   const statusSteps = [
     { status: 'pending', label: 'Order Placed', desc: 'Your order has been successfully placed.', icon: ClipboardCheck },
-    { status: 'processing', label: 'Processing', desc: 'Our atelier is preparing your selection.', icon: Package },
+    { status: 'processing', label: 'Processing', desc: 'We are preparing your order.', icon: Package },
     { status: 'shipped', label: 'Shipped', desc: 'Order handed to courier for delivery.', icon: Truck },
     { status: 'delivered', label: 'Delivered', desc: 'Order has been delivered to your doorstep.', icon: CheckCircle }
   ];
@@ -115,12 +115,12 @@ export function OrderTracking() {
         <div className="max-w-[540px] mx-auto text-center w-full">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.03] text-[9px] uppercase tracking-[0.25em] text-white/50 mb-6">
             <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-            <span>ATELIER DISPATCH TRACKER</span>
+            <span>ORDER TRACKER</span>
           </div>
 
           <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl mb-4 uppercase tracking-tight text-white">Track Order</h1>
           <p className="text-white/40 mb-10 font-sans text-xs tracking-wide">
-            Enter your unique atelier order reference to view real-time tailoring, dispatch, and courier progression.
+            Enter your order ID to see the latest delivery status.
           </p>
           
           <form onSubmit={handleTrack} className="space-y-4">
@@ -171,7 +171,7 @@ export function OrderTracking() {
           <div>
             <div className="flex items-center gap-2 text-[9px] uppercase tracking-[0.25em] text-white/40 mb-2">
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-              <span>ATELIER DISPATCH REFERENCE</span>
+              <span>ORDER REFERENCE</span>
             </div>
             <h1 className="font-serif text-3xl sm:text-4xl text-white uppercase tracking-tight">{order.orderId}</h1>
             <p className="text-white/40 text-xs font-sans mt-1">
@@ -199,7 +199,7 @@ export function OrderTracking() {
                   <XCircle className="w-10 h-10 text-white/50 mb-4" />
                   <h3 className="font-serif text-2xl text-white mb-2 uppercase tracking-wide">Acquisition Cancelled</h3>
                   <p className="text-white/40 text-xs font-sans max-w-md mx-auto leading-relaxed">
-                    This order has been archived. The reserved atelier inventory has been returned to the catalogue.
+                    This order has been archived and is no longer active.
                   </p>
                 </div>
               ) : (
@@ -326,7 +326,7 @@ export function OrderTracking() {
                 className="w-full flex items-center justify-center gap-2.5 border border-white/15 hover:border-white/30 hover:bg-white/[0.04] py-3.5 rounded-full transition-all text-[10px] uppercase tracking-[0.2em] font-semibold text-white/80 hover:text-white"
               >
                 <MessageSquare className="w-3.5 h-3.5" />
-                <span>Contact Atelier Concierge ↗</span>
+                <span>Contact Support ↗</span>
               </a>
 
               {order.status === 'pending' && (
@@ -345,7 +345,7 @@ export function OrderTracking() {
                 className="w-full flex items-center justify-center gap-2.5 bg-accent text-white py-3.5 rounded-full transition-all text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-[#3ab0ad] shadow-xl"
               >
                 <RefreshCcw className="w-3.5 h-3.5" />
-                <span>Browse Atelier Collections ↗</span>
+                <span>Browse the Collection ↗</span>
               </Link>
             </div>
           </div>

@@ -50,7 +50,7 @@ export function LoadingScreen() {
           transition={{ delay: 0.5, duration: 1 }}
           className="text-[10px] uppercase tracking-[0.4em] text-white mt-6 font-light"
         >
-          Elegance is Loading
+          Loading
         </motion.p>
       </div>
 
@@ -61,7 +61,7 @@ export function LoadingScreen() {
         transition={{ duration: 2 }}
         className="absolute bottom-12 text-[10px] uppercase tracking-[0.2em] text-white/20"
       >
-        Maison Wearition &copy; 2026
+        Wearition &copy; 2026
       </motion.div>
     </motion.div>
   );

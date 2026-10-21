@@ -3,76 +3,26 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-// Curated high-fashion editorial pieces for the infinite runway showcase
-const FALLBACK_SHOWCASE_ITEMS = [
-  {
-    id: 'faraz-manan-zardozi-bridal',
-    title: 'Faraz Manan Bridal Masterpiece',
-    category: 'Haute Couture',
-    tag: 'Bespoke Atelier',
-    image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=1200&auto=format&fit=crop',
-    href: '/shop',
-  },
-  {
-    id: 'elan-silk-organza-peshwas',
-    title: 'Élan Handcrafted Peshwas',
-    category: 'Prestige Resale',
-    tag: 'Bridal Heritage',
-    image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1200&auto=format&fit=crop',
-    href: '/shop',
-  },
-  {
-    id: 'sana-safinaz-noir-velvet',
-    title: 'Sana Safinaz Noir Velvet Gown',
-    category: 'Evening Gala',
-    tag: 'Archive Drop',
-    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1200&auto=format&fit=crop',
-    href: '/shop',
-  },
-  {
-    id: 'hussain-rehar-zardozi-cape',
-    title: 'Hussain Rehar Embroidered Cape',
-    category: 'Editorial Exclusive',
-    tag: 'Limited 1 of 1',
-    image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200&auto=format&fit=crop',
-    href: '/shop',
-  },
-  {
-    id: 'zara-shahjahan-festive-silk',
-    title: 'Zara Shahjahan Festive Raw Silk',
-    category: 'Ready-to-Wear',
-    tag: 'Signature Drop',
-    image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1200&auto=format&fit=crop',
-    href: '/shop',
-  },
-  {
-    id: 'suffuse-mukesh-organza',
-    title: 'Suffuse Hand-Embellished Formal',
-    category: 'Prestige Resale',
-    tag: 'Curated Drop',
-    image: 'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?q=80&w=1200&auto=format&fit=crop',
-    href: '/shop',
-  },
-];
-
 interface HeroSectionProps {
   products?: any[];
 }
 
 export default function HeroSection({ products = [] }: HeroSectionProps) {
-  // Blend live Firestore products with fallback editorial visuals
-  const showcaseItems = products.length >= 4 
-    ? products.map((p, idx) => ({
-        id: p.id,
-        title: p.title || 'Maison Couture',
-        category: p.category || p.brand || 'Luxury Fashion',
-        tag: p.isNew ? 'New Archive' : 'Featured',
-        image: p.images?.[0] || p.image || FALLBACK_SHOWCASE_ITEMS[idx % FALLBACK_SHOWCASE_ITEMS.length].image,
-        href: `/product/${p.id}`,
-      }))
-    : FALLBACK_SHOWCASE_ITEMS;
+  // Real store products only — never stock-photo stand-ins presented as
+  // inventory. With few products, repeat them so the marquee still loops.
+  const showcaseItems = (products || []).map((p, idx) => ({
+    id: p.id,
+    title: p.title || 'Wearition Product',
+    category: p.category || p.brand || 'Women',
+    tag: p.isNew ? 'New In' : 'Featured',
+    image: p.images?.[0] || p.image || '',
+    href: `/product/${p.id}`,
+  })).filter(item => item.image);
 
-  const loopedItems = [...showcaseItems, ...showcaseItems];
+  const doubled = [...showcaseItems, ...showcaseItems];
+  const loopedItems = showcaseItems.length > 0 && showcaseItems.length < 4
+    ? [...doubled, ...doubled]
+    : doubled;
 
   return (
     <section id="home" className="relative w-full overflow-hidden bg-[#030303] text-[#fafafa] pt-36 md:pt-48 pb-20">
@@ -90,7 +40,7 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
           <span className="text-[11px] md:text-xs font-mono uppercase tracking-[0.3em] text-[#adadad] inline-block mr-[-0.3em]">
             <span className="block sm:inline">Wear Your Identity</span>
             <span className="hidden sm:inline text-accent"> &bull; </span>
-            <span className="block sm:inline mt-2 sm:mt-0">Pakistan&apos;s Premier Luxury Atelier</span>
+            <span className="block sm:inline mt-2 sm:mt-0">Pakistan&apos;s Top Clothing Brands</span>
           </span>
         </motion.div>
 
@@ -112,11 +62,11 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
           className="max-w-3xl mx-auto"
         >
           <div className="subheading-xodex mt-4 mr-[-0.22em]">
-            <span className="inline-block whitespace-nowrap">Curated Designer Couture</span>
+            <span className="inline-block whitespace-nowrap">Branded Suits</span>
             <span> &bull; </span>
-            <span className="inline-block whitespace-nowrap">Bespoke Bridal Creations</span>
+            <span className="inline-block whitespace-nowrap">New Collections</span>
             <span> &bull; </span>
-            <span className="inline-block whitespace-nowrap">Timeless Preloved Luxury</span>
+            <span className="inline-block whitespace-nowrap">Cash on Delivery</span>
           </div>
 
           <div className="dividerhero" />
@@ -127,14 +77,14 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
               href="/shop"
               className="buttonprimary"
             >
-              <span>EXPLORE ARCHIVE ↗</span>
+              <span>SHOP NOW ↗</span>
             </Link>
 
             <Link
-              href="/contact"
+              href="/brands"
               className="buttonsecondary group"
             >
-              <span>BOOK BRIDAL FITTING</span>
+              <span>SHOP BY BRAND</span>
               <svg
                 viewBox="0 0 24 24"
                 fill="none"

@@ -15,6 +15,7 @@ import { MobileMenu } from "@/components/layout/MobileMenu";
 import { MobileBottomBar } from "@/components/layout/MobileBottomBar";
 import { SearchOverlay } from "@/components/layout/SearchOverlay";
 import { AIStyleAssistant } from "@/components/layout/AIStyleAssistant";
+import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { LoadingScreen } from "@/components/layout/LoadingScreen";
 import { LenisProvider } from "@/components/layout/LenisProvider";
 
@@ -76,6 +77,7 @@ export function StoreLayout({ children }: { children: React.ReactNode }) {
       <main className="min-h-screen">{children}</main>
       <Footer />
       {!isPDP && <MobileBottomBar />}
+      <WhatsAppButton />
       <AIStyleAssistant />
     </LenisProvider>
   );

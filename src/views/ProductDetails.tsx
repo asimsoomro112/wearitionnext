@@ -106,7 +106,7 @@ function SizeGuideModal({ onClose }: { onClose: () => void }) {
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6 pb-3 border-b border-white/10">
-          <h3 className="text-white font-serif text-lg uppercase tracking-wider">Atelier Sizing Guide</h3>
+          <h3 className="text-white font-serif text-lg uppercase tracking-wider">Size Guide</h3>
           <button onClick={onClose} aria-label="Close guide"><X className="w-5 h-5 text-white/40 hover:text-white transition-colors" /></button>
         </div>
         <table className="w-full text-xs font-mono">
@@ -128,7 +128,7 @@ function SizeGuideModal({ onClose }: { onClose: () => void }) {
           </tbody>
         </table>
         <p className="text-[10px] text-white/30 uppercase tracking-widest mt-6">
-          All measurements in inches. Custom fittings available via Atelier Styling.
+          All measurements in inches. Need help with sizing? Message us on WhatsApp.
         </p>
       </motion.div>
     </motion.div>
@@ -301,7 +301,7 @@ export function ProductDetails() {
     </div>
   );
 
-  const whatsappHref = `https://wa.me/923333744318?text=${encodeURIComponent('Hello WEARITION Concierge, I would like to inquire about ' + product.title)}`;
+  const whatsappHref = `https://wa.me/923333744318?text=${encodeURIComponent('Hello WEARITION, I have a question about ' + product.title)}`;
 
   // ─── Render ────────────────────────────────────────────────────────────────
   return (
@@ -345,7 +345,7 @@ export function ProductDetails() {
         <div className="w-full max-w-[1600px] mx-auto px-6 md:px-12 pt-36 md:pt-40 pb-4 flex items-center gap-2 text-[10px] text-white/40 uppercase tracking-[0.2em]">
           <Link href="/" className="hover:text-white cursor-pointer transition-colors">Home</Link>
           <ChevronRight className="w-3 h-3 text-white/20" />
-          <Link href="/shop" className="hover:text-white cursor-pointer transition-colors">Atelier Collection</Link>
+          <Link href="/shop" className="hover:text-white cursor-pointer transition-colors">Shop</Link>
           <ChevronRight className="w-3 h-3 text-white/20" />
           <span className="text-white/70 truncate max-w-[200px]">{product.title}</span>
         </div>
@@ -402,7 +402,7 @@ export function ProductDetails() {
               {/* ── Brand Tag ─────────────────────────────────────────── */}
               <div className="flex items-center gap-2 text-[9px] uppercase tracking-[0.25em] text-white/40 mb-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                <span>ATELIER HAUTE COUTURE • WEARITION</span>
+                <span>{product.brand ? `${product.brand} • WEARITION` : 'WEARITION'}</span>
               </div>
 
 
@@ -434,7 +434,7 @@ export function ProductDetails() {
                 <div className="mb-5 p-3.5 rounded-sm bg-white/[0.02] border border-white/10">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-[10px] uppercase tracking-widest text-white/80 font-bold">
-                      Limited Atelier Run — {product.stock} pieces remaining
+                      Only {product.stock} left in stock
                     </span>
                     <span className="text-[10px] text-white/40 font-mono">{product.stock} left</span>
                   </div>
@@ -451,7 +451,7 @@ export function ProductDetails() {
               {isOutOfStock && (
                 <div className="mb-5 flex items-center gap-2 text-white/70 text-xs bg-white/[0.03] border border-white/10 rounded-sm px-4 py-3">
                   <AlertCircle className="w-4 h-4 text-white/50" />
-                  <span className="uppercase text-[10px] tracking-widest">This silhouette is currently sold out in the atelier</span>
+                  <span className="uppercase text-[10px] tracking-widest">This product is currently sold out</span>
                 </div>
               )}
 
@@ -489,7 +489,7 @@ export function ProductDetails() {
                   <div>
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-medium">
-                        Atelier Fit: <span className="text-white font-bold">{selectedSize || 'Select'}</span>
+                        Size: <span className="text-white font-bold">{selectedSize || 'Select'}</span>
                       </span>
                       <button
                         onClick={() => setSizeGuideOpen(true)}
@@ -588,8 +588,8 @@ export function ProductDetails() {
               <div className="grid grid-cols-2 gap-2 mb-8">
                 {[
                   { icon: <Banknote className="w-4 h-4 text-white" />, label: 'Cash on Delivery', sub: 'Nationwide' },
-                  { icon: <Truck className="w-4 h-4 text-white" />, label: 'Express Delivery', sub: 'DHL / TCS Express' },
-                  { icon: <RotateCcw className="w-4 h-4 text-white" />, label: 'Atelier Exchange', sub: 'Hassle-free policy' },
+                  { icon: <Truck className="w-4 h-4 text-white" />, label: 'Fast Delivery', sub: '3–5 working days' },
+                  { icon: <RotateCcw className="w-4 h-4 text-white" />, label: 'Easy Exchange', sub: '7-day defect policy' },
                   { icon: <ShieldCheck className="w-4 h-4 text-white" />, label: 'Quality Checked', sub: 'Inspected before dispatch' },
                 ].map(({ icon, label, sub }) => (
                   <div key={label}
@@ -617,7 +617,7 @@ export function ProductDetails() {
                           : 'text-white/40 hover:text-white/70'
                       }`}
                     >
-                      {tab === 'description' ? 'Atelier Notes' : 'Care & Maintenance'}
+                      {tab === 'description' ? 'Product Details' : 'Care & Maintenance'}
                       {activeTab === tab && (
                         <motion.div
                           layoutId="tab-underline"
@@ -637,7 +637,7 @@ export function ProductDetails() {
                       exit={{ opacity: 0, y: -8 }}
                       className="text-white/60 text-xs md:text-sm leading-relaxed font-sans mb-6 whitespace-pre-line"
                     >
-                      {product.description || 'Premium bespoke silhouette from WEARITION\'s curated collection. Handcrafted by master artisans with intricate detail and precision tailoring.'}
+                      {product.description || 'Premium quality piece from the latest WEARITION collection. See the details above for fabric, embroidery and what is included.'}
                     </motion.div>
                   )}
 
@@ -651,7 +651,7 @@ export function ProductDetails() {
                       className="mb-6 space-y-2"
                     >
                       {[
-                        { title: 'Dry Clean Only', detail: 'Professional couture dry cleaning recommended to protect fine silks and embroidery.' },
+                        { title: 'Dry Clean Only', detail: 'Professional dry cleaning recommended for embroidered pieces.' },
                         { title: 'Preservation Storage', detail: 'Store in complimentary breathable garment bag away from direct heat.' },
                         { title: 'Low Heat Steaming', detail: 'Steam inside out on low temperature setting.' },
                       ].map(({ title, detail }) => (
@@ -672,7 +672,7 @@ export function ProductDetails() {
                 rel="noopener noreferrer"
                 className="w-full py-3.5 rounded-full border border-white/15 bg-white/[0.02] hover:border-white/30 hover:bg-white/[0.05] text-[10px] uppercase tracking-[0.2em] font-semibold text-white/80 hover:text-white transition-all text-center flex items-center justify-center gap-2 mb-6"
               >
-                <span>Speak with an Atelier Stylist ↗</span>
+                <span>Chat on WhatsApp ↗</span>
               </a>
 
               {/* ── Shipping Note ─────────────────────────────────────────── */}

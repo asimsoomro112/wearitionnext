@@ -38,16 +38,16 @@ export function Navbar() {
       {/* Center Micro Navigation (Desktop) */}
       <nav className="hidden md:flex items-center gap-8 text-[11px] uppercase tracking-[0.25em] font-mono font-medium text-white/60">
         <Link href="/shop" className="hover:text-accent transition-colors">
-          Archive
+          Shop
         </Link>
         <Link href="/brands" className="hover:text-accent transition-colors">
           Brands
         </Link>
         <Link href="/editorial" className="hover:text-accent transition-colors">
-          Couture
+          Editorial
         </Link>
         <Link href="/about" className="hover:text-accent transition-colors">
-          Studio
+          About
         </Link>
         <Link href="/contact" className="hover:text-accent transition-colors">
           Contact

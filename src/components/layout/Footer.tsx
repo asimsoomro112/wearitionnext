@@ -20,7 +20,7 @@ export function Footer() {
             </Link>
 
             <p className="text-xs sm:text-sm font-sans text-[#adadad] leading-relaxed max-w-md">
-              Maison WEARITION &mdash; Curators of bespoke women&apos;s haute couture, heritage craftsmanship, and certified luxury designer collections.
+              WEARITION &mdash; Pakistan&apos;s top clothing brands in one store. The latest branded suits with cash on delivery, anywhere in Pakistan.
             </p>
 
             <nav className="flex flex-wrap lg:flex-nowrap gap-x-6 xl:gap-x-8 gap-y-3 text-xs uppercase font-mono tracking-[0.2em] font-medium text-white/70">
@@ -28,16 +28,16 @@ export function Footer() {
                 HOME
               </Link>
               <Link href="/shop" className="hover:text-accent transition-colors">
-                ARCHIVE
+                SHOP
               </Link>
               <Link href="/brands" className="hover:text-accent transition-colors">
                 BRANDS
               </Link>
               <Link href="/editorial" className="hover:text-accent transition-colors">
-                COUTURE
+                EDITORIAL
               </Link>
               <Link href="/about" className="hover:text-accent transition-colors">
-                STUDIO
+                ABOUT
               </Link>
               <Link href="/contact" className="hover:text-accent transition-colors">
                 CONTACT
@@ -49,7 +49,7 @@ export function Footer() {
           <div className="flex flex-col gap-6 lg:text-right">
             <div>
               <span className="text-[10px] uppercase tracking-[0.3em] font-mono text-[#adadad] block mb-2">
-                [DIRECT ATELIER INQUIRIES &bull; KARACHI, PK]
+                [CONTACT US &bull; KARACHI, PK]
               </span>
               <a
                 href="mailto:wearition.80@gmail.com"

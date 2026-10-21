@@ -244,15 +244,15 @@ export function Account() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 pb-8 border-b border-white/10">
             <div>
               <p className="text-[10px] uppercase font-mono tracking-[0.3em] text-white/40 mb-2">
-                [01] • PATRON DASHBOARD
+                [01] • MY ACCOUNT
               </p>
               <h1 className="font-serif text-3xl md:text-5xl tracking-tight text-white">
-                Welcome back, {user.displayName?.split(' ')[0] || 'Patron'}
+                Welcome back, {user.displayName?.split(' ')[0] || 'there'}
               </h1>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-[10px] uppercase font-mono tracking-[0.2em] px-3.5 py-1.5 rounded-full border border-white/15 bg-white/[0.03] text-white/70">
-                Atelier Member
+                Member
               </span>
               <button
                 onClick={handleSignOut}
@@ -279,7 +279,7 @@ export function Account() {
                   </div>
                   <div className="min-w-0">
                     <p className="font-medium text-white truncate text-sm">
-                      {user.displayName || 'Patron'}
+                      {user.displayName || 'Wearition Member'}
                     </p>
                     <p className="text-white/40 text-xs font-mono truncate">{user.email}</p>
                   </div>
@@ -332,13 +332,13 @@ export function Account() {
                 <div className="pt-6 border-t border-white/5">
                   <div className="bg-white/[0.02] border border-white/5 p-4 rounded-sm">
                     <p className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40 mb-1">
-                      Concierge Support
+                      Customer Support
                     </p>
                     <p className="text-xs text-white/60 font-sans leading-relaxed mb-3">
-                      Need bespoke tailoring or order assistance?
+                      Need help with an order or a product?
                     </p>
                     <a
-                      href="https://wa.me/923333744318?text=Hello%20WEARITION%20Concierge"
+                      href="https://wa.me/923333744318?text=Hello%20WEARITION"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 text-[10px] uppercase font-mono tracking-[0.2em] text-white hover:underline"
@@ -367,7 +367,7 @@ export function Account() {
                         href="/shop" 
                         className="text-[10px] uppercase font-mono tracking-[0.2em] text-white/60 hover:text-white flex items-center gap-1.5 transition-colors"
                       >
-                        Explore Atelier <ChevronRight className="w-3 h-3" />
+                        Explore Shop <ChevronRight className="w-3 h-3" />
                       </Link>
                     </div>
 
@@ -383,13 +383,13 @@ export function Account() {
                         <ShoppingBag className="w-12 h-12 text-white/20 mx-auto mb-4 stroke-1" />
                         <h3 className="font-serif text-2xl mb-2 text-white">No Orders on Record</h3>
                         <p className="text-white/40 text-xs font-sans max-w-sm mx-auto mb-8 leading-relaxed">
-                          Your acquisition portfolio is currently vacant. Discover our latest couture runway drops.
+                          You have not placed any orders yet. Discover our latest collections.
                         </p>
                         <Link 
                           href="/shop" 
                           className="inline-flex items-center gap-2 bg-accent text-white px-8 py-3.5 rounded-full text-[10px] uppercase tracking-[0.2em] font-semibold hover:bg-[#3ab0ad] transition-all shadow-xl"
                         >
-                          <span>Browse Atelier Collection ↗</span>
+                          <span>Browse the Collection ↗</span>
                         </Link>
                       </div>
                     ) : (
@@ -475,7 +475,7 @@ export function Account() {
                     className="space-y-6"
                   >
                     <div className="pb-4 border-b border-white/5">
-                      <h2 className="font-serif text-2xl tracking-tight text-white">Patron Credentials</h2>
+                      <h2 className="font-serif text-2xl tracking-tight text-white">Account Details</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -484,13 +484,13 @@ export function Account() {
                           [01] Full Name
                         </p>
                         <p className="text-base font-serif text-white">
-                          {user.displayName || 'Patron Member'}
+                          {user.displayName || 'Wearition Member'}
                         </p>
                       </div>
 
                       <div className="bg-[#0a0a0a] border border-white/5 p-6 rounded-sm">
                         <p className="text-[9px] uppercase font-mono tracking-[0.2em] text-white/40 mb-2">
-                          [02] Patron Since
+                          [02] Member Since
                         </p>
                         <p className="text-base font-serif text-white">
                           {user.metadata?.creationTime ? new Date(user.metadata.creationTime).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) : 'Active Member'}
@@ -511,10 +511,10 @@ export function Account() {
                         <ShieldCheck className="w-6 h-6 text-white/80 flex-shrink-0 mt-0.5" />
                         <div>
                           <h4 className="text-[10px] uppercase font-mono tracking-[0.25em] text-white font-semibold mb-2">
-                            Elite Atelier Tier
+                            Your Account Benefits
                           </h4>
                           <p className="text-xs text-white/50 leading-relaxed font-sans">
-                            As a verified patron of WEARITION, your account is pre-registered for priority concierge delivery, exclusive preview of seasonal drops, and custom tailoring consultations.
+                            Your WEARITION account keeps your orders, saved addresses and wishlist in one place — and makes your next checkout faster.
                           </p>
                         </div>
                       </div>
@@ -554,7 +554,7 @@ export function Account() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-white/[0.03] border border-white/10 rounded-sm py-3.5 pl-10 pr-4 text-white text-xs placeholder:text-white/20 focus:border-white focus:outline-none transition-colors"
-                  placeholder="patron@wearition.store"
+                  placeholder="you@example.com"
                 />
               </div>
             </div>
@@ -651,7 +651,7 @@ export function Account() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-white/[0.03] border border-white/10 rounded-sm py-3.5 pl-10 pr-4 text-white text-xs placeholder:text-white/20 focus:border-white focus:outline-none transition-colors"
-                  placeholder="patron@wearition.store"
+                  placeholder="you@example.com"
                 />
               </div>
             </div>
@@ -768,7 +768,7 @@ export function Account() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-white/[0.03] border border-white/10 rounded-sm py-3.5 pl-10 pr-4 text-white text-xs placeholder:text-white/20 focus:border-white focus:outline-none transition-colors"
-                  placeholder="patron@wearition.store"
+                  placeholder="you@example.com"
                 />
               </div>
             </div>
@@ -872,7 +872,7 @@ export function Account() {
           
           <div className="text-center mb-8">
             <p className="text-[10px] uppercase font-mono tracking-[0.3em] text-white/40 mb-2">
-              [01] • ATELIER PATRON PORTAL
+              [01] • MY ACCOUNT
             </p>
             <h1 className="font-serif text-3xl tracking-tight text-white uppercase">
               WEARITION

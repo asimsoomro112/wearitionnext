@@ -83,17 +83,17 @@ export function Contact() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-20">
           <div className="flex flex-col items-center text-center p-8 bg-background-secondary/5 border border-white/5 rounded-sm">
             <Mail className="w-6 h-6 mb-4 text-accent" />
-            <h3 className="uppercase text-[10px] tracking-widest mb-2 font-bold">Email Concierge</h3>
+            <h3 className="uppercase text-[10px] tracking-widest mb-2 font-bold">Email Us</h3>
             <p className="text-sm text-foreground/60">wearition.80@gmail.com</p>
           </div>
           <div className="flex flex-col items-center text-center p-8 bg-background-secondary/5 border border-white/5 rounded-sm">
             <Globe className="w-6 h-6 mb-4 text-accent" />
-            <h3 className="uppercase text-[10px] tracking-widest mb-2 font-bold">Global Dispatch</h3>
-            <p className="text-sm text-foreground/60">DHL Express Worldwide</p>
+            <h3 className="uppercase text-[10px] tracking-widest mb-2 font-bold">Nationwide Delivery</h3>
+            <p className="text-sm text-foreground/60">All Across Pakistan</p>
           </div>
           <div className="flex flex-col items-center text-center p-8 bg-background-secondary/5 border border-white/5 rounded-sm">
             <MapPin className="w-6 h-6 mb-4 text-accent" />
-            <h3 className="uppercase text-[10px] tracking-widest mb-2 font-bold">Atelier Origin</h3>
+            <h3 className="uppercase text-[10px] tracking-widest mb-2 font-bold">Based In</h3>
             <p className="text-sm text-foreground/60">Karachi, Pakistan</p>
           </div>
           <div className="flex flex-col items-center text-center p-8 bg-background-secondary/5 border border-white/5 rounded-sm">

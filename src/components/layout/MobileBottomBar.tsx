@@ -83,7 +83,7 @@ export function MobileBottomBar() {
             }`}
           >
             {showBrands ? <X className="w-4 h-4" /> : <LayoutGrid className="w-4 h-4" />}
-            <span className="text-[8px] mt-1 uppercase font-mono tracking-widest font-semibold">Houses</span>
+            <span className="text-[8px] mt-1 uppercase font-mono tracking-widest font-semibold">Brands</span>
           </button>
 
           <Link 
@@ -122,7 +122,7 @@ export function MobileBottomBar() {
             }`}
           >
             <User className="w-4 h-4" />
-            <span className="text-[8px] mt-1 uppercase font-mono tracking-widest font-semibold">Patron</span>
+            <span className="text-[8px] mt-1 uppercase font-mono tracking-widest font-semibold">Account</span>
           </Link>
         </motion.div>
       </div>
@@ -136,8 +136,8 @@ export function MobileBottomBar() {
             className="md:hidden fixed bottom-24 left-1/2 -translate-x-1/2 z-[99] w-[92%] max-w-[380px] bg-[#0a0a0a]/95 backdrop-blur-2xl border border-white/15 rounded-2xl p-6 shadow-2xl overflow-hidden"
           >
             <div className="text-center mb-5 pb-3 border-b border-white/5">
-              <span className="text-white/40 text-[8px] uppercase font-mono tracking-[0.3em] block mb-1">Curated Couture</span>
-              <h3 className="font-serif text-lg text-white uppercase tracking-wider">Design Houses</h3>
+              <span className="text-white/40 text-[8px] uppercase font-mono tracking-[0.3em] block mb-1">Shop by Brand</span>
+              <h3 className="font-serif text-lg text-white uppercase tracking-wider">Our Brands</h3>
             </div>
             <div className="grid grid-cols-2 gap-2.5 max-h-[40vh] overflow-y-auto pr-1 hide-scrollbar">
               {dynamicBrands.length > 0 ? (
@@ -152,14 +152,14 @@ export function MobileBottomBar() {
                   </Link>
                 ))
               ) : (
-                <div className="col-span-2 text-center py-6 text-[10px] text-white/30 font-mono italic">No houses cataloged.</div>
+                <div className="col-span-2 text-center py-6 text-[10px] text-white/30 font-mono italic">No brands found.</div>
               )}
               <Link 
                 href="/brands"
                 onClick={() => setShowBrands(false)}
                 className="col-span-2 p-3 bg-white text-black rounded-full text-center text-[10px] uppercase font-mono tracking-[0.2em] font-semibold mt-2 hover:bg-white/90 transition-all"
               >
-                View All Atelier Houses ↗
+                View All Brands ↗
               </Link>
             </div>
           </motion.div>

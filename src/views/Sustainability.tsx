@@ -43,7 +43,7 @@ export function Sustainability() {
       <SEO title="Sustainability" description="Discover Wearition's commitment to ethical and sustainable luxury fashion through reselling." />
       <div className="max-w-[1000px] mx-auto">
         <header className="mb-20 text-center">
-          <span className="text-accent text-[10px] uppercase tracking-[0.4em] mb-4 block font-bold">Maison Commitment</span>
+          <span className="text-accent text-[10px] uppercase tracking-[0.4em] mb-4 block font-bold">Our Commitment</span>
           <TextReveal as="h1" className="font-serif text-4xl sm:text-5xl md:text-7xl text-foreground mb-8">Sustainability</TextReveal>
           <div className="h-px w-32 bg-accent mx-auto"></div>
         </header>

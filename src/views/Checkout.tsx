@@ -224,8 +224,8 @@ export function Checkout() {
     return (
       <div className="w-full pt-40 px-6 pb-32 bg-[#050505] text-white min-h-[85vh] flex flex-col items-center justify-center">
         <p className="font-serif text-5xl text-white/10 mb-6">◇</p>
-        <h1 className="font-serif text-3xl md:text-4xl uppercase tracking-tight text-white mb-3">Your Atelier Bag is Empty</h1>
-        <p className="text-white/40 mb-8 font-sans text-xs tracking-wide">Acquire exclusive haute couture pieces to proceed with checkout.</p>
+        <h1 className="font-serif text-3xl md:text-4xl uppercase tracking-tight text-white mb-3">Your Bag is Empty</h1>
+        <p className="text-white/40 mb-8 font-sans text-xs tracking-wide">Add some products to your bag to proceed with checkout.</p>
         <Link href="/shop" className="px-8 py-3.5 bg-accent text-white text-[10px] uppercase tracking-[0.22em] font-semibold hover:bg-[#3ab0ad] transition-colors rounded-full shadow-xl">
           Discover Collections ↗
         </Link>
@@ -243,10 +243,10 @@ export function Checkout() {
           <SEO title="Checkout • WEARITION" description="Complete your WEARITION order securely." />
           <div className="flex items-center gap-2 text-[9px] uppercase tracking-[0.25em] text-white/40 mb-3">
             <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-            <span>SECURE ATELIER ACQUISITION</span>
+            <span>SECURE CHECKOUT</span>
           </div>
           <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl uppercase tracking-tight text-white">Checkout</h1>
-          <p className="text-white/40 text-xs font-sans mt-2 tracking-wide">Encrypted transactions & certified luxury handling</p>
+          <p className="text-white/40 text-xs font-sans mt-2 tracking-wide">Your details stay private and secure.</p>
         </motion.header>
 
         <div className="flex flex-col lg:flex-row gap-10">
@@ -265,7 +265,7 @@ export function Checkout() {
                   </div>
                   <h2 className="font-serif text-2xl uppercase tracking-wider text-white mb-3">Choose Acquisition Flow</h2>
                   <p className="text-white/40 text-xs mb-8 max-w-sm mx-auto font-sans leading-relaxed">
-                    Sign in to track your order in real-time with saved addresses, or proceed instantly as an atelier guest.
+                    Sign in to track your order in real-time with saved addresses, or proceed instantly as a guest.
                   </p>
                   
                   <div className="flex flex-col sm:flex-row gap-3.5 justify-center">
@@ -301,7 +301,7 @@ export function Checkout() {
                       <div className="space-y-4">
                         <div>
                           <label className={labelClass}>Email Address *</label>
-                          <input value={email} onChange={e => setEmail(e.target.value)} required type="email" className={inputClass} placeholder="patron@wearition.store" />
+                          <input value={email} onChange={e => setEmail(e.target.value)} required type="email" className={inputClass} placeholder="you@example.com" />
                           
                           <AnimatePresence>
                             {isEmailRegistered && (
@@ -361,7 +361,7 @@ export function Checkout() {
                               onChange={(e) => setSaveAddress(e.target.checked)}
                               className="w-4 h-4 accent-white cursor-pointer"
                             />
-                            <label htmlFor="saveAddress" className="text-xs text-white/60 cursor-pointer font-sans">Save this address to your patron profile</label>
+                            <label htmlFor="saveAddress" className="text-xs text-white/60 cursor-pointer font-sans">Save this address to my account</label>
                           </div>
                         )}
                       </div>
@@ -373,7 +373,7 @@ export function Checkout() {
                       <div className="space-y-2.5">
                         {[
                           { value: 'cod', label: 'Cash on Delivery (COD)', desc: 'Pay courier cash upon signature and inspection at your doorstep.' },
-                          { value: 'bank', label: 'Direct Bank Transfer / Wire', desc: 'Secure direct wire to WEARITION Atelier corporate account.' },
+                          { value: 'bank', label: 'Direct Bank Transfer / Wire', desc: 'Direct bank transfer to the WEARITION account.' },
                           { value: 'easypaisa', label: 'EasyPaisa Wallet', desc: 'Instant mobile wallet payment.' },
                           { value: 'jazzcash', label: 'JazzCash Wallet', desc: 'Instant mobile wallet payment.' },
                         ].map(opt => (

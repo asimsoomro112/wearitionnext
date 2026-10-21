@@ -106,7 +106,7 @@ export function Brands() {
     <div className="w-full pt-40 px-6 md:px-12 pb-32 bg-background min-h-screen">
       <SEO 
         title={selectedBrand ? `${selectedBrand.toUpperCase()} Collection` : "Our Brands"} 
-        description="Explore the curated collection of premium Pakistani luxury brands we resell." 
+        description="Browse all the Pakistani clothing brands available at WEARITION — the latest suits and collections in one store."
       />
       
       <div className="max-w-[1440px] mx-auto">
@@ -120,10 +120,10 @@ export function Brands() {
               transition={{ duration: 0.5 }}
             >
               <header className="mb-20 text-center">
-                <span className="text-accent text-[10px] uppercase tracking-[0.4em] mb-4 block font-bold">The Houses We Represent</span>
+                <span className="text-accent text-[10px] uppercase tracking-[0.4em] mb-4 block font-bold">Shop by Brand</span>
                 <TextReveal as="h1" className="font-serif text-5xl sm:text-6xl md:text-8xl text-foreground mb-8">Brands</TextReveal>
                 <p className="text-foreground/50 text-sm max-w-xl mx-auto font-sans leading-relaxed">
-                  Automatically curated collections from the most prestigious fashion houses in our inventory.
+                  All the brands currently in our store — pick your favourite and browse its latest collection.
                 </p>
               </header>
 
@@ -144,7 +144,7 @@ export function Brands() {
                               {brand}
                             </h2>
                             <p className="text-[10px] text-foreground/40 leading-loose uppercase tracking-widest">
-                              Official {brand} Resale Collection
+                              Shop the {brand} collection
                             </p>
                           </div>
                           <div className="mt-12 flex items-center gap-3 text-accent opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
@@ -179,7 +179,7 @@ export function Brands() {
                     <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                     Back to Brands
                   </button>
-                  <span className="text-accent text-[10px] uppercase tracking-[0.4em] mb-4 block font-bold">Maison Collection</span>
+                  <span className="text-accent text-[10px] uppercase tracking-[0.4em] mb-4 block font-bold">Shop the Collection</span>
                   <h1 className="font-serif text-5xl sm:text-6xl md:text-8xl text-foreground uppercase tracking-tighter">
                     {selectedBrand}
                   </h1>
@@ -200,7 +200,7 @@ export function Brands() {
                 <div className="py-32 text-center">
                   <p className="font-serif text-3xl text-foreground/20 mb-4 uppercase tracking-widest">Coming Soon</p>
                   <p className="text-sm text-foreground/40 font-sans max-w-sm mx-auto">
-                    The latest collection from {selectedBrand} is currently being curated.
+                    The latest {selectedBrand} collection is on its way — check back soon.
                   </p>
                 </div>
               ) : (

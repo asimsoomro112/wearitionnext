@@ -66,13 +66,13 @@ export function Wishlist() {
             <Bookmark className="w-12 h-12 text-white/20 mx-auto mb-4 stroke-1" />
             <h3 className="font-serif text-2xl text-white mb-2">No Saved Pieces</h3>
             <p className="text-white/40 text-xs font-sans max-w-sm mx-auto mb-8 leading-relaxed">
-              Explore the atelier collections and bookmark your desired couture garments for future acquisition.
+              Browse the collection and save your favourite suits here for later.
             </p>
             <Link 
               href="/shop" 
               className="inline-flex items-center gap-2 bg-accent text-white px-8 py-3.5 rounded-full text-[10px] uppercase font-mono tracking-[0.2em] font-semibold hover:bg-[#3ab0ad] transition-all shadow-xl"
             >
-              <span>Explore Atelier Archive ↗</span>
+              <span>Start Shopping ↗</span>
             </Link>
           </div>
         ) : (

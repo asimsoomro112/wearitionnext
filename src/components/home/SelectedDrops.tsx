@@ -4,56 +4,20 @@ import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const FEATURED_DROPS = [
-  {
-    id: 'faraz-manan-velvet-bridal',
-    title: 'Faraz Manan Heirloom Velvet Bridal',
-    category: 'Bespoke Atelier',
-    season: 'Hand Zardozi • Karachi Studio',
-    image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=1200&auto=format&fit=crop',
-    href: '/shop',
-  },
-  {
-    id: 'elan-organza-peshwas',
-    title: 'Élan Handcrafted Silk Peshwas Suite',
-    category: 'Haute Couture',
-    season: 'Gold Tilla & Dabka • Curated Drop',
-    image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1200&auto=format&fit=crop',
-    href: '/shop',
-  },
-  {
-    id: 'sana-safinaz-noir-gala',
-    title: 'Sana Safinaz Midnight Sculptural Gown',
-    category: 'Luxury Evening',
-    season: 'Limited 1 of 1 • French Velvet',
-    image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200&auto=format&fit=crop',
-    href: '/shop',
-  },
-  {
-    id: 'zara-shahjahan-festive-ensemble',
-    title: 'Zara Shahjahan Festive Raw Silk Kurta',
-    category: 'Ready-to-Wear',
-    season: 'Iconic Signature • Express Dispatch',
-    image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1200&auto=format&fit=crop',
-    href: '/shop',
-  },
-];
-
 interface SelectedDropsProps {
   products?: any[];
 }
 
 export function SelectedDrops({ products = [] }: SelectedDropsProps) {
-  const drops = products.length >= 4
-    ? products.slice(0, 4).map((p, idx) => ({
-        id: p.id,
-        title: p.title || 'Maison Couture Creation',
-        category: p.category || p.brand || 'Bespoke Couture',
-        season: p.isNew ? 'New Archive Drop' : 'Curated Drop',
-        image: p.images?.[0] || p.image || FEATURED_DROPS[idx % FEATURED_DROPS.length].image,
-        href: `/product/${p.id}`,
-      }))
-    : FEATURED_DROPS;
+  // Real products only — no stock-photo stand-ins presented as inventory.
+  const drops = (products || []).slice(0, 4).map((p) => ({
+    id: p.id,
+    title: p.title || 'Wearition Product',
+    category: p.category || p.brand || 'Women',
+    season: p.isNew ? 'New In' : 'Featured',
+    image: p.images?.[0] || p.image || '',
+    href: `/product/${p.id}`,
+  })).filter(d => d.image);
 
   return (
     <section id="drops" className="relative w-full bg-[#030303] text-[#fafafa] py-24 md:py-36 px-6 md:px-12 border-t border-white/5 overflow-hidden">
@@ -63,11 +27,11 @@ export function SelectedDrops({ products = [] }: SelectedDropsProps) {
         <div className="flex items-center justify-between border-b border-white/10 pb-6 mb-12 sm:mb-16">
           <div className="flex items-center gap-4">
             <span className="text-[11px] uppercase tracking-[0.3em] font-medium text-[#adadad] font-mono">
-              [02] CURATED ARCHIVE &bull; ICONIC DROPS
+              [02] FEATURED &bull; LATEST DROPS
             </span>
           </div>
           <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#adadad]">
-            AUTHENTIC LUXURY
+            NEW ARRIVALS
           </span>
         </div>
 
@@ -113,7 +77,7 @@ export function SelectedDrops({ products = [] }: SelectedDropsProps) {
                 {/* Central Hover Pill */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="opacity-0 group-hover:opacity-100 group-hover:scale-100 scale-90 transition-all duration-300 px-7 py-3 rounded-full bg-accent text-white font-semibold text-xs tracking-[0.22em] uppercase shadow-2xl flex items-center gap-2">
-                    <span>VIEW PROJECT</span>
+                    <span>VIEW PRODUCT</span>
                     <ArrowUpRight className="w-4 h-4" />
                   </div>
                 </div>
@@ -146,14 +110,14 @@ export function SelectedDrops({ products = [] }: SelectedDropsProps) {
         {/* Section Bottom Context & Button */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pt-16 mt-16 border-t border-white/10">
           <p className="text-sm font-sans text-[#adadad] max-w-xl leading-relaxed">
-            Where ancestral craftsmanship meets contemporary silhouette &mdash; step into our complete archive of authenticated designer ensembles and bespoke commissions.
+            New branded suits are added regularly &mdash; explore the full collection and order with cash on delivery, anywhere in Pakistan.
           </p>
 
           <Link
             href="/shop"
             className="buttonprimary"
           >
-            <span>DISCOVER FULL ARCHIVE ↗</span>
+            <span>SHOP ALL PRODUCTS ↗</span>
           </Link>
         </div>
       </div>
