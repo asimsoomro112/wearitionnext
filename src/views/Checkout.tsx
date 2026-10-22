@@ -224,7 +224,7 @@ export function Checkout() {
     <div className="w-full pt-36 md:pt-40 px-6 md:px-12 pb-36 bg-[#050505] text-white min-h-screen">
       <div className="max-w-[1280px] mx-auto">
         <motion.header initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
-          <SEO title="Checkout • WEARITION" description="Complete your WEARITION order securely." />
+          <SEO title="Checkout" description="Complete your WEARITION order securely." />
           <div className="flex items-center gap-2 text-[9px] uppercase tracking-[0.25em] text-white/40 mb-3">
             <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
             <span>SECURE CHECKOUT</span>

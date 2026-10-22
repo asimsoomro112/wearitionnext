@@ -37,7 +37,7 @@ export function Editorial() {
   return (
     <div ref={containerRef} className="w-full bg-background min-h-screen text-foreground overflow-x-hidden">
       <SEO 
-        title="Collections | WEARITION" 
+        title="Collections" 
         description="Explore Wearition's latest collections. A curation of premium luxury fashion, redefined for the modern visionary."
       />
 

@@ -25,7 +25,7 @@ export async function generateMetadata(
       if (docSnap.exists) {
         const product = docSnap.data() as { title: string; description?: string; images?: string[] };
         return {
-          title: `${product.title} | WEARITION`,
+          title: product.title,
           description: product.description || `Shop ${product.title} at WEARITION.`,
           openGraph: {
             title: `${product.title} | WEARITION`,
@@ -44,7 +44,7 @@ export async function generateMetadata(
   // product loads — it must never flash "Product Not Found" for a product
   // that exists.
   return {
-    title: 'Shop | WEARITION',
+    title: 'Shop',
   };
 }
 

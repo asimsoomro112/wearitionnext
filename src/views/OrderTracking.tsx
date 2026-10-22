@@ -111,7 +111,7 @@ export function OrderTracking() {
   if (!hasSearched || !order) {
     return (
       <div className="w-full pt-40 px-6 md:px-12 pb-36 bg-[#050505] text-white min-h-screen flex flex-col justify-center">
-        <SEO title="Track Order • WEARITION" />
+        <SEO title="Track Order" />
         <div className="max-w-[540px] mx-auto text-center w-full">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.03] text-[9px] uppercase tracking-[0.25em] text-white/50 mb-6">
             <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
@@ -163,7 +163,7 @@ export function OrderTracking() {
 
   return (
     <div className="w-full pt-36 md:pt-40 px-6 md:px-12 pb-36 bg-[#050505] text-white min-h-screen">
-      <SEO title={`Order ${order.orderId} • Tracking • WEARITION`} />
+      <SEO title={`Order ${order.orderId} • Tracking`} />
       
       <div className="max-w-[1280px] mx-auto">
         {/* Page Header */}
