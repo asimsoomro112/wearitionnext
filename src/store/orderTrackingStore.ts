@@ -16,6 +16,8 @@ export interface Order {
   shippingDetails?: any;
   shippingAddress?: { name: string; address: string; city: string; zip?: string; phone?: string };
   paymentMethod?: string;
+  paymentScreenshot?: string | null;
+  paymentStatus?: 'cod' | 'awaiting_proof' | 'proof_received' | 'confirmed';
   createdAt?: any;
 }
 

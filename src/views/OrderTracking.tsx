@@ -16,7 +16,8 @@ import {
   RefreshCcw,
   Clock,
   Box,
-  XCircle
+  XCircle,
+  ShieldCheck
 } from 'lucide-react';
 import { SEO } from '../components/layout/SEO';
 import { motion } from 'framer-motion';
@@ -293,6 +294,21 @@ export function OrderTracking() {
                   <Clock className="w-3.5 h-3.5" />
                   <span>Protocol: {order.paymentMethod === 'cod' ? 'Cash on Delivery' : order.paymentMethod}</span>
                 </div>
+                {order.paymentMethod && order.paymentMethod !== 'cod' && (
+                  <div className="mt-2 flex items-center gap-2 text-[10px] uppercase tracking-widest">
+                    <ShieldCheck className="w-3.5 h-3.5 text-accent" />
+                    <span className="text-white/60">
+                      Payment:{' '}
+                      <span className="text-white">
+                        {order.paymentStatus === 'confirmed'
+                          ? 'Confirmed ✓'
+                          : order.paymentStatus === 'proof_received' || order.paymentScreenshot
+                            ? 'Screenshot received — verifying'
+                            : 'Awaiting screenshot — send it on WhatsApp'}
+                      </span>
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 

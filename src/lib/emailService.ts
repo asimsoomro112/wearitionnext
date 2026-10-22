@@ -26,8 +26,10 @@ import {
   orderPlacedEmail, 
   orderStatusEmail, 
   verificationOTPEmail, 
-  passwordResetOTPEmail 
+  passwordResetOTPEmail,
+  paymentProofEmail 
 } from './emailTemplates';
+import { ADMIN_NOTIFY_EMAILS, paymentMethodLabel } from './paymentConfig';
 
 // ──────────────── CORE SEND FUNCTION ────────────────
 
@@ -155,6 +157,37 @@ export async function sendOrderStatusEmail(data: {
 }): Promise<boolean> {
   const { subject, html } = orderStatusEmail(data);
   return sendEmail(data.email, subject, html);
+}
+
+/**
+ * Notify the store admin + owner that a customer shared a payment
+ * screenshot for a manual online-payment order (verify + confirm from the
+ * admin portal). Fire-and-forget by design — a mail failure must never
+ * affect the customer's order.
+ */
+export async function sendPaymentProofNotification(data: {
+  orderId: string;
+  customerName: string;
+  customerEmail: string;
+  paymentMethod: string;
+  total: number;
+  screenshotUrl: string;
+}): Promise<void> {
+  try {
+    const { subject, html } = paymentProofEmail({
+      orderId: data.orderId,
+      customerName: data.customerName,
+      customerEmail: data.customerEmail,
+      methodLabel: paymentMethodLabel(data.paymentMethod),
+      total: data.total,
+      screenshotUrl: data.screenshotUrl,
+    });
+    await Promise.all(
+      ADMIN_NOTIFY_EMAILS.map(to => sendEmail(to, subject, html).catch(() => false))
+    );
+  } catch (error) {
+    console.error('[Email] Payment proof notification failed:', error);
+  }
 }
 
 /**

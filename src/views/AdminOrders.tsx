@@ -124,6 +124,34 @@ export function AdminOrders() {
     }
   };
 
+  // Confirm a manual online payment: mark the proof verified and move the
+  // order to Processing — which fires the existing status email, so the
+  // customer receives their confirmation without any extra step.
+  const handleConfirmPayment = async () => {
+    if (!detailOrder) return;
+    try {
+      const docId = detailOrder.id || detailOrder.orderId;
+      const updates: { paymentStatus: string; status?: string } = { paymentStatus: 'confirmed' };
+      const moveToProcessing = detailOrder.status === 'pending';
+      if (moveToProcessing) updates.status = 'processing';
+      await updateDoc(doc(db, 'orders', docId), updates);
+      setDetailOrder({ ...detailOrder, ...updates });
+      setOrders(prev => prev.map(o => (o.id === docId || o.orderId === detailOrder.orderId) ? { ...o, ...updates } : o));
+      toast.success(`Payment confirmed for ${detailOrder.orderId}`);
+      if (moveToProcessing) {
+        sendOrderStatusEmail({
+          email: detailOrder.email,
+          name: detailOrder.shippingAddress?.name?.split(' ')[0] || 'Valued Customer',
+          orderId: detailOrder.orderId,
+          status: 'processing',
+        }).catch(() => {});
+      }
+    } catch (e) {
+      console.error('Failed to confirm payment:', e);
+      toast.error('Failed to confirm payment');
+    }
+  };
+
   if (loading) return <div className="p-12 text-center text-[#0a0a0a]/60">Loading orders...</div>;
 
   return (
@@ -246,6 +274,43 @@ export function AdminOrders() {
                   {detailOrder.paymentMethod || '—'}
                 </span>
               </div>
+
+              {/* Payment proof — manual online payments */}
+              {detailOrder.paymentMethod && detailOrder.paymentMethod !== 'cod' && (
+                <div>
+                  <h3 className="text-xs uppercase tracking-[0.2em] text-[#0a0a0a]/50 font-bold mb-3">Payment Proof</h3>
+                  {(() => {
+                    const ps = detailOrder.paymentStatus || (detailOrder.paymentScreenshot ? 'proof_received' : 'awaiting_proof');
+                    return (
+                      <div className="flex flex-col gap-3">
+                        <span className={`self-start px-2.5 py-1 rounded text-[10px] uppercase font-bold tracking-wider ${
+                          ps === 'confirmed' ? 'bg-green-100 text-green-800' :
+                          ps === 'proof_received' ? 'bg-blue-100 text-blue-800' :
+                          'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {ps === 'confirmed' ? 'Payment Confirmed' : ps === 'proof_received' ? 'Screenshot Received — Verify Payment' : 'Awaiting Screenshot'}
+                        </span>
+                        {detailOrder.paymentScreenshot ? (
+                          <a href={detailOrder.paymentScreenshot} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-3 rounded-lg border border-black/10 bg-[#fcfcfc] hover:border-black/30 transition-colors">
+                            <img src={detailOrder.paymentScreenshot} alt="Payment screenshot" className="w-14 h-[72px] object-cover rounded bg-black/5" />
+                            <span className="text-sm font-medium text-[#0a0a0a] underline underline-offset-2">View payment screenshot</span>
+                          </a>
+                        ) : (
+                          <p className="text-sm text-[#0a0a0a]/50">No screenshot yet — the customer can still send it on WhatsApp.</p>
+                        )}
+                        {ps !== 'confirmed' && (
+                          <button
+                            onClick={handleConfirmPayment}
+                            className="self-start px-5 py-2.5 rounded-full bg-[#0a0a0a] text-white text-[10px] uppercase tracking-[0.18em] font-bold hover:bg-black/70 transition-colors cursor-pointer"
+                          >
+                            Confirm Payment Received
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
 
               {/* Customer */}
               <div>

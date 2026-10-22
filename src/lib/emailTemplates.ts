@@ -370,3 +370,42 @@ export function passwordResetOTPEmail(data: { name?: string; code: string }): { 
     html: emailWrapper(content)
   };
 }
+
+// ──────────────── PAYMENT PROOF (ADMIN NOTIFICATION) ────────────────
+// Sent to the store admin + owner when a customer shares a payment
+// screenshot for a manual online-payment order, so the payment can be
+// verified and confirmed from the admin portal.
+export function paymentProofEmail(data: {
+  orderId: string;
+  customerName: string;
+  customerEmail: string;
+  methodLabel: string;
+  total: number;
+  screenshotUrl: string;
+}): { subject: string; html: string } {
+  const content = `
+    <tr>
+      <td class="padding-mobile" style="padding:20px 40px 50px;">
+        <h2 style="font-size:26px;margin:0 0 12px;">Payment screenshot received</h2>
+        <p style="font-size:14px;line-height:1.7;color:${BRAND.colors.muted};margin:0 0 24px;">
+          A customer has shared a payment screenshot for a manual online payment.
+          Please verify the payment in your ${data.methodLabel} account and confirm
+          the order from the admin portal — the customer receives their confirmation
+          as soon as the order moves to Processing.
+        </p>
+        <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid ${BRAND.colors.border};">
+          <tr><td style="padding:14px 18px;font-size:12px;color:${BRAND.colors.muted};">ORDER</td><td style="padding:14px 18px;font-size:13px;font-weight:bold;">${data.orderId}</td></tr>
+          <tr><td style="padding:14px 18px;font-size:12px;color:${BRAND.colors.muted};border-top:1px solid ${BRAND.colors.border};">CUSTOMER</td><td style="padding:14px 18px;font-size:13px;border-top:1px solid ${BRAND.colors.border};">${data.customerName} (${data.customerEmail})</td></tr>
+          <tr><td style="padding:14px 18px;font-size:12px;color:${BRAND.colors.muted};border-top:1px solid ${BRAND.colors.border};">METHOD</td><td style="padding:14px 18px;font-size:13px;border-top:1px solid ${BRAND.colors.border};">${data.methodLabel}</td></tr>
+          <tr><td style="padding:14px 18px;font-size:12px;color:${BRAND.colors.muted};border-top:1px solid ${BRAND.colors.border};">ORDER TOTAL</td><td style="padding:14px 18px;font-size:13px;font-weight:bold;border-top:1px solid ${BRAND.colors.border};">Rs. ${Math.round(data.total).toLocaleString()}</td></tr>
+        </table>
+        <p style="margin:28px 0 0;text-align:center;">
+          <a href="${data.screenshotUrl}" style="display:inline-block;padding:14px 28px;background-color:${BRAND.colors.accent};color:#0A0A0A;font-size:12px;font-weight:bold;letter-spacing:2px;text-decoration:none;">VIEW PAYMENT SCREENSHOT</a>
+        </p>
+      </td>
+    </tr>`;
+  return {
+    subject: `Payment screenshot received — Order ${data.orderId}`,
+    html: emailWrapper(content, `Payment screenshot received for order ${data.orderId} — verify and confirm from the admin portal.`),
+  };
+}

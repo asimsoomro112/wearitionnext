@@ -7,14 +7,15 @@ import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { formatCurrency } from '@/lib/currency';
 import { getOptimizedImage } from '../lib/images';
-import { sendOrderConfirmationEmail } from '@/lib/emailService';
+import { sendOrderConfirmationEmail, sendPaymentProofNotification } from '@/lib/emailService';
+import { PAYMENT_RECEIVING, STORE_WHATSAPP_NUMBER, paymentMethodLabel } from '@/lib/paymentConfig';
 import { useOrderTrackingStore } from '../store/orderTrackingStore';
 import { useAuthStore } from '../store/authStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SEO } from '../components/layout/SEO';
 import { doc, setDoc, getDoc, collection, query, where, getDocs, limit } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { LogIn, User, ShoppingBag, ArrowRight } from 'lucide-react';
+import { LogIn, User, ShoppingBag, ArrowRight, Upload, X, Copy, Check } from 'lucide-react';
 
 interface ShippingAddress {
   firstName: string;
@@ -31,6 +32,15 @@ export function Checkout() {
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('cod');
+  // Manual online-payment proof. STRICT rule (Ahmed, 2026-10-22): nothing in
+  // this flow may ever block or fail the customer's order — the screenshot
+  // is optional, an upload failure only shows the WhatsApp fallback, and
+  // every notification is fire-and-forget.
+  const [screenshotUrl, setScreenshotUrl] = useState('');
+  const [screenshotName, setScreenshotName] = useState('');
+  const [isUploadingProof, setIsUploadingProof] = useState(false);
+  const [proofError, setProofError] = useState('');
+  const [copiedNumber, setCopiedNumber] = useState(false);
   const [email, setEmail] = useState('');
   const [saveAddress, setSaveAddress] = useState(false);
   const [shipping, setShipping] = useState<ShippingAddress>({
@@ -113,6 +123,48 @@ export function Checkout() {
     setShipping(prev => ({ ...prev, [field]: e.target.value }));
   };
 
+  // Upload the payment screenshot the moment the customer picks it, so the
+  // order itself never waits on it. Any failure is soft: the order can still
+  // be placed and the customer can send the screenshot on WhatsApp instead.
+  const handleProofUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setProofError('Please choose an image file (a photo or screenshot of your payment).');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setProofError('That image is too large (max 10MB). Please try a smaller screenshot.');
+      return;
+    }
+    setProofError('');
+    setIsUploadingProof(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.success || !data?.url) throw new Error('upload failed');
+      setScreenshotUrl(data.url);
+      setScreenshotName(file.name);
+    } catch {
+      setProofError('Upload did not go through — no problem, you can still place your order and send the screenshot on WhatsApp afterwards.');
+    } finally {
+      setIsUploadingProof(false);
+    }
+  };
+
+  const copyAccountNumber = async () => {
+    try {
+      await navigator.clipboard.writeText(PAYMENT_RECEIVING.accountNumber.replace(/\s/g, ''));
+      setCopiedNumber(true);
+      setTimeout(() => setCopiedNumber(false), 2000);
+    } catch {
+      // Clipboard unavailable (older browser) — the number stays visible to copy by hand.
+    }
+  };
+
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) { toast.error('Please enter your email address'); return; }
@@ -143,6 +195,8 @@ export function Checkout() {
         image: i.image || ""
       })),
       paymentMethod,
+      paymentScreenshot: screenshotUrl || null,
+      paymentStatus: (paymentMethod === 'cod' ? 'cod' : screenshotUrl ? 'proof_received' : 'awaiting_proof') as 'cod' | 'awaiting_proof' | 'proof_received' | 'confirmed',
       shippingAddress: {
         name: `${shipping.firstName} ${shipping.lastName}`,
         address: shipping.address,
@@ -189,6 +243,20 @@ export function Checkout() {
           city: shipping.city,
         },
       }).catch(() => {});
+
+      // Notify admin + owner that a payment screenshot arrived, so the
+      // payment can be verified and confirmed from the admin portal.
+      // Fire-and-forget — a mail failure never affects the order.
+      if (screenshotUrl) {
+        sendPaymentProofNotification({
+          orderId,
+          customerName: `${shipping.firstName} ${shipping.lastName}`.trim(),
+          customerEmail: email.toLowerCase(),
+          paymentMethod,
+          total,
+          screenshotUrl,
+        }).catch(() => {});
+      }
 
       toast.success(`Order ${orderId} placed successfully!`);
       clearCart();
@@ -371,8 +439,71 @@ export function Checkout() {
                         ))}
                       </div>
                       {paymentMethod !== 'cod' && (
-                        <div className="mt-4 p-4 border border-white/10 bg-white/[0.03] rounded-sm text-xs text-white/70 font-sans">
-                          Payment instructions and account details will be dispatched to <b className="text-white">{email || 'your email'}</b> immediately upon order confirmation.
+                        <div className="mt-4 p-5 border border-accent/25 bg-accent/[0.05] rounded-sm">
+                          <p className="text-[10px] uppercase tracking-[0.22em] text-white/50 font-semibold mb-3">
+                            Pay {formatCurrency(total)} to this {PAYMENT_RECEIVING.walletName} account
+                          </p>
+                          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
+                            <span className="font-mono text-xl md:text-2xl font-bold text-white tracking-wider">{PAYMENT_RECEIVING.accountNumber}</span>
+                            <button
+                              type="button"
+                              onClick={copyAccountNumber}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/15 text-[9px] uppercase tracking-[0.18em] font-mono text-white/70 hover:text-white hover:border-white/40 transition-colors cursor-pointer"
+                            >
+                              {copiedNumber ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                              {copiedNumber ? 'Copied' : 'Copy number'}
+                            </button>
+                          </div>
+                          <p className="text-xs text-white/60 font-sans mb-4">
+                            Account title: <b className="text-white">{PAYMENT_RECEIVING.accountTitle}</b> — send from your {paymentMethodLabel(paymentMethod)} app, then share the screenshot below.
+                          </p>
+
+                          <ol className="text-xs text-white/60 font-sans space-y-1.5 mb-5 list-none">
+                            <li><b className="text-white/90">1.</b> Send the payment from your app to the number above.</li>
+                            <li><b className="text-white/90">2.</b> Upload the payment screenshot here (optional — you can also send it later).</li>
+                            <li><b className="text-white/90">3.</b> Place your order — we verify the payment and email you the confirmation.</li>
+                          </ol>
+
+                          {screenshotUrl ? (
+                            <div className="flex items-center gap-4 p-3 border border-white/10 bg-white/[0.03] rounded-sm">
+                              <img src={screenshotUrl} alt="Payment screenshot" className="w-12 h-16 object-cover rounded-sm border border-white/10" />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs text-white font-medium flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-accent" /> Screenshot attached</p>
+                                <p className="text-[10px] text-white/40 font-sans truncate mt-0.5">{screenshotName}</p>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => { setScreenshotUrl(''); setScreenshotName(''); }}
+                                className="p-2 text-white/40 hover:text-white transition-colors cursor-pointer"
+                                aria-label="Remove screenshot"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ) : (
+                            <div>
+                              <label htmlFor="payment-proof" className={`inline-flex items-center gap-2.5 px-5 py-3 rounded-full border border-dashed border-white/25 text-[10px] uppercase tracking-[0.18em] font-mono text-white/80 hover:border-accent hover:text-white transition-colors cursor-pointer ${isUploadingProof ? 'opacity-50 pointer-events-none' : ''}`}>
+                                <Upload className="w-3.5 h-3.5" />
+                                {isUploadingProof ? 'Uploading...' : 'Upload payment screenshot'}
+                              </label>
+                              <input id="payment-proof" type="file" accept="image/*" className="hidden" onChange={handleProofUpload} />
+                              {proofError && (
+                                <p className="text-[11px] text-amber-200/80 font-sans mt-3 leading-relaxed">{proofError}</p>
+                              )}
+                              <p className="text-[11px] text-white/40 font-sans mt-3 leading-relaxed">
+                                No screenshot right now? Place your order anyway and send it on{' '}
+                                <a
+                                  href={`https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${encodeURIComponent('Assalam o Alaikum! I just placed an order on WEARITION and want to share my payment screenshot.')}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-white underline underline-offset-2"
+                                >
+                                  WhatsApp
+                                </a>{' '}
+                                — your order will not be affected.
+                              </p>
+                            </div>
+                          )}
                         </div>
                       )}
                     </section>
