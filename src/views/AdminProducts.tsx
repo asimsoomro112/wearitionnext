@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, query, onSnapshot, doc, deleteDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, query, onSnapshot, doc, deleteDoc, serverTimestamp, setDoc, updateDoc, getDoc, writeBatch } from 'firebase/firestore';
 import { Plus, Edit2, Trash2, X, Search } from 'lucide-react';
 import { formatCurrency } from '@/lib/currency';
 import { getOptimizedImage } from '../lib/images';
@@ -13,6 +13,9 @@ interface Product {
   brand: string;
   description?: string;
   price: number;
+  originalPrice?: number;
+  salePrice?: number;
+  isOnSale?: boolean;
   stock: number;
   sizes?: string[];
   images: string[];
@@ -32,6 +35,95 @@ export function AdminProducts() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+
+  // ---- Bulk price tool (added 2026-10-22 at the owner's request) ----
+  // One-tap flat increase across the whole catalog. The selling `price`
+  // always moves; `originalPrice` (the struck-through "was" price) and
+  // `salePrice` move by the same amount where present, so discount gaps
+  // stay exactly as they were. Current values are backed up FIRST to
+  // settings/price-backup-latest — if that write fails, nothing changes —
+  // and the same backup powers the one-click undo.
+  const PRICE_DELTA = 400;
+  const [bulkStage, setBulkStage] = useState<'idle' | 'confirm' | 'working' | 'done'>('idle');
+  const [bulkResult, setBulkResult] = useState('');
+
+  type BulkEntry = { id: string; title: string; isPublished: boolean; price: number; originalPrice: number | null; salePrice: number | null };
+  const bulkPlan: BulkEntry[] = products
+    .filter(p => typeof p.price === 'number' && isFinite(p.price))
+    .map(p => ({
+      id: p.id,
+      title: p.title,
+      isPublished: !!p.isPublished,
+      price: p.price,
+      originalPrice: typeof p.originalPrice === 'number' ? p.originalPrice : null,
+      salePrice: typeof p.salePrice === 'number' ? p.salePrice : null,
+    }));
+  const bulkSkipped = products.length - bulkPlan.length;
+
+  const chunkList = <T,>(arr: T[], size: number): T[][] => {
+    const out: T[][] = [];
+    for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+    return out;
+  };
+
+  const applyPriceBump = async () => {
+    setBulkStage('working');
+    try {
+      await setDoc(doc(db, 'settings', 'price-backup-latest'), {
+        createdAt: serverTimestamp(),
+        delta: PRICE_DELTA,
+        entries: bulkPlan,
+      });
+      for (const part of chunkList(bulkPlan, 400)) {
+        const batch = writeBatch(db);
+        for (const e of part) {
+          const update: Record<string, number> = { price: e.price + PRICE_DELTA };
+          if (e.originalPrice !== null) update.originalPrice = e.originalPrice + PRICE_DELTA;
+          if (e.salePrice !== null) update.salePrice = e.salePrice + PRICE_DELTA;
+          batch.update(doc(db, 'products', e.id), update);
+        }
+        await batch.commit();
+      }
+      setBulkResult(`${bulkPlan.length} products updated — every price is now ${formatCurrency(PRICE_DELTA)} higher. If anything looks wrong, Undo restores the exact old prices from the backup.`);
+      setBulkStage('done');
+      toast.success(`${bulkPlan.length} product prices increased.`);
+    } catch (err) {
+      console.error('Bulk price update failed:', err);
+      setBulkStage('idle');
+      toast.error("Price update failed — please retry. If it stopped after the backup step, verify the prices and use Undo.");
+    }
+  };
+
+  const undoPriceBump = async () => {
+    setBulkStage('working');
+    try {
+      const snap = await getDoc(doc(db, 'settings', 'price-backup-latest'));
+      if (!snap.exists()) {
+        toast.error("No backup found — undo is not possible.");
+        setBulkStage('idle');
+        return;
+      }
+      const entries = (snap.data().entries || []) as BulkEntry[];
+      for (const part of chunkList(entries, 400)) {
+        const batch = writeBatch(db);
+        for (const e of part) {
+          const update: Record<string, number> = { price: e.price };
+          if (e.originalPrice !== null) update.originalPrice = e.originalPrice;
+          if (e.salePrice !== null) update.salePrice = e.salePrice;
+          batch.update(doc(db, 'products', e.id), update);
+        }
+        await batch.commit();
+      }
+      await deleteDoc(doc(db, 'settings', 'price-backup-latest'));
+      setBulkResult(`Undo complete — old prices restored on ${entries.length} products.`);
+      setBulkStage('done');
+      toast.success("Old prices restored.");
+    } catch (err) {
+      console.error('Bulk price undo failed:', err);
+      setBulkStage('idle');
+      toast.error("Undo failed — please retry.");
+    }
+  };
   
   // Form state
   const [title, setTitle] = useState('');
@@ -251,6 +343,60 @@ export function AdminProducts() {
         </div>
       </div>
       
+      {/* Bulk price tool */}
+      <div className="bg-white border border-black/10 rounded-lg shadow-sm p-5 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div>
+            <h3 className="font-serif text-lg text-[#0a0a0a]">Bulk Price Increase</h3>
+            <p className="text-xs text-[#0a0a0a]/50 mt-1 max-w-xl">
+              Flat {formatCurrency(PRICE_DELTA)} increase on every product, whatever its current price is. originalPrice and salePrice (where present) move by the same amount, so discount gaps stay unchanged. Current prices are backed up first — one-click undo is included.
+            </p>
+          </div>
+          {bulkStage === 'idle' && (
+            <button onClick={() => setBulkStage('confirm')} className="flex-shrink-0 bg-foreground text-background px-6 py-3 text-[10px] uppercase tracking-widest font-bold rounded-full hover:bg-accent transition-colors">
+              All Prices + {formatCurrency(PRICE_DELTA)}
+            </button>
+          )}
+          {bulkStage === 'working' && (
+            <p className="flex-shrink-0 text-[10px] uppercase tracking-widest font-bold text-[#0a0a0a]/50">Updating... do not close this page</p>
+          )}
+          {bulkStage === 'done' && (
+            <div className="flex gap-3 flex-shrink-0">
+              <button onClick={undoPriceBump} className="px-6 py-3 text-[10px] uppercase tracking-widest font-bold rounded-full border border-black/20 text-[#0a0a0a] hover:bg-black/5 transition-colors">
+                Undo — Restore Old Prices
+              </button>
+              <button onClick={() => setBulkStage('idle')} className="bg-foreground text-background px-6 py-3 text-[10px] uppercase tracking-widest font-bold rounded-full hover:bg-accent transition-colors">
+                Done
+              </button>
+            </div>
+          )}
+        </div>
+        {bulkStage === 'confirm' && (
+          <div className="mt-4 pt-4 border-t border-black/10">
+            <p className="text-sm text-[#0a0a0a]">
+              <strong>{bulkPlan.length} products</strong> will be updated ({bulkPlan.filter(e => e.isPublished).length} published, {bulkPlan.filter(e => !e.isPublished).length} drafts)
+              {bulkSkipped > 0 ? <> — <strong>{bulkSkipped} skipped</strong> (no numeric price)</> : ''}. Examples:
+            </p>
+            <ul className="mt-2 space-y-1">
+              {bulkPlan.slice(0, 3).map(e => (
+                <li key={e.id} className="text-xs text-[#0a0a0a]/60">{e.title}: {formatCurrency(e.price)} → {formatCurrency(e.price + PRICE_DELTA)}</li>
+              ))}
+            </ul>
+            <div className="flex gap-3 mt-4">
+              <button onClick={applyPriceBump} className="bg-foreground text-background px-6 py-3 text-[10px] uppercase tracking-widest font-bold rounded-full hover:bg-accent transition-colors">
+                Confirm — Apply to All
+              </button>
+              <button onClick={() => setBulkStage('idle')} className="px-6 py-3 text-[10px] uppercase tracking-widest font-bold rounded-full border border-black/20 text-[#0a0a0a] hover:bg-black/5 transition-colors">
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+        {bulkStage === 'done' && bulkResult && (
+          <p className="mt-3 text-sm text-green-700">{bulkResult}</p>
+        )}
+      </div>
+
       <div className="bg-white border border-black/10 rounded-lg overflow-x-auto shadow-sm">
         <table className="w-full text-left min-w-[800px]">
           <thead className="bg-[#fcfcfc] border-b border-black/10 text-[10px] uppercase tracking-widest text-[#0a0a0a]/60">
