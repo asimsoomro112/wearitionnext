@@ -26,6 +26,9 @@ export async function generateMetadata(
         const product = docSnap.data() as { title: string; description?: string; images?: string[] };
         return {
           title: product.title,
+          alternates: {
+            canonical: `https://www.wearition.store/product/${id}`,
+          },
           description: product.description || `Shop ${product.title} at WEARITION.`,
           openGraph: {
             title: `${product.title} | WEARITION`,

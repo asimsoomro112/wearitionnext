@@ -39,14 +39,16 @@ export const metadata: Metadata = {
   authors: [{ name: "WEARITION" }],
   creator: "WEARITION",
   publisher: "WEARITION",
-  metadataBase: new URL("https://wearition.store"),
-  alternates: {
-    canonical: "https://wearition.store",
-  },
+  metadataBase: new URL("https://www.wearition.store"),
+  // NO global canonical: a single hardcoded canonical here made EVERY page
+  // (including all product pages) declare the homepage as its canonical URL
+  // (QA SEV-2, 2026-10-22). Pages without their own canonical simply emit
+  // none and search engines use the real URL; product pages set theirs in
+  // generateMetadata.
   openGraph: {
     title: "WEARITION — Wear Your Identity | Branded Suits Online in Pakistan",
     description: "Shop the latest branded suits from Pakistan's top fashion houses. New collections with cash on delivery and nationwide shipping.",
-    url: "https://wearition.store",
+    url: "https://www.wearition.store",
     siteName: "WEARITION",
     locale: "en_US",
     type: "website",

@@ -8,14 +8,21 @@ import { MagneticButton } from '../components/layout/MagneticButton';
 import { Mail, MapPin, Globe } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { STORE_WHATSAPP_NUMBER } from '@/lib/paymentConfig';
 
 export function Contact() {
-  const [submitting, setSubmitting] = useState(false);
+  // Fail-safe send state (QA SEV-2, 2026-10-22): the old submit chained
+  // everything behind a Firestore write that can hang silently in
+  // production, leaving the customer with no feedback at all — and no
+  // admin screen reads the 'messages' collection anyway. Now both
+  // channels race in parallel under a timeout, and the customer ALWAYS
+  // gets a persistent on-page result: success, or direct alternatives.
+  const [sendState, setSendState] = useState<'idle' | 'sending' | 'sent' | 'failed'>('idle');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (submitting) return;
-    setSubmitting(true);
+    if (sendState === 'sending') return;
+    setSendState('sending');
 
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -24,43 +31,54 @@ export function Contact() {
     const email = formData.get('email') as string;
     const message = formData.get('message') as string;
 
-    try {
-      // Save to Firestore for admin to see
-      await addDoc(collection(db, 'messages'), {
-        firstName,
-        lastName,
-        email,
-        message,
-        createdAt: serverTimestamp(),
-        read: false,
-      });
+    // Channel 1: save to Firestore (best effort — currently has no admin
+    // reader, kept for the record).
+    const saveMessage: Promise<boolean> = addDoc(collection(db, 'messages'), {
+      firstName,
+      lastName,
+      email,
+      message,
+      createdAt: serverTimestamp(),
+      read: false,
+    }).then(() => true).catch(() => false);
 
-      // Also try sending email notification to store owner
-      try {
-        await fetch('/api/send-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            to: 'wearition.80@gmail.com',
-            subject: `New Contact Message from ${firstName} ${lastName}`,
-            html: `<h2>New Contact Form Submission</h2>
-              <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-              <p><strong>Email:</strong> ${email}</p>
-              <p><strong>Message:</strong></p>
-              <p>${message}</p>`,
-          }),
-        });
-      } catch {
-        // Email send failure is non-critical
-      }
+    // Channel 2: email the store inbox — the channel the owner actually
+    // sees. A "mock" response means mail is not configured on the server
+    // and nothing was really sent, so it does not count as delivered.
+    const sendMail: Promise<boolean> = fetch('/api/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: 'wearition.80@gmail.com',
+        subject: `New Contact Message from ${firstName} ${lastName}`,
+        html: `<h2>New Contact Form Submission</h2>
+          <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Message:</strong></p>
+          <p>${message}</p>`,
+      }),
+    })
+      .then(async r => {
+        if (!r.ok) return false;
+        const data = await r.json().catch(() => null);
+        return data?.mock !== true;
+      })
+      .catch(() => false);
 
+    // Whichever channel lands first within 10 seconds wins; a hang can
+    // never leave the customer staring at a dead form again.
+    const landed = await Promise.race([
+      Promise.all([saveMessage, sendMail]).then(([saved, mailed]) => saved || mailed),
+      new Promise<boolean>(resolve => setTimeout(() => resolve(false), 10000)),
+    ]);
+
+    if (landed) {
+      setSendState('sent');
       toast.success('Your message has been sent. We will get back to you shortly.');
       form.reset();
-    } catch (err) {
-      console.error('Contact form error:', err);
-      toast.error('Failed to send message. Please try again or email us directly.');
-    } finally {
-      setSubmitting(false);
+    } else {
+      setSendState('failed');
+      toast.error('Message could not be sent. Please reach us on WhatsApp or email instead.');
     }
   };
 
@@ -134,8 +152,31 @@ export function Contact() {
                 strength={0.2}
                 className="mt-6 bg-foreground text-background py-4 uppercase text-[10px] tracking-[0.3em] font-bold hover:bg-accent transition-colors self-center px-16"
               >
-                Send Message
+                {sendState === 'sending' ? 'Sending...' : 'Send Message'}
               </MagneticButton>
+
+              {sendState === 'sent' && (
+                <div className="mt-6 p-5 border border-accent/30 bg-accent/[0.06] text-center" role="status">
+                  <p className="text-sm font-semibold text-foreground mb-1">Message received — thank you.</p>
+                  <p className="text-xs text-foreground/60 leading-relaxed">
+                    We will get back to you shortly. For anything urgent, message us on{' '}
+                    <a href={`https://wa.me/${STORE_WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 text-foreground">WhatsApp</a>.
+                  </p>
+                </div>
+              )}
+
+              {sendState === 'failed' && (
+                <div className="mt-6 p-5 border border-amber-300/30 bg-amber-100/[0.05] text-center" role="alert">
+                  <p className="text-sm font-semibold text-foreground mb-1">Your message could not be sent just now.</p>
+                  <p className="text-xs text-foreground/60 leading-relaxed">
+                    Please reach us directly on{' '}
+                    <a href={`https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${encodeURIComponent('Assalam o Alaikum! I tried the WEARITION contact form but it did not go through. My message: ')}`} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 text-foreground">WhatsApp</a>{' '}
+                    or email{' '}
+                    <a href="mailto:wearition.80@gmail.com" className="underline underline-offset-2 text-foreground">wearition.80@gmail.com</a>{' '}
+                    — we will still get it right away.
+                  </p>
+                </div>
+              )}
             </form>
           </div>
         </motion.div>
