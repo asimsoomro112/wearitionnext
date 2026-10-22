@@ -9,6 +9,7 @@ import { formatCurrency } from '@/lib/currency';
 import { getOptimizedImage } from '../lib/images';
 import { sendOrderConfirmationEmail, sendPaymentProofNotification } from '@/lib/emailService';
 import { PAYMENT_RECEIVING, STORE_WHATSAPP_NUMBER, paymentMethodLabel } from '@/lib/paymentConfig';
+import { calculateShipping } from '@/lib/shipping';
 import { useOrderTrackingStore } from '../store/orderTrackingStore';
 import { useAuthStore } from '../store/authStore';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -109,13 +110,13 @@ export function Checkout() {
   }, [user]);
 
   // Pricing follows the published shipping policy exactly (see Shipping
-  // page): flat Rs. 250 nationwide, FREE on orders of Rs. 10,000 or more,
+  // page and src/lib/shipping.ts): Rs. 250 for the first suit, +Rs. 50
+  // per additional suit, FREE when the suits' total reaches Rs. 12,500,
   // and no tax. Deliberately NOT settings-driven — previously a settings
   // fetch supplied a per-item shipping increment and a 4% tax, so checkout
   // contradicted the policy page customers had read.
-  const FLAT_SHIPPING = 250;
-  const FREE_SHIPPING_THRESHOLD = 10000;
-  const shippingCost = items.length === 0 ? 0 : subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : FLAT_SHIPPING;
+  const itemCount = items.reduce((n, i) => n + (i.quantity || 1), 0);
+  const shippingCost = calculateShipping(subtotal, itemCount);
   const taxAmount = 0;
   const total = subtotal + shippingCost;
 
@@ -557,7 +558,7 @@ export function Checkout() {
                 <div className="flex justify-between text-white/60">
                   <div className="flex flex-col">
                     <span className="uppercase tracking-wider text-[10px]">Shipping</span>
-                    <span className="text-[9px] text-white/35 font-normal">Flat nationwide — free over Rs. 10,000</span>
+                    <span className="text-[9px] text-white/35 font-normal">Rs. 250 first suit · +Rs. 50 each extra — free over Rs. 12,500</span>
                   </div>
                   <span className="font-mono text-white">{shippingCost === 0 ? 'FREE' : formatCurrency(shippingCost)}</span>
                 </div>

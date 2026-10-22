@@ -15,7 +15,7 @@ export const FAQS = [
   },
   {
     q: 'What are your delivery timelines across Pakistan?',
-    a: 'Orders are processed within 24\u201348 hours and delivered in 3\u20135 business days anywhere in Pakistan. Shipping is a flat Rs. 250, and free on orders above Rs. 10,000. You\u2019ll receive a tracking number by SMS/email once your order is dispatched.',
+    a: 'Orders are processed within 24\u201348 hours and delivered in 3\u20135 business days anywhere in Pakistan. Shipping is Rs. 250 for the first suit plus Rs. 50 for each additional suit, and free on orders of Rs. 12,500 or more. You\u2019ll receive a tracking number by SMS/email once your order is dispatched.',
   },
   {
     q: 'What payment methods do you accept?',

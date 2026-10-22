@@ -16,7 +16,7 @@ const ATELIER_DISCIPLINES = [
   {
     number: '02',
     title: 'Cash on Delivery',
-    subtitle: 'Order online and pay at your doorstep. Flat Rs. 250 shipping across Pakistan — free on orders above Rs. 10,000.',
+    subtitle: 'Order online and pay at your doorstep. Shipping is Rs. 250 for the first suit (+Rs. 50 per additional suit) across Pakistan — free on orders above Rs. 12,500.',
     tag: 'Nationwide',
     href: '/shop',
   },

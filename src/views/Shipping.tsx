@@ -37,7 +37,7 @@ export function Shipping() {
               <Truck className="w-6 h-6 text-accent mt-1" />
               <div>
                 <h2 className="uppercase text-[11px] tracking-[0.2em] font-bold text-foreground mb-3">Shipping Rates</h2>
-                <p className="text-sm text-foreground/60 leading-relaxed">Standard shipping is FREE on orders above PKR 10,000. For orders below this amount, a flat rate of PKR 250 applies nationwide.</p>
+                <p className="text-sm text-foreground/60 leading-relaxed">Shipping is PKR 250 for the first suit in an order, plus PKR 50 for each additional suit. Standard shipping is FREE on orders of PKR 12,500 or more, nationwide.</p>
               </div>
             </div>
             <div className="flex items-start gap-4">

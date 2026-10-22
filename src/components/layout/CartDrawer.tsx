@@ -142,7 +142,7 @@ export function CartDrawer() {
                 </div>
                 <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-white/40 mb-6 bg-white/[0.02] border border-white/5 px-3 py-2 rounded-sm">
                   <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                  <span>Flat Rs. 250 shipping — free on orders above Rs. 10,000</span>
+                  <span>Rs. 250 for the first suit, +Rs. 50 each additional — free on orders of Rs. 12,500 or more</span>
                 </div>
                 <button 
                   onClick={() => {

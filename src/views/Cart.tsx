@@ -4,17 +4,15 @@ import { motion } from "framer-motion";
 import { Minus, Plus, X, ShoppingBag, ArrowRight, Truck } from "lucide-react";
 import { useCartStore, getCartSubtotal } from "@/store/cartStore";
 import { formatCurrency } from "@/lib/currency";
+import { calculateShipping, FREE_SHIPPING_THRESHOLD } from "@/lib/shipping";
 import { SEO } from "@/components/layout/SEO";
-
-const FREE_SHIPPING_THRESHOLD = 10000;
-const SHIPPING_FLAT = 250;
 
 export function Cart() {
   const { items, removeItem, updateQuantity } = useCartStore();
   const subtotal = getCartSubtotal(items);
-  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : SHIPPING_FLAT;
-  const total = subtotal + shipping;
   const itemCount = items.reduce((n, i) => n + i.quantity, 0);
+  const shipping = calculateShipping(subtotal, itemCount);
+  const total = subtotal + shipping;
 
   return (
     <div className="w-full pt-36 md:pt-44 px-6 md:px-12 pb-32 bg-[#030303] text-[#fafafa] min-h-screen">

@@ -248,7 +248,7 @@ export function ProductDetails() {
     });
     triggerHaptic('success');
     toast.success(`${quantity}x ${product.title} added to your bag`, {
-      description: 'Free delivery on orders above PKR 10,000',
+      description: 'Free delivery on orders of PKR 12,500 or more',
       icon: '🛍️',
     });
     openCart();
@@ -692,7 +692,7 @@ export function ProductDetails() {
 
               {/* ── Shipping Note ─────────────────────────────────────────── */}
               <p className="text-[9px] text-white/20 uppercase tracking-[0.2em] text-center mb-4">
-                Nationwide Delivery Across Pakistan · Rs. 250 Shipping · Free Over Rs. 10,000
+                Nationwide Delivery Across Pakistan · Rs. 250 First Suit · +Rs. 50 Each Extra · Free Over Rs. 12,500
               </p>
 
             </motion.div>
