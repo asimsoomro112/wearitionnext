@@ -37,18 +37,25 @@ export function AdminProducts() {
   const [searchTerm, setSearchTerm] = useState('');
 
   // ---- Bulk price tool (added 2026-10-22 at the owner's request) ----
-  // One-tap flat increase across the whole catalog. The selling `price`
-  // always moves; `originalPrice` (the struck-through "was" price) and
-  // `salePrice` move by the same amount where present, so discount gaps
-  // stay exactly as they were. Current values are backed up FIRST to
+  // One-tap flat increase OR decrease across the whole catalog, with the
+  // amount typed in by the owner. The selling `price` always moves;
+  // `originalPrice` (the struck-through "was" price) and `salePrice` move
+  // by the same amount where present, so discount gaps stay exactly as
+  // they were. Current values are backed up FIRST to
   // settings/price-backup-latest — if that write fails, nothing changes —
-  // and the same backup powers the one-click undo.
-  const PRICE_DELTA = 400;
+  // and the same backup powers the one-click undo. On a decrease, any
+  // product whose price (or originalPrice/salePrice) would fall below
+  // Rs. 1 is skipped and reported, never pushed to zero or negative.
+  const [bulkMode, setBulkMode] = useState<'increase' | 'decrease'>('increase');
+  const [bulkAmount, setBulkAmount] = useState('400');
+  const parsedAmount = parseInt(bulkAmount, 10);
+  const amountValid = Number.isFinite(parsedAmount) && parsedAmount > 0;
+  const signedDelta = amountValid ? (bulkMode === 'increase' ? parsedAmount : -parsedAmount) : 0;
   const [bulkStage, setBulkStage] = useState<'idle' | 'confirm' | 'working' | 'done'>('idle');
   const [bulkResult, setBulkResult] = useState('');
 
   type BulkEntry = { id: string; title: string; isPublished: boolean; price: number; originalPrice: number | null; salePrice: number | null };
-  const bulkPlan: BulkEntry[] = products
+  const bulkRawPlan: BulkEntry[] = products
     .filter(p => typeof p.price === 'number' && isFinite(p.price))
     .map(p => ({
       id: p.id,
@@ -58,7 +65,13 @@ export function AdminProducts() {
       originalPrice: typeof p.originalPrice === 'number' ? p.originalPrice : null,
       salePrice: typeof p.salePrice === 'number' ? p.salePrice : null,
     }));
-  const bulkSkipped = products.length - bulkPlan.length;
+  const bulkPlan: BulkEntry[] = bulkRawPlan.filter(e =>
+    e.price + signedDelta >= 1 &&
+    (e.originalPrice === null || e.originalPrice + signedDelta >= 1) &&
+    (e.salePrice === null || e.salePrice + signedDelta >= 1)
+  );
+  const bulkSkipped = products.length - bulkRawPlan.length;
+  const bulkFloorSkipped = bulkRawPlan.length - bulkPlan.length;
 
   const chunkList = <T,>(arr: T[], size: number): T[][] => {
     const out: T[][] = [];
@@ -71,20 +84,20 @@ export function AdminProducts() {
     try {
       await setDoc(doc(db, 'settings', 'price-backup-latest'), {
         createdAt: serverTimestamp(),
-        delta: PRICE_DELTA,
+        delta: signedDelta,
         entries: bulkPlan,
       });
       for (const part of chunkList(bulkPlan, 400)) {
         const batch = writeBatch(db);
         for (const e of part) {
-          const update: Record<string, number> = { price: e.price + PRICE_DELTA };
-          if (e.originalPrice !== null) update.originalPrice = e.originalPrice + PRICE_DELTA;
-          if (e.salePrice !== null) update.salePrice = e.salePrice + PRICE_DELTA;
+          const update: Record<string, number> = { price: e.price + signedDelta };
+          if (e.originalPrice !== null) update.originalPrice = e.originalPrice + signedDelta;
+          if (e.salePrice !== null) update.salePrice = e.salePrice + signedDelta;
           batch.update(doc(db, 'products', e.id), update);
         }
         await batch.commit();
       }
-      setBulkResult(`${bulkPlan.length} products updated — every price is now ${formatCurrency(PRICE_DELTA)} higher. If anything looks wrong, Undo restores the exact old prices from the backup.`);
+      setBulkResult(`${bulkPlan.length} products updated — every price is now ${formatCurrency(parsedAmount)} ${bulkMode === 'increase' ? 'higher' : 'lower'}. If anything looks wrong, Undo restores the exact old prices from the backup.`);
       setBulkStage('done');
       toast.success(`${bulkPlan.length} product prices increased.`);
     } catch (err) {
@@ -347,15 +360,25 @@ export function AdminProducts() {
       <div className="bg-white border border-black/10 rounded-lg shadow-sm p-5 mb-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>
-            <h3 className="font-serif text-lg text-[#0a0a0a]">Bulk Price Increase</h3>
+            <h3 className="font-serif text-lg text-[#0a0a0a]">Bulk Price Tool</h3>
             <p className="text-xs text-[#0a0a0a]/50 mt-1 max-w-xl">
-              Flat {formatCurrency(PRICE_DELTA)} increase on every product, whatever its current price is. originalPrice and salePrice (where present) move by the same amount, so discount gaps stay unchanged. Current prices are backed up first — one-click undo is included.
+              Increase or decrease the price of every product by a flat amount you choose. originalPrice and salePrice (where present) move by the same amount, so discount gaps stay unchanged. Current prices are backed up first — one-click undo is included.
             </p>
           </div>
           {bulkStage === 'idle' && (
-            <button onClick={() => setBulkStage('confirm')} className="flex-shrink-0 bg-foreground text-background px-6 py-3 text-[10px] uppercase tracking-widest font-bold rounded-full hover:bg-accent transition-colors">
-              All Prices + {formatCurrency(PRICE_DELTA)}
-            </button>
+            <div className="flex flex-wrap items-center gap-2 flex-shrink-0">
+              <div className="flex rounded-full border border-black/15 overflow-hidden">
+                <button onClick={() => setBulkMode('increase')} className={`px-4 py-2.5 text-[10px] uppercase tracking-widest font-bold transition-colors ${bulkMode === 'increase' ? 'bg-foreground text-background' : 'text-[#0a0a0a]/50 hover:bg-black/5'}`}>Increase +</button>
+                <button onClick={() => setBulkMode('decrease')} className={`px-4 py-2.5 text-[10px] uppercase tracking-widest font-bold transition-colors ${bulkMode === 'decrease' ? 'bg-foreground text-background' : 'text-[#0a0a0a]/50 hover:bg-black/5'}`}>Decrease −</button>
+              </div>
+              <div className="flex items-center gap-1 bg-black/5 rounded-full px-4 py-2">
+                <span className="text-[10px] uppercase tracking-widest font-bold text-[#0a0a0a]/40">Rs.</span>
+                <input type="number" min="1" step="1" inputMode="numeric" value={bulkAmount} onChange={e => setBulkAmount(e.target.value)} className="w-20 bg-transparent outline-none text-sm font-bold text-[#0a0a0a]" />
+              </div>
+              <button onClick={() => setBulkStage('confirm')} disabled={!amountValid} className="bg-foreground text-background px-6 py-3 text-[10px] uppercase tracking-widest font-bold rounded-full hover:bg-accent transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                Review — All Prices {bulkMode === 'increase' ? '+' : '−'} {amountValid ? formatCurrency(parsedAmount) : 'Rs. 0'}
+              </button>
+            </div>
           )}
           {bulkStage === 'working' && (
             <p className="flex-shrink-0 text-[10px] uppercase tracking-widest font-bold text-[#0a0a0a]/50">Updating... do not close this page</p>
@@ -374,12 +397,13 @@ export function AdminProducts() {
         {bulkStage === 'confirm' && (
           <div className="mt-4 pt-4 border-t border-black/10">
             <p className="text-sm text-[#0a0a0a]">
-              <strong>{bulkPlan.length} products</strong> will be updated ({bulkPlan.filter(e => e.isPublished).length} published, {bulkPlan.filter(e => !e.isPublished).length} drafts)
-              {bulkSkipped > 0 ? <> — <strong>{bulkSkipped} skipped</strong> (no numeric price)</> : ''}. Examples:
+              <strong>{bulkPlan.length} products</strong> will be updated — every price {bulkMode === 'increase' ? 'increases' : 'decreases'} by <strong>{formatCurrency(parsedAmount)}</strong> ({bulkPlan.filter(e => e.isPublished).length} published, {bulkPlan.filter(e => !e.isPublished).length} drafts)
+              {bulkSkipped > 0 ? <> — <strong>{bulkSkipped} skipped</strong> (no numeric price)</> : ''}
+              {bulkFloorSkipped > 0 ? <> — <strong>{bulkFloorSkipped} skipped</strong> (price would fall below Rs. 1)</> : ''}. Examples:
             </p>
             <ul className="mt-2 space-y-1">
               {bulkPlan.slice(0, 3).map(e => (
-                <li key={e.id} className="text-xs text-[#0a0a0a]/60">{e.title}: {formatCurrency(e.price)} → {formatCurrency(e.price + PRICE_DELTA)}</li>
+                <li key={e.id} className="text-xs text-[#0a0a0a]/60">{e.title}: {formatCurrency(e.price)} → {formatCurrency(e.price + signedDelta)}</li>
               ))}
             </ul>
             <div className="flex gap-3 mt-4">
