@@ -12,7 +12,7 @@ export const revalidate = 86400;
 // service account (FIREBASE_CLIENT_EMAIL + FIREBASE_PRIVATE_KEY on Vercel)
 // and is not subject to API-key restrictions.
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://wearition.store';
+  const baseUrl = 'https://www.wearition.store';
 
   // Base static routes
   const staticRoutes = [

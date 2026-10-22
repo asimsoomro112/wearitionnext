@@ -181,8 +181,11 @@ export function AdminDashboard() {
                     <td className="p-4 text-xs font-mono text-[#0a0a0a]">{formatCurrency(product.price)}</td>
                     <td className="p-4 text-xs text-[#0a0a0a]/70">{product.stock} in stock</td>
                     <td className="p-4 text-right">
-                      <button onClick={() => togglePublish(product.id, product.isPublished)} className="text-[10px] uppercase tracking-widest font-bold text-[#0a0a0a]/40 hover:text-[#0a0a0a]">
-                        {product.isPublished ? 'Draft' : 'Publish'}
+                      <span className={`inline-block px-2 py-1 rounded text-[9px] uppercase font-bold tracking-wider mr-3 ${product.isPublished ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                        {product.isPublished ? 'Published' : 'Draft'}
+                      </span>
+                      <button onClick={() => togglePublish(product.id, product.isPublished)} className="text-[10px] uppercase tracking-widest font-bold text-[#0a0a0a]/40 hover:text-[#0a0a0a] underline underline-offset-2">
+                        {product.isPublished ? 'Make Draft' : 'Publish'}
                       </button>
                     </td>
                   </tr>

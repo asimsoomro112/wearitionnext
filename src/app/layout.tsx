@@ -86,6 +86,43 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
       <body className={`${cinzel.variable} ${inter.variable} font-sans bg-[#030303] text-[#fafafa] antialiased selection:bg-white selection:text-black`}>
+        {/* Site-wide structured data (QA SEV-3): Organization + WebSite with
+            the shop's real search endpoint. Facts only — the store's own
+            published links. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@graph': [
+                {
+                  '@type': 'Organization',
+                  name: 'WEARITION',
+                  url: 'https://www.wearition.store',
+                  logo: 'https://wearition.store/logo.png',
+                  sameAs: [
+                    'https://www.instagram.com/_wearition',
+                    'https://www.facebook.com/profile.php?id=61589494648557',
+                    'https://www.tiktok.com/@wearition3',
+                  ],
+                },
+                {
+                  '@type': 'WebSite',
+                  name: 'WEARITION',
+                  url: 'https://www.wearition.store',
+                  potentialAction: {
+                    '@type': 'SearchAction',
+                    target: {
+                      '@type': 'EntryPoint',
+                      urlTemplate: 'https://www.wearition.store/shop?search={search_term_string}',
+                    },
+                    'query-input': 'required name=search_term_string',
+                  },
+                },
+              ],
+            }),
+          }}
+        />
         {children}
       </body>
     </html>

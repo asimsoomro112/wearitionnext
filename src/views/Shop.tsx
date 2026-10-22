@@ -163,7 +163,7 @@ export function Shop() {
   return (
     <div className="w-full pt-36 md:pt-44 px-6 md:px-12 lg:px-16 pb-36 bg-[#030303] text-[#fafafa] min-h-screen">
       <SEO 
-        title={brandFilter ? `${brandFilter.toUpperCase()} Collection • WEARITION` : categoryFilter ? `${categoryFilter.toUpperCase()} • WEARITION` : 'Shop All Products • WEARITION'}
+        title={brandFilter ? `${brandFilter.toUpperCase()} Collection` : categoryFilter ? `${categoryFilter.toUpperCase()}` : 'Shop All Products'}
         description="Browse the full WEARITION collection — the latest branded suits from Pakistan's top fashion houses, with cash on delivery nationwide."
       />
       <div className="max-w-[1440px] mx-auto">
