@@ -40,6 +40,11 @@ export const metadata: Metadata = {
   creator: "WEARITION",
   publisher: "WEARITION",
   metadataBase: new URL("https://www.wearition.store"),
+  // Google Search Console ownership verification (URL-prefix property
+  // https://www.wearition.store/ created 2026-10-23 under the brand
+  // account wearition.80@gmail.com). This token is public by design —
+  // it is printed in every page's head.
+  verification: { google: "iaBZti34B6h6P1aJA0PbUPHT7P7iumJF_IqrN6RDkSk" },
   // NO global canonical: a single hardcoded canonical here made EVERY page
   // (including all product pages) declare the homepage as its canonical URL
   // (QA SEV-2, 2026-10-22). Pages without their own canonical simply emit
