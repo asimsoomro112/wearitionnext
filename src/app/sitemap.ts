@@ -1,9 +1,10 @@
 import { MetadataRoute } from 'next';
 import { adminDb } from '@/lib/firebase-admin';
 
-// Regenerate daily instead of build-only: if a generation ever fails, the
-// sitemap self-heals within 24h instead of staying empty.
-export const revalidate = 86400;
+// Regenerate twice daily instead of build-only: if a generation ever fails,
+// the sitemap self-heals within 12h instead of staying empty, and newly
+// published products reach the sitemap the same day.
+export const revalidate = 43200;
 
 // Product URLs come through the Firebase Admin SDK. Every client-SDK /
 // public-key route fails server-side (the web API key's restrictions reject
