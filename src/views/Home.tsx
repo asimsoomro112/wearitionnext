@@ -10,6 +10,7 @@ import { SEO } from "../components/layout/SEO";
 import HeroSection from "../components/HeroSection/HeroSection";
 import { BrandManifesto } from "../components/home/BrandManifesto";
 import { SelectedDrops } from "../components/home/SelectedDrops";
+import { SeasonEdit } from "../components/home/SeasonEdit";
 import { AtelierDisciplines } from "../components/home/AtelierDisciplines";
 import { ParallaxVignette } from "../components/home/ParallaxVignette";
 import { FaqSection, FAQS } from "../components/home/FaqSection";
@@ -98,6 +99,29 @@ export function Home() {
 
       {/* [02] Works: Selected Drops & Case Studies */}
       <SelectedDrops products={products} />
+
+      {/* Winter Edit: velvet suits for the cold season — fills itself as new
+          velvet suits are published, newest first. */}
+      <SeasonEdit
+        eyebrow="WINTER EDIT • VELVET"
+        title="Winter Velvet Edit"
+        blurb="Heavy velvets for winter — warmth, depth and shaadi-season luxury. New velvet suits join this row automatically as they arrive."
+        products={products}
+        keywords={['velvet']}
+        viewAllHref="/shop?search=velvet"
+        viewAllLabel="Shop all velvet"
+      />
+
+      {/* Party Edit: organza and party-wear suits for shaadi season. */}
+      <SeasonEdit
+        eyebrow="PARTY EDIT • ORGANZA & CHIFFON"
+        title="Party Wear Edit"
+        blurb="Organza and party-wear suits for shaadi season — embroidered, festive and ready for the function."
+        products={products}
+        keywords={['organza', 'party']}
+        viewAllHref="/shop?search=organza"
+        viewAllLabel="Shop all party wear"
+      />
 
       {/* [03] Services: Our Disciplines with Neon Emerald Dot */}
       <AtelierDisciplines />
