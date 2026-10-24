@@ -10,12 +10,26 @@ interface SelectedDropsProps {
 }
 
 export function SelectedDrops({ products = [] }: SelectedDropsProps) {
+  // Newest first: the feed must track new arrivals as they are added.
+  // Admin-created products carry createdAt (serverTimestamp); older docs
+  // without it sort last instead of being dropped.
+  const createdTime = (p: any): number => {
+    const c = p.createdAt;
+    if (!c) return 0;
+    if (typeof c.seconds === 'number') return c.seconds * 1000;
+    if (typeof c === 'string') return Date.parse(c) || 0;
+    if (typeof c.toMillis === 'function') return c.toMillis();
+    return 0;
+  };
+
   // Real products only — no stock-photo stand-ins presented as inventory.
-  const drops = (products || []).slice(0, 4).map((p) => ({
+  const drops = [...(products || [])]
+    .sort((a, b) => createdTime(b) - createdTime(a))
+    .slice(0, 4).map((p) => ({
     id: p.id,
     title: p.title || 'Wearition Product',
     category: p.category || p.brand || 'Women',
-    season: p.isNew ? 'New In' : 'Featured',
+    season: 'New In',
     image: p.images?.[0] || p.image || '',
     href: `/product/${p.id}`,
   })).filter(d => d.image);
