@@ -10,6 +10,7 @@ import { getOptimizedImage } from '../lib/images';
 import { sendOrderConfirmationEmail, sendPaymentProofNotification } from '@/lib/emailService';
 import { PAYMENT_RECEIVING, STORE_WHATSAPP_NUMBER, paymentMethodLabel } from '@/lib/paymentConfig';
 import { calculateShipping } from '@/lib/shipping';
+import { calculateCustomerTax, calculateStoreAbsorbedTax } from '@/lib/tax';
 import { useOrderTrackingStore } from '../store/orderTrackingStore';
 import { useAuthStore } from '../store/authStore';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -111,14 +112,18 @@ export function Checkout() {
 
   // Pricing follows the published shipping policy exactly (see Shipping
   // page and src/lib/shipping.ts): Rs. 250 for the first suit, +Rs. 50
-  // per additional suit, FREE when the suits' total reaches Rs. 12,500,
-  // and no tax. Deliberately NOT settings-driven — previously a settings
-  // fetch supplied a per-item shipping increment and a 4% tax, so checkout
+  // per additional suit, FREE when the suits' total reaches Rs. 12,500.
+  // Government tax (see src/lib/tax.ts): the customer pays 3% of the
+  // suits' total on Cash on Delivery only; advance payment waives it.
+  // The remaining 1% of the 4% government rate is absorbed by the store.
+  // Deliberately NOT settings-driven — previously a settings fetch
+  // supplied a per-item shipping increment and a 4% tax, so checkout
   // contradicted the policy page customers had read.
   const itemCount = items.reduce((n, i) => n + (i.quantity || 1), 0);
   const shippingCost = calculateShipping(subtotal, itemCount);
-  const taxAmount = 0;
-  const total = subtotal + shippingCost;
+  const taxAmount = calculateCustomerTax(subtotal, paymentMethod);
+  const taxAbsorbedByStore = calculateStoreAbsorbedTax(subtotal, paymentMethod);
+  const total = subtotal + shippingCost + taxAmount;
 
   const handleShippingChange = (field: keyof ShippingAddress) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setShipping(prev => ({ ...prev, [field]: e.target.value }));
@@ -207,7 +212,8 @@ export function Checkout() {
       },
       shippingDetails: { 
         shippingAmount: shippingCost,
-        taxAmount: taxAmount
+        taxAmount: taxAmount,
+        taxAbsorbedByStore: taxAbsorbedByStore
       }
     };
 
@@ -561,6 +567,15 @@ export function Checkout() {
                     <span className="text-[9px] text-white/35 font-normal">Rs. 250 first suit · +Rs. 50 each extra — free over Rs. 12,500</span>
                   </div>
                   <span className="font-mono text-white">{shippingCost === 0 ? 'FREE' : formatCurrency(shippingCost)}</span>
+                </div>
+                <div className="flex justify-between text-white/60">
+                  <div className="flex flex-col">
+                    <span className="uppercase tracking-wider text-[10px]">Govt. Tax (3%)</span>
+                    {paymentMethod !== 'cod' && (
+                      <span className="text-[9px] text-white/35 font-normal">Waived on advance payment</span>
+                    )}
+                  </div>
+                  <span className="font-mono text-white">{paymentMethod === 'cod' ? formatCurrency(taxAmount) : 'Waived'}</span>
                 </div>
                 <div className="border-t border-white/10 pt-4 flex justify-between items-baseline font-medium text-white">
                   <span className="uppercase tracking-[0.2em] text-xs">Total</span>

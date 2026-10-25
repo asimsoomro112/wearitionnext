@@ -244,7 +244,7 @@ export function orderPlacedEmail(data: {
                 <td align="right" style="padding:6px 0;font-size:13px;color:${BRAND.colors.white};">Rs. ${Math.round(data.shipping).toLocaleString()}</td>
               </tr>
               <tr>
-                <td style="padding:6px 0;font-size:13px;color:${BRAND.colors.muted};">Government Tax (4%)</td>
+                <td style="padding:6px 0;font-size:13px;color:${BRAND.colors.muted};">Government Tax (3%)</td>
                 <td align="right" style="padding:6px 0;font-size:13px;color:${BRAND.colors.white};">Rs. ${Math.round(data.tax).toLocaleString()}</td>
               </tr>
               <tr>

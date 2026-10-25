@@ -3,8 +3,10 @@
 //   - Rs. 250 for the first suit in an order
 //   - + Rs. 50 for each additional suit
 //   - FREE when the suits' total (subtotal) reaches Rs. 12,500
-// No tax. Checkout and the cart both price through here so they can
+// Checkout and the cart both price through here so they can
 // never contradict each other — or the policy page — again.
+// Government tax is separate (see src/lib/tax.ts): 3% to the customer
+// on COD only, waived on advance payment.
 export const FREE_SHIPPING_THRESHOLD = 12500;
 export const BASE_SHIPPING = 250;
 export const EXTRA_ITEM_SHIPPING = 50;

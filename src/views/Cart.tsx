@@ -145,6 +145,9 @@ export function Cart() {
                   <span className="text-white font-medium">Total</span>
                   <span className="font-mono text-xl font-medium text-white">{formatCurrency(total)}</span>
                 </div>
+                <p className="text-[11px] text-white/40 leading-relaxed font-sans pt-1">
+                  Govt. tax (3%) applies on Cash on Delivery orders at checkout — waived on advance payment.
+                </p>
               </div>
 
               {shipping > 0 && (
