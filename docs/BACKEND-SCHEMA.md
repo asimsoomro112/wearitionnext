@@ -8,7 +8,7 @@ Per `src/views/Home.tsx`, `Shop.tsx`, `ProductDetails.tsx`, `src/app/sitemap.ts`
 - `description` (string, optional) — long description, product page + SEO.
 - `price` (number, required) — current selling price (PKR, formatted via `src/lib/currency.ts`).
 - `salePrice` (number, optional) — strikethrough original price when on sale; drives the teal sale badge.
-- `images` (string[], required-ish) — image URLs; may be Cloudinary URLs (new) or legacy `i.ibb.co` URLs (old).
+- `images` (string[], required-ish) — image URLs; all Cloudinary (ImgBB migration completed 2026-11-03).
 - `category` (string, required) — e.g. "Men", "Shirts"; drives Shop category pills (also sourced from `settings/store.collections`).
 - `brand` (string, optional) — drives `?brand=` Shop filter.
 - `sizes` (string[], optional) — variant selector options on product page.
@@ -43,7 +43,7 @@ Per `src/views/Shop.tsx` (`doc(db, 'settings', 'store')`).
 
 ## 7. Data-layer notes
 - **Client cart persistence:** the cart lives in `cartStore.ts` with zustand `persist` middleware → `localStorage`. Firestore is only touched at order placement (order write + stock decrement). No server-side cart.
-- **Images:** Cloudinary is the connected host for new uploads (per owner confirmation); legacy `i.ibb.co` URLs still serve some products. `getOptimizedImage()` in `src/lib/images.ts` is currently a pass-through; `onImgError` swaps a placeholder SVG.
+- **Images:** Cloudinary is the image host for all products (ImgBB fully removed 2026-11-03; no `i.ibb.co` URLs remain in product data). `getOptimizedImage()` in `src/lib/images.ts` is currently a pass-through; `onImgError` swaps a placeholder SVG.
 - **Email:** order confirmation emails via `src/lib/emailService.ts` (Gmail SMTP / EmailJS config in `.env.example`); templates in `src/lib/emailTemplates.ts`.
 - **Query pattern:** storefront reads are simple `where("isPublished","==",true)` + client-side filter/sort — deliberate, avoids composite index management.
 - **Rules:** Firestore security rules are the real access control (API key is public by design); rules were not changed by the redesign.

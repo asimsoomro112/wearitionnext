@@ -24,7 +24,7 @@ No REST API was added. Client talks directly to Firestore via the SDK; the exist
 
 ## 4. Data layer
 - **Firestore** (existing project, configured in Vercel env). Client SDK with `experimentalForceLongPolling` (per `src/lib/firebase.ts`).
-- **Images:** Cloudinary is the connected host for new uploads; legacy product images still serve from `i.ibb.co` (remote patterns whitelisted in `next.config.ts`).
+- **Images:** Cloudinary is the image host for all product images (ImgBB migration completed 2026-11-03; no `i.ibb.co` URLs remain in any product's main or colour galleries).
 - **Indexing:** single-field `where("isPublished","==",true)` queries only; no composite indexes required. Client-side filtering/sorting on Shop avoids index needs.
 - **Migration:** none — schemas untouched.
 
@@ -35,7 +35,7 @@ No REST API was added. Client talks directly to Firestore via the SDK; the exist
 - Checkout validates email format client-side; server-side validation deferred to Firestore rules.
 
 ## 6. Performance & SEO
-- Images: `next/image` remote patterns for `i.ibb.co`, `ibb.co`, `images.unsplash.com`; hero/first images eager, rest lazy. ProductCard uses plain `<img>` with `loading="lazy"` + error fallback (kept from original).
+- Images: `next/image` remote patterns for Cloudinary (`res.cloudinary.com`) and `images.unsplash.com` (ImgBB patterns removed 2026-11-03, commit d07100f); hero/first images eager, rest lazy. ProductCard uses plain `<img>` with `loading="lazy"` + error fallback (kept from original).
 - Fonts via `next/font` (no render-blocking Google Fonts link; `globals.css` also imports Google Fonts — dedupe noted as cleanup).
 - SEO: `SEO` component per page (title/description/OG/Twitter), `src/app/sitemap.ts` includes all published products (lazy Firebase import), robots config in layout metadata.
 - Budget: no formal budget set; redesign added no new JS weight.
