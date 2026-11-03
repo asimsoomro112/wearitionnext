@@ -4,7 +4,7 @@
  * Cloudinary-hosted images are served resized to the display width with
  * automatic quality/format (w_<width>,q_auto,f_auto) instead of the full
  * original — the single biggest page-weight saving on product imagery.
- * Other hosts (e.g. ImgBB) have no reliable URL transform, so their URLs
+ * Other hosts have no reliable URL transform, so their URLs
  * pass through unchanged.
  */
 export function getOptimizedImage(url: string | undefined, width = 900): string {

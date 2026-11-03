@@ -152,6 +152,12 @@ export function AdminProducts() {
   const [isUnstitched, setIsUnstitched] = useState(false);
   const [colors, setColors] = useState('');
   const [colorImages, setColorImages] = useState<Record<string, string[]>>({});
+  // Raw pasted text per colour, mirroring the main "RAW URLS" field: the
+  // textarea keeps keystrokes verbatim (so a trailing comma while typing
+  // is not eaten), while colorImages always holds the parsed list. Both
+  // are updated together on paste, upload-append, thumbnail-remove,
+  // edit-prefill and form-reset, so they never diverge.
+  const [colorUrlsText, setColorUrlsText] = useState<Record<string, string>>({});
   const [isUploading, setIsUploading] = useState(false);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, colorKey?: string) => {
@@ -183,6 +189,12 @@ export function AdminProducts() {
         setColorImages(prev => ({
           ...prev,
           [colorKey]: [...(prev[colorKey] || []), ...uploadedUrls]
+        }));
+        // Mirror the main-field upload behaviour: append to the pasted
+        // text with a comma separator, so the textarea shows the upload.
+        setColorUrlsText(prev => ({
+          ...prev,
+          [colorKey]: prev[colorKey] ? `${prev[colorKey]}, ${uploadedUrls.join(', ')}` : uploadedUrls.join(', ')
         }));
       } else {
         setImages((prev) => (prev ? `${prev}, ${uploadedUrls.join(', ')}` : uploadedUrls.join(', ')));
@@ -278,6 +290,7 @@ export function AdminProducts() {
     setIsUnstitched(false);
     setColors('');
     setColorImages({});
+    setColorUrlsText({});
     setEditingId(null);
   };
 
@@ -301,6 +314,9 @@ export function AdminProducts() {
     setIsUnstitched(product.isUnstitched ?? false);
     setColors(product.colors?.join(', ') || '');
     setColorImages(product.colorImages || {});
+    setColorUrlsText(Object.fromEntries(
+      Object.entries(product.colorImages || {}).map(([key, urls]) => [key, urls.join(', ')])
+    ));
     setIsModalOpen(true);
   };
 
@@ -643,9 +659,14 @@ export function AdminProducts() {
                           <button 
                             type="button"
                             onClick={() => {
+                              const updated = (colorImages[color] || []).filter((_, idx) => idx !== i);
                               setColorImages(prev => ({
                                 ...prev,
-                                [color]: prev[color].filter((_, idx) => idx !== i)
+                                [color]: updated
+                              }));
+                              setColorUrlsText(prev => ({
+                                ...prev,
+                                [color]: updated.join(', ')
                               }));
                             }}
                             className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-lg z-20"
@@ -656,6 +677,24 @@ export function AdminProducts() {
                       ))}
                     </div>
                   )}
+
+                  <label className="text-[10px] uppercase tracking-[0.2em] text-[#0a0a0a]/60 font-bold">Raw URLs for {color} (Internal Use)</label>
+                  <textarea
+                    rows={2}
+                    value={colorUrlsText[color] || ''}
+                    onChange={e => {
+                      const value = e.target.value;
+                      setColorUrlsText(prev => ({
+                        ...prev,
+                        [color]: value
+                      }));
+                      setColorImages(prev => ({
+                        ...prev,
+                        [color]: value.split(',').map(url => url.trim()).filter(Boolean)
+                      }));
+                    }}
+                    className="border border-black/5 rounded-md p-3 focus:outline-none bg-black/[0.01] text-[8px] font-mono text-[#0a0a0a]/40"
+                  />
                 </div>
               ))}
 

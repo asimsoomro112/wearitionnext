@@ -40,7 +40,7 @@ The app utilizes **Recipe 12: Luxury / Prestige** & **Recipe 4: Dark Luxury** fr
 2. **Bot Prompt**: Bot replies asking for Title, Price, Description, Sizes.
 3. **Admin Reply**: "Red Velvet Gown | 299 | Luxury winter gown | S, M, L"
 4. **Backend Webhook**: Express.js `/api/telegram-webhook` processes the payload.
-5. **Image Hosting**: Sends images to ImgBB and receives CDN URLs.
+5. **Image Hosting**: Sends images to Cloudinary and receives CDN URLs.
 6. **Firestore Write**: Uses `firebase-admin` to create a new document in the `products` collection.
 7. **Frontend Update**: Zustand/React query automatically synchronizes the new product instantly on the live site.
 
