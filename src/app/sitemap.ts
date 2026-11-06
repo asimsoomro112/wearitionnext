@@ -1,4 +1,4 @@
-// Rebuild trigger 2026-11-02: force production redeploy to refresh the sitemap (ISR output stuck at 25 Oct build). No behavior change.
+// Rebuild trigger 2026-11-06: force production redeploy to refresh the sitemap (ISR output stuck at 3 Nov build; 7 newest suits missing). No behavior change.
 import { MetadataRoute } from 'next';
 import { adminDb } from '@/lib/firebase-admin';
 
