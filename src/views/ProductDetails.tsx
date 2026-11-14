@@ -619,67 +619,6 @@ export function ProductDetails() {
                 ))}
               </div>
 
-              {/* ── Tabs: Description / Reviews / Care ────────────────── */}
-              <div className="border-t border-white/10">
-                <div className="flex gap-0 border-b border-white/10 mb-6 mt-4">
-                  {(['description', 'care'] as const).map(tab => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={`flex-1 pb-3 text-[10px] uppercase tracking-widest font-bold transition-all duration-200 relative ${
-                        activeTab === tab
-                          ? 'text-white'
-                          : 'text-white/40 hover:text-white/70'
-                      }`}
-                    >
-                      {tab === 'description' ? 'Product Details' : 'Care & Maintenance'}
-                      {activeTab === tab && (
-                        <motion.div
-                          layoutId="tab-underline"
-                          className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent rounded-full"
-                        />
-                      )}
-                    </button>
-                  ))}
-                </div>
-
-                <AnimatePresence mode="wait">
-                  {activeTab === 'description' && (
-                    <motion.div
-                      key="desc"
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      className="text-white/60 text-xs md:text-sm leading-relaxed font-sans mb-6 whitespace-pre-line"
-                    >
-                      {product.description || 'Premium quality piece from the latest WEARITION collection. See the details above for fabric, embroidery and what is included.'}
-                    </motion.div>
-                  )}
-
-
-                  {activeTab === 'care' && (
-                    <motion.div
-                      key="care"
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      className="mb-6 space-y-2"
-                    >
-                      {[
-                        { title: 'Dry Clean Only', detail: 'Professional dry cleaning recommended for embroidered pieces.' },
-                        { title: 'Preservation Storage', detail: 'Store in complimentary breathable garment bag away from direct heat.' },
-                        { title: 'Low Heat Steaming', detail: 'Steam inside out on low temperature setting.' },
-                      ].map(({ title, detail }) => (
-                        <div key={title} className="p-3 bg-[#0a0a0a] border border-white/5 rounded-sm">
-                          <p className="text-[10px] text-white font-semibold uppercase tracking-wider">{title}</p>
-                          <p className="text-[11px] text-white/50 font-sans mt-0.5">{detail}</p>
-                        </div>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
               {/* ── WhatsApp Styling Concierge ────────────────────────── */}
               <a 
                 href={whatsappHref}
@@ -696,6 +635,75 @@ export function ProductDetails() {
               </p>
 
             </motion.div>
+          </div>
+        </div>
+
+        {/* ── Tabs: Description / Care — full-width section below the grid ──
+            (Was inside the sticky right column, which is a viewport-height
+            internally-scrolling panel: the description's last lines sat below
+            its fold with a hidden scrollbar, so desktop visitors never saw
+            them. On the normal page flow every line renders.) */}
+        <div className="w-full max-w-[1600px] mx-auto px-6 md:px-12 pb-16">
+          <div className="max-w-3xl">
+            <div className="border-t border-white/10">
+              <div className="flex gap-0 border-b border-white/10 mb-6 mt-4">
+                {(['description', 'care'] as const).map(tab => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`flex-1 pb-3 text-[10px] uppercase tracking-widest font-bold transition-all duration-200 relative ${
+                      activeTab === tab
+                        ? 'text-white'
+                        : 'text-white/40 hover:text-white/70'
+                    }`}
+                  >
+                    {tab === 'description' ? 'Product Details' : 'Care & Maintenance'}
+                    {activeTab === tab && (
+                      <motion.div
+                        layoutId="tab-underline"
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent rounded-full"
+                      />
+                    )}
+                  </button>
+                ))}
+              </div>
+
+              <AnimatePresence mode="wait">
+                {activeTab === 'description' && (
+                  <motion.div
+                    key="desc"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    className="text-white/60 text-xs md:text-sm leading-relaxed font-sans mb-6 whitespace-pre-line"
+                  >
+                    {product.description || 'Premium quality piece from the latest WEARITION collection. See the product details below for fabric, embroidery and what is included.'}
+                  </motion.div>
+                )}
+
+
+                {activeTab === 'care' && (
+                  <motion.div
+                    key="care"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    className="mb-6 space-y-2"
+                  >
+                    {[
+                      { title: 'Dry Clean Only', detail: 'Professional dry cleaning recommended for embroidered pieces.' },
+                      { title: 'Preservation Storage', detail: 'Store in complimentary breathable garment bag away from direct heat.' },
+                      { title: 'Low Heat Steaming', detail: 'Steam inside out on low temperature setting.' },
+                    ].map(({ title, detail }) => (
+                      <div key={title} className="p-3 bg-[#0a0a0a] border border-white/5 rounded-sm">
+                        <p className="text-[10px] text-white font-semibold uppercase tracking-wider">{title}</p>
+                        <p className="text-[11px] text-white/50 font-sans mt-0.5">{detail}</p>
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </div>
