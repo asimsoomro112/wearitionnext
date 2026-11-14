@@ -1,4 +1,4 @@
-// Rebuild trigger 2026-11-06 (retry): force production redeploy to refresh the sitemap (ISR output stuck at 3 Nov build; previous deploy failed). No behavior change.
+// Rebuild trigger 2026-11-14: force production redeploy — the DETAILS-fix deploy (6c4e709) failed on Vercel; retry. No behavior change.
 import { MetadataRoute } from 'next';
 import { adminDb } from '@/lib/firebase-admin';
 
