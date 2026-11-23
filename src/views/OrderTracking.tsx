@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useOrderTrackingStore } from '../store/orderTrackingStore';
+import { useAuthStore } from '../store/authStore';
 import { sendOrderStatusEmail } from '@/lib/emailService';
 import { formatCurrency } from '@/lib/currency';
 import { 
@@ -27,23 +28,28 @@ export function OrderTracking() {
   const searchParams = useSearchParams();
   const initialId = searchParams.get('id') || '';
   const initialEmail = searchParams.get('email') || '';
+  const userEmail = useAuthStore(state => state.user?.email) || '';
   
   const [orderId, setOrderId] = useState(initialId);
+  // The order email is the ownership check: the server only returns the
+  // order when the email matches the one on the order, so an order ID
+  // alone is never enough to read (or cancel) someone else's order.
+  const [email, setEmail] = useState(initialEmail || userEmail);
   const [hasSearched, setHasSearched] = useState(!!initialId);
   const [order, setOrder] = useState<any>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  const { getOrder, updateOrderStatus } = useOrderTrackingStore();
+  const { getOrder, cancelOrder } = useOrderTrackingStore();
 
   const handleCancelOrder = async () => {
     if (!order || order.status !== 'pending') return;
     if (window.confirm("Are you sure you want to cancel this order? This action cannot be undone.")) {
       setIsSearching(true);
       try {
-        await updateOrderStatus(order.id, 'cancelled');
+        await cancelOrder(order.orderId, email);
         // Refresh local state to reflect cancellation
-        const updatedOrder = await getOrder(order.orderId);
+        const updatedOrder = await getOrder(order.orderId, email);
         if (updatedOrder) {
           setOrder(updatedOrder);
           // Send cancellation email
@@ -55,9 +61,9 @@ export function OrderTracking() {
           }).catch(console.error);
         }
         toast.success("Your order has been cancelled successfully.");
-      } catch (error) {
+      } catch (error: any) {
         console.error("Cancellation error:", error);
-        toast.error("Failed to cancel order. Please try again or contact support.");
+        toast.error(error.message || "Failed to cancel order. Please try again or contact support.");
       } finally {
         setIsSearching(false);
       }
@@ -66,27 +72,30 @@ export function OrderTracking() {
 
   useEffect(() => {
     const urlId = searchParams.get('id');
-    if (urlId) {
+    const urlEmail = searchParams.get('email');
+    if (urlId && urlEmail) {
       setOrderId(urlId);
-      handleTrack(null, urlId);
+      setEmail(urlEmail);
+      handleTrack(null, urlId, urlEmail);
     }
   }, [searchParams]);
 
-  const handleTrack = async (e: React.FormEvent | null, idOverride?: string) => {
+  const handleTrack = async (e: React.FormEvent | null, idOverride?: string, emailOverride?: string) => {
     if (e) e.preventDefault();
     const idToSearch = (idOverride || orderId || '').trim().toUpperCase();
-    if (!idToSearch) return;
+    const emailToSearch = (emailOverride || email || '').trim().toLowerCase();
+    if (!idToSearch || !emailToSearch) return;
     
     setIsSearching(true);
     setHasSearched(true);
     try {
-      const foundOrder = await getOrder(idToSearch);
+      const foundOrder = await getOrder(idToSearch, emailToSearch);
       if (foundOrder) {
         setOrder(foundOrder);
         setError(null);
       } else {
         setOrder(null);
-        setError('Order not found. Please check the ID and try again.');
+        setError('Order not found. Please check the ID and email and try again.');
       }
     } catch (err: any) {
       console.error('Order lookup failed:', err);
@@ -121,7 +130,7 @@ export function OrderTracking() {
 
           <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl mb-4 uppercase tracking-tight text-white">Track Order</h1>
           <p className="text-white/40 mb-10 font-sans text-xs tracking-wide">
-            Enter your order ID to see the latest delivery status.
+            Enter your order ID and the email used for the order.
           </p>
           
           <form onSubmit={handleTrack} className="space-y-4">
@@ -132,6 +141,14 @@ export function OrderTracking() {
               type="text" 
               placeholder="ORDER ID (E.G. WR-XXXXXX)" 
               className="w-full bg-white/[0.03] border border-white/15 px-6 py-4 text-xs focus:outline-none focus:border-white transition-colors uppercase tracking-[0.25em] text-center font-mono text-white placeholder-white/25 rounded-full shadow-inner" 
+            />
+            <input 
+              required 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              type="email" 
+              placeholder="EMAIL USED FOR THE ORDER" 
+              className="w-full bg-white/[0.03] border border-white/15 px-6 py-4 text-xs focus:outline-none focus:border-white transition-colors tracking-[0.15em] text-center font-mono text-white placeholder-white/25 rounded-full shadow-inner" 
             />
             <button 
               type="submit" 
@@ -149,7 +166,7 @@ export function OrderTracking() {
           {hasSearched && !order && !isSearching && (
             <div className="mt-8 p-4 rounded-sm border border-white/10 bg-white/[0.02] space-y-1.5">
               <p className="text-white text-xs font-mono">{error || `Reference "${orderId}" not found in current records.`}</p>
-              <p className="text-white/40 text-[9px] uppercase tracking-widest font-sans">Please verify the Order ID listed on your confirmation receipt.</p>
+              <p className="text-white/40 text-[9px] uppercase tracking-widest font-sans">Please verify the Order ID and email listed on your confirmation receipt.</p>
             </div>
           )}
         </div>

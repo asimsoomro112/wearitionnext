@@ -11,6 +11,7 @@ import { PAYMENT_RECEIVING, STORE_WHATSAPP_NUMBER } from '@/lib/paymentConfig';
 export function OrderSuccess() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get('id') || 'WR-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+  const orderEmail = searchParams.get('email') || '';
   const getOrder = useOrderTrackingStore(state => state.getOrder);
   const [order, setOrder] = useState<Order | null>(null);
 
@@ -19,11 +20,11 @@ export function OrderSuccess() {
   // must never see a broken success page.
   useEffect(() => {
     let active = true;
-    getOrder(orderId)
+    getOrder(orderId, orderEmail)
       .then(o => { if (active && o) setOrder(o); })
       .catch(() => {});
     return () => { active = false; };
-  }, [orderId, getOrder]);
+  }, [orderId, orderEmail, getOrder]);
 
   const isOnlinePayment = order && order.paymentMethod && order.paymentMethod !== 'cod';
 
@@ -96,7 +97,7 @@ export function OrderSuccess() {
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <Link
-              href={`/track-order?id=${orderId}`}
+              href={orderEmail ? `/track-order?id=${orderId}&email=${encodeURIComponent(orderEmail)}` : `/track-order?id=${orderId}`}
               className="w-full sm:w-auto px-8 py-3.5 bg-accent text-white text-[10px] uppercase font-mono tracking-[0.25em] font-semibold hover:bg-[#3ab0ad] transition-all rounded-full shadow-xl flex items-center justify-center gap-2"
             >
               <span>Track Order</span>

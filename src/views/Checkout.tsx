@@ -51,7 +51,7 @@ export function Checkout() {
   const [showGuestForm, setShowGuestForm] = useState(false);
   const [isEmailRegistered, setIsEmailRegistered] = useState(false);
   const [isCheckingEmail, setIsCheckingEmail] = useState(false);
-  const addOrder = useOrderTrackingStore(state => state.addOrder);
+  const createOrder = useOrderTrackingStore(state => state.createOrder);
   const { user } = useAuthStore();
 
   // Check if email is registered
@@ -179,47 +179,30 @@ export function Checkout() {
       toast.error('Please fill in your shipping address'); return;
     }
 
-    setIsProcessing(true);
-
-    const orderId = 'WR-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
-
-    const orderData = {
-      orderId,
-      email: email.toLowerCase(),
-      userId: user?.uid || 'guest',
-      status: 'pending' as const,
-      date: new Date().toISOString(),
-      subtotal,
-      tax: taxAmount,
-      total,
-      items: items.map(i => ({
-        id: i.id, 
-        title: i.title, 
-        price: i.price,
-        quantity: i.quantity, 
-        size: i.size || null, 
-        color: i.color || null, 
-        image: i.image || ""
-      })),
-      paymentMethod,
-      paymentScreenshot: screenshotUrl || null,
-      paymentStatus: (paymentMethod === 'cod' ? 'cod' : screenshotUrl ? 'proof_received' : 'awaiting_proof') as 'cod' | 'awaiting_proof' | 'proof_received' | 'confirmed',
-      shippingAddress: {
-        name: `${shipping.firstName} ${shipping.lastName}`,
-        address: shipping.address,
-        city: shipping.city,
-        zip: shipping.zip || "",
-        phone: shipping.phone || "",
-      },
-      shippingDetails: { 
-        shippingAmount: shippingCost,
-        taxAmount: taxAmount,
-        taxAbsorbedByStore: taxAbsorbedByStore
-      }
-    };
-
     try {
-      await addOrder(orderData);
+      // The server prices the order from the catalogue, verifies stock,
+      // and creates the order + decrements stock in one transaction —
+      // the client sends only product IDs/quantities, never prices.
+      const placed = await createOrder({
+        items: items.map(i => ({
+          id: i.id,
+          quantity: i.quantity,
+          size: i.size || null,
+          color: i.color || null,
+        })),
+        email: email.toLowerCase(),
+        shippingAddress: {
+          firstName: shipping.firstName,
+          lastName: shipping.lastName,
+          address: shipping.address,
+          city: shipping.city,
+          zip: shipping.zip || '',
+          phone: shipping.phone || '',
+        },
+        paymentMethod,
+        paymentScreenshot: screenshotUrl || null,
+      });
+      const orderId = placed.orderId;
 
       // Save address to user profile if requested
       if (saveAddress && user) {
@@ -232,7 +215,8 @@ export function Checkout() {
         }, { merge: true });
       }
 
-      // Send rich branded confirmation email
+      // Send rich branded confirmation email (totals are the server's —
+      // the email route loads the order from the database anyway).
       sendOrderConfirmationEmail({
         email: email.toLowerCase(),
         name: shipping.firstName,
@@ -241,10 +225,10 @@ export function Checkout() {
           title: i.title, quantity: i.quantity, price: i.price,
           size: i.size, color: i.color, image: i.image
         })),
-        subtotal,
-        shipping: shippingCost,
-        tax: taxAmount,
-        total,
+        subtotal: placed.subtotal,
+        shipping: placed.shipping,
+        tax: placed.tax,
+        total: placed.total,
         shippingAddress: {
           name: `${shipping.firstName} ${shipping.lastName}`,
           address: shipping.address,
@@ -261,20 +245,17 @@ export function Checkout() {
           customerName: `${shipping.firstName} ${shipping.lastName}`.trim(),
           customerEmail: email.toLowerCase(),
           paymentMethod,
-          total,
+          total: placed.total,
           screenshotUrl,
         }).catch(() => {});
       }
 
       toast.success(`Order ${orderId} placed successfully!`);
       clearCart();
-      router.push(`/order-success?id=${orderId}`);
+      router.push(`/order-success?id=${orderId}&email=${encodeURIComponent(email.toLowerCase())}`);
     } catch (error: any) {
       console.error('Order placement failed:', error);
-      const errorMessage = error.code === 'permission-denied' 
-        ? 'Permission denied. Please ensure you are logged in correctly.'
-        : error.message || 'Failed to place order. Please check your connection.';
-      toast.error(errorMessage);
+      toast.error(error.message || 'Failed to place order. Please check your connection.');
     } finally {
       setIsProcessing(false);
     }

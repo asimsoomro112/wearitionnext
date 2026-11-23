@@ -19,6 +19,11 @@ interface CartState {
   clearCart: () => void;
 }
 
+// Max units per line item. The server enforces the same cap on order
+// creation — the cart matches it so a customer can never build a cart
+// the checkout will reject. Larger quantities go through WhatsApp.
+const MAX_QTY_PER_LINE = 10;
+
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
@@ -26,7 +31,7 @@ export const useCartStore = create<CartState>()(
       addItem: (newItem) => set((state) => {
         // Ensure price is a number to prevent calculation bugs
         const price = typeof newItem.price === 'string' ? parseFloat(newItem.price) : newItem.price;
-        const processedItem = { ...newItem, price: isNaN(price) ? 0 : price };
+        const processedItem = { ...newItem, price: isNaN(price) ? 0 : price, quantity: Math.min(Math.max(1, newItem.quantity || 1), MAX_QTY_PER_LINE) };
 
         const existingItem = state.items.find(
           (item) => item.id === processedItem.id && item.size === processedItem.size && item.color === processedItem.color
@@ -36,7 +41,7 @@ export const useCartStore = create<CartState>()(
           return {
             items: state.items.map((item) =>
               item.id === processedItem.id && item.size === processedItem.size && item.color === processedItem.color
-                ? { ...item, quantity: item.quantity + processedItem.quantity }
+                ? { ...item, quantity: Math.min(item.quantity + processedItem.quantity, MAX_QTY_PER_LINE) }
                 : item
             ),
           };
@@ -51,7 +56,7 @@ export const useCartStore = create<CartState>()(
       updateQuantity: (id, quantity, size, color) => set((state) => ({
         items: state.items.map((item) =>
           item.id === id && item.size === size && item.color === color
-            ? { ...item, quantity: Math.max(1, quantity) }
+            ? { ...item, quantity: Math.min(Math.max(1, quantity), MAX_QTY_PER_LINE) }
             : item
         )
       })),

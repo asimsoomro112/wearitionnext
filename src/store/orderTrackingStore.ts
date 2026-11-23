@@ -1,7 +1,19 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { db } from '@/lib/firebase';
-import { collection, addDoc, updateDoc, doc, setDoc, getDoc, getDocs, query, where, serverTimestamp, increment, writeBatch } from 'firebase/firestore';
+
+// WEARITION — Order tracking store (API-backed, no local persistence).
+//
+// SECURITY (2026-11-23): the old store persisted full orders — including
+// customer name, email, phone and address — in localStorage
+// ('wearition-orders-v2') indefinitely, and it wrote orders + stock
+// straight from the browser (client-computed prices, anonymous stock
+// updates, order reads with no ownership check). All three now go
+// through server routes with the Admin SDK:
+//  - createOrder → POST /api/orders (catalogue prices re-verified,
+//    stock decremented atomically in a transaction)
+//  - getOrder    → POST /api/track-order (orderId + email, verified)
+//  - cancelOrder → POST /api/cancel-order (pending-only, stock restored)
+// Nothing in this store reads or writes Firestore directly, and nothing
+// is persisted to browser storage (every view fetches by orderId).
 
 export interface Order {
   id?: string;
@@ -18,117 +30,75 @@ export interface Order {
   paymentMethod?: string;
   paymentScreenshot?: string | null;
   paymentStatus?: 'cod' | 'awaiting_proof' | 'proof_received' | 'confirmed';
+  trackingNumber?: string;
+  courierName?: string;
+  estimatedDelivery?: string;
   createdAt?: any;
 }
 
-interface OrderTrackingState {
-  orders: Order[];
-  addOrder: (order: Order) => Promise<string>;
-  updateOrderStatus: (id: string, status: Order['status']) => Promise<void>;
-  getOrder: (orderId: string) => Promise<Order | undefined>;
-  fetchAllOrders: () => Promise<void>;
+export interface CreateOrderInput {
+  items: { id: string; quantity: number; size?: string | null; color?: string | null }[];
+  email: string;
+  shippingAddress: {
+    firstName: string;
+    lastName: string;
+    address: string;
+    city: string;
+    zip?: string;
+    phone?: string;
+  };
+  paymentMethod: string;
+  paymentScreenshot?: string | null;
 }
 
-export const useOrderTrackingStore = create<OrderTrackingState>()(
-  persist(
-    (set, get) => ({
-      orders: [],
-      addOrder: async (order) => {
-        const orderRef = doc(db, 'orders', order.orderId);
-        
-        // Use a batch to ensure order is saved AND stock is decremented atomically
-        const batch = writeBatch(db);
-        
-        batch.set(orderRef, {
-          ...order,
-          createdAt: serverTimestamp()
-        });
+export interface CreateOrderResult {
+  orderId: string;
+  subtotal: number;
+  shipping: number;
+  tax: number;
+  total: number;
+}
 
-        // Decrement stock for each item in the order
-        if (order.items && order.items.length > 0) {
-          order.items.forEach(item => {
-            if (item.id) {
-              const productRef = doc(db, 'products', item.id);
-              batch.update(productRef, {
-                stock: increment(-item.quantity)
-              });
-            }
-          });
-        }
+interface OrderTrackingState {
+  createOrder: (input: CreateOrderInput) => Promise<CreateOrderResult>;
+  getOrder: (orderId: string, email: string) => Promise<Order | undefined>;
+  cancelOrder: (orderId: string, email: string) => Promise<void>;
+}
 
-        await batch.commit();
+async function postJson(path: string, payload: unknown): Promise<{ ok: boolean; data: any }> {
+  const response = await fetch(path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const data = await response.json().catch(() => null);
+  return { ok: response.ok, data };
+}
 
-        set((state) => ({ orders: [...state.orders, { ...order, id: order.orderId }] }));
-        return order.orderId;
-      },
-      updateOrderStatus: async (id, status) => {
-        const orderRef = doc(db, 'orders', id);
-        
-        if (status === 'cancelled') {
-          const docSnap = await getDoc(orderRef);
-          if (docSnap.exists()) {
-            const orderData = docSnap.data();
-            if (orderData.status !== 'cancelled') {
-              const batch = writeBatch(db);
-              batch.update(orderRef, { status });
-              
-              if (orderData.items && orderData.items.length > 0) {
-                orderData.items.forEach((item: any) => {
-                  if (item.id) {
-                    batch.update(doc(db, 'products', item.id), { stock: increment(item.quantity) });
-                  }
-                });
-              }
-              await batch.commit();
-            }
-          }
-        } else {
-          await updateDoc(orderRef, { status });
-        }
-
-        set((state) => ({
-          orders: state.orders.map(o => o.id === id ? { ...o, status } : o)
-        }));
-      },
-      getOrder: async (orderId) => {
-        if (!orderId) return undefined;
-        const cleanId = orderId.trim();
-        const upperId = cleanId.toUpperCase();
-
-        try {
-          // 1. Try direct document ID lookup
-          const docRef = doc(db, 'orders', cleanId);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            return { id: docSnap.id, ...docSnap.data() } as Order;
-          }
-
-          // 2. Search by custom orderId field (try both cases just in case)
-          const q = query(
-            collection(db, 'orders'), 
-            where('orderId', 'in', [cleanId, upperId])
-          );
-          const querySnapshot = await getDocs(q);
-          
-          if (!querySnapshot.empty) {
-            const d = querySnapshot.docs[0];
-            return { id: d.id, ...d.data() } as Order;
-          }
-        } catch (e) {
-          console.error("Order lookup error:", e);
-          throw e; // Throw so UI can catch it
-        }
-
-        return undefined;
-      },
-      fetchAllOrders: async () => {
-        const querySnapshot = await getDocs(collection(db, 'orders'));
-        const fetchedOrders = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order));
-        set({ orders: fetchedOrders });
-      },
-    }),
-    {
-      name: 'wearition-orders-v2',
+export const useOrderTrackingStore = create<OrderTrackingState>()(() => ({
+  createOrder: async (input) => {
+    const { ok, data } = await postJson('/api/orders', input);
+    if (!ok || !data?.success || !data?.orderId) {
+      throw new Error(data?.error || 'Failed to place order. Please try again.');
     }
-  )
-);
+    return {
+      orderId: data.orderId,
+      subtotal: data.subtotal,
+      shipping: data.shipping,
+      tax: data.tax,
+      total: data.total,
+    };
+  },
+  getOrder: async (orderId, email) => {
+    if (!orderId || !email) return undefined;
+    const { ok, data } = await postJson('/api/track-order', { orderId, email });
+    if (!ok || !data?.order) return undefined;
+    return data.order as Order;
+  },
+  cancelOrder: async (orderId, email) => {
+    const { ok, data } = await postJson('/api/cancel-order', { orderId, email });
+    if (!ok || !data?.success) {
+      throw new Error(data?.error || 'Failed to cancel order. Please try again or contact support.');
+    }
+  },
+}));
