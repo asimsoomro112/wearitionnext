@@ -7,7 +7,7 @@ import type { NextRequest } from 'next/server';
 // unambiguously to any crawler that does fetch them.
 const NOINDEX_PATHS = ['/checkout', '/account', '/order-success', '/admin', '/cart', '/wishlist'];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const response = NextResponse.next();
   if (NOINDEX_PATHS.some(p => request.nextUrl.pathname === p || request.nextUrl.pathname.startsWith(p + '/'))) {
     response.headers.set('X-Robots-Tag', 'noindex, nofollow');
