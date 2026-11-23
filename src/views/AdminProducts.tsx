@@ -260,10 +260,17 @@ export function AdminProducts() {
         toast.success('Product created successfully');
 
         // --- AUTOMATIC SYNC TO PRELOVED MARKETPLACE ---
+        // Admin-only server-side: attach the ID token (the route rejects
+        // unauthenticated calls). Fire-and-forget — a sync failure never
+        // affects the product save.
         try {
+          const token = await getIdToken();
           fetch('/api/sync-preloved', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            },
             body: JSON.stringify(productData)
           }).then(res => res.json()).then(syncData => {
             if (syncData.success) {
