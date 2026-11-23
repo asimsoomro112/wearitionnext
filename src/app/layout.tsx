@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cinzel, Inter } from "next/font/google";
+import { safeJsonLd } from "@/lib/jsonLd";
 import "./globals.css";
 
 const cinzel = Cinzel({
@@ -97,7 +98,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
+            __html: safeJsonLd({
               '@context': 'https://schema.org',
               '@graph': [
                 {

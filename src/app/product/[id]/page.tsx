@@ -1,5 +1,6 @@
 import { ClientShell, StoreLayout } from "@/components/ClientShell";
 import { adminDb } from "@/lib/firebase-admin";
+import { safeJsonLd } from "@/lib/jsonLd";
 import type { Metadata, ResolvingMetadata } from "next";
 import { ProductClient } from "./ProductClient";
 
@@ -98,7 +99,7 @@ export default async function ProductPage(props: Props) {
         {jsonLd && (
           <script
             type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
           />
         )}
         <ProductClient />

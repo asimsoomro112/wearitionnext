@@ -28,12 +28,11 @@ export enum OperationType {
 }
 
 export function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  // SECURITY (2026-11-23, point 19): never log the signed-in user's email
+  // or UID — a log line is not a place for PII. Operation + path + the
+  // error message are enough to diagnose a Firestore failure.
   const errInfo = {
     error: error instanceof Error ? error.message : String(error),
-    authInfo: {
-      userId: auth.currentUser?.uid,
-      email: auth.currentUser?.email,
-    },
     operationType,
     path
   };
