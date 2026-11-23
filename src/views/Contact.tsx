@@ -6,17 +6,16 @@ import { SEO } from '../components/layout/SEO';
 import { TextReveal } from '../components/layout/TextReveal';
 import { MagneticButton } from '../components/layout/MagneticButton';
 import { Mail, MapPin, Globe } from 'lucide-react';
-import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { STORE_WHATSAPP_NUMBER } from '@/lib/paymentConfig';
 
 export function Contact() {
-  // Fail-safe send state (QA SEV-2, 2026-10-22): the old submit chained
-  // everything behind a Firestore write that can hang silently in
-  // production, leaving the customer with no feedback at all — and no
-  // admin screen reads the 'messages' collection anyway. Now both
-  // channels race in parallel under a timeout, and the customer ALWAYS
-  // gets a persistent on-page result: success, or direct alternatives.
+  // Send state (QA SEV-2, 2026-10-22): the customer ALWAYS gets a
+  // persistent on-page result — success, or direct alternatives — and a
+  // hang can never leave them staring at a dead form. The message goes
+  // to the store inbox through the typed /api/send-email endpoint (the
+  // server builds the email and escapes the fields). The old second
+  // channel — a Firestore write to 'messages' — is gone: the rules deny
+  // it, and no admin screen reads that collection anyway.
   const [sendState, setSendState] = useState<'idle' | 'sending' | 'sent' | 'failed'>('idle');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -31,44 +30,27 @@ export function Contact() {
     const email = formData.get('email') as string;
     const message = formData.get('message') as string;
 
-    // Channel 1: save to Firestore (best effort — currently has no admin
-    // reader, kept for the record).
-    const saveMessage: Promise<boolean> = addDoc(collection(db, 'messages'), {
-      firstName,
-      lastName,
-      email,
-      message,
-      createdAt: serverTimestamp(),
-      read: false,
-    }).then(() => true).catch(() => false);
-
-    // Channel 2: email the store inbox — the channel the owner actually
-    // sees. A "mock" response means mail is not configured on the server
-    // and nothing was really sent, so it does not count as delivered.
     const sendMail: Promise<boolean> = fetch('/api/send-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        to: 'wearition.80@gmail.com',
-        subject: `New Contact Message from ${firstName} ${lastName}`,
-        html: `<h2>New Contact Form Submission</h2>
-          <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Message:</strong></p>
-          <p>${message}</p>`,
+        type: 'contact',
+        name: `${firstName} ${lastName}`.trim(),
+        email,
+        message,
       }),
     })
       .then(async r => {
         if (!r.ok) return false;
         const data = await r.json().catch(() => null);
-        return data?.mock !== true;
+        return data?.success === true;
       })
       .catch(() => false);
 
-    // Whichever channel lands first within 10 seconds wins; a hang can
-    // never leave the customer staring at a dead form again.
+    // The send must land within 10 seconds; a hang can never leave the
+    // customer staring at a dead form again.
     const landed = await Promise.race([
-      Promise.all([saveMessage, sendMail]).then(([saved, mailed]) => saved || mailed),
+      sendMail,
       new Promise<boolean>(resolve => setTimeout(() => resolve(false), 10000)),
     ]);
 
