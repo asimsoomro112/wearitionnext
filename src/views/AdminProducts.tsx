@@ -5,6 +5,7 @@ import { collection, query, onSnapshot, doc, deleteDoc, serverTimestamp, setDoc,
 import { Plus, Edit2, Trash2, X, Search } from 'lucide-react';
 import { formatCurrency } from '@/lib/currency';
 import { getOptimizedImage } from '../lib/images';
+import { getIdToken } from '@/lib/authToken';
 import { toast } from 'sonner';
 
 interface Product {
@@ -166,12 +167,17 @@ export function AdminProducts() {
 
     setIsUploading(true);
     try {
+      // Product uploads are admin-only server-side: attach the ID token
+      // once for the whole batch.
+      const token = await getIdToken();
       const uploadPromises = files.map(async (file) => {
         const formData = new FormData();
         formData.append('file', file);
-        
+        formData.append('purpose', 'product');
+
         const response = await fetch('/api/upload', {
           method: 'POST',
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
           body: formData,
         });
 

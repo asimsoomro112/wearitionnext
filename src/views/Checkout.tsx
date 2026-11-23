@@ -149,6 +149,7 @@ export function Checkout() {
     try {
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('purpose', 'payment_proof');
       const res = await fetch('/api/upload', { method: 'POST', body: formData });
       const data = await res.json().catch(() => null);
       if (!res.ok || !data?.success || !data?.url) throw new Error('upload failed');
