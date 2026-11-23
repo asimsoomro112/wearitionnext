@@ -35,8 +35,26 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { formatCurrency } from '@/lib/currency';
-import { generateOTP, saveOTP, verifyOTP } from '@/lib/otpService';
-import { sendVerificationOTPEmail, sendPasswordResetOTPEmail } from '@/lib/emailService';
+
+// OTP codes are verified server-side (/api/auth/send-otp, /api/auth/verify-otp)
+// — the old client-side otpService wrote the codes to Firestore from the
+// browser and the rules denied it, so the flow was broken live; the server
+// store also closes the reset-password takeover (the route used to trust
+// the client). Map the server's reason codes to the messages users see.
+function otpErrorMessage(reason?: string | null): string {
+  switch (reason) {
+    case 'incorrect':
+      return 'Incorrect code. Please try again.';
+    case 'expired':
+      return 'Code has expired. Please request a new one.';
+    case 'too_many_attempts':
+      return 'Too many attempts. Please request a new code.';
+    case 'unavailable':
+      return 'Verification service is unavailable. Please try again later.';
+    default:
+      return 'Invalid or expired code.';
+  }
+}
 
 type AuthView = 'login' | 'signup' | 'verify' | 'forgot' | 'reset';
 
@@ -96,9 +114,16 @@ export function Account() {
     setError(null);
     setIsLoadingAction(true);
     try {
-      const code = generateOTP();
-      await saveOTP(email, code, 'verification');
-      await sendVerificationOTPEmail({ name: firstName, email, code });
+      if (password.length < 8) {
+        throw new Error('Password must be at least 8 characters.');
+      }
+      const response = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, purpose: 'signup', name: firstName }),
+      });
+      const data = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(data?.error || 'Failed to send verification code');
       setView('verify');
       toast.success('Verification code sent to your email.');
     } catch (err: any) {
@@ -113,8 +138,13 @@ export function Account() {
     setError(null);
     setIsLoadingAction(true);
     try {
-      const res = await verifyOTP(email, otp, 'verification');
-      if (!res.success) throw new Error(res.message);
+      const response = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, purpose: 'signup', code: otp }),
+      });
+      const data = await response.json().catch(() => null);
+      if (!response.ok || !data?.success) throw new Error(otpErrorMessage(data?.error));
       
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(cred.user, { displayName: `${firstName} ${lastName}` });
@@ -138,9 +168,13 @@ export function Account() {
     setError(null);
     setIsLoadingAction(true);
     try {
-      const code = generateOTP();
-      await saveOTP(email, code, 'password_reset');
-      await sendPasswordResetOTPEmail({ email, code });
+      const response = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, purpose: 'reset' }),
+      });
+      const data = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(data?.error || 'Failed to send reset code');
       setView('reset');
       toast.success('Reset code sent to your email.');
     } catch (err: any) {
@@ -155,9 +189,16 @@ export function Account() {
     setError(null);
     setIsLoadingAction(true);
     try {
-      const res = await verifyOTP(email, otp, 'password_reset');
-      if (!res.success) throw new Error(res.message);
-      
+      const verifyResponse = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, purpose: 'reset', code: otp }),
+      });
+      const verifyData = await verifyResponse.json().catch(() => null);
+      if (!verifyResponse.ok || !verifyData?.success) {
+        throw new Error(otpErrorMessage(verifyData?.error));
+      }
+
       const response = await fetch('/api/auth/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
