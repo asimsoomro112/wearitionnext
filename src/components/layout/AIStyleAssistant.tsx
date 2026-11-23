@@ -2,7 +2,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, X, Send, ShoppingBag } from 'lucide-react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import Link from 'next/link';
@@ -14,15 +13,6 @@ interface Message {
   content: string;
   products?: any[];
 }
-
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || '');
-
-const SYSTEM_PROMPT = `You are a luxury personal stylist for WEARITION, a high-end Pakistani fashion brand. You help customers find perfect outfits.
-Your personality: elegant, knowledgeable, warm but sophisticated — like a Harrods personal shopper.
-When the user describes what they're looking for, extract key intent keywords like category (men/women/shirts/pants), occasion, style, and price range.
-Always respond in 2-3 sentences max, then end with: [SEARCH: keyword1,keyword2] so the system can find matching products.
-Example: "For a winter gala, I'd recommend our architectural wool pieces. [SEARCH: women,coats,luxury]"
-If user greets, introduce yourself briefly. Keep responses warm and luxury-toned. Never mention prices unless asked.`;
 
 export function AIStyleAssistant() {
   const [isOpen, setIsOpen] = useState(false);
@@ -68,29 +58,28 @@ export function AIStyleAssistant() {
 
     try {
       const history = messages.slice(1).map(m => ({
-        role: m.role === 'user' ? 'user' : 'model',
-        parts: [{ text: m.content }],
+        role: m.role,
+        content: m.content,
       }));
 
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.NEXT_PUBLIC_GEMINI_API_KEY}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [...history, { role: 'user', parts: [{ text: input }] }],
-            systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] }
-          })
-        }
-      );
+      // The Gemini API key lives only on the server — the browser posts
+      // the conversation to our proxy and gets the reply back. The key
+      // never ships in the bundle or in a request URL.
+      const response = await fetch('/api/style-assistant', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [...history, { role: 'user', content: input }],
+        }),
+      });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
       
-      if (!response.ok) {
-        throw new Error(data.error?.message || 'API request failed');
+      if (!response.ok || !data?.reply) {
+        throw new Error('Stylist unavailable');
       }
 
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'd love to help you find something special.";
+      const text: string = data.reply;
       
       // Extract search keywords
       const searchMatch = text.match(/\[SEARCH:\s*([^\]]+)\]/);
@@ -108,10 +97,10 @@ export function AIStyleAssistant() {
         products: foundProducts.length > 0 ? foundProducts : undefined,
       }]);
     } catch (e: any) {
-      console.error("Gemini API Full Error:", e);
+      console.error("Style Assistant Error:", e);
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: `Stylist Note: I encountered an issue. (Detail: ${e.message})`,
+        content: `Stylist Note: I'm having trouble right now — please try again in a moment.`,
       }]);
     } finally {
       setIsTyping(false);

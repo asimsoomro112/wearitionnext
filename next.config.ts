@@ -11,10 +11,10 @@ import type { NextConfig } from "next";
 //    (remotePatterns) + data:/blob: (upload previews, inline SVG)
 //  - fonts: self-hosted woff2 under _next/static
 //  - connect: Firebase SDK (*.googleapis.com — Firestore/Auth/Installations,
-//    *.firebaseio.com — realtime listeners) + EmailJS fallback
-//    + generativelanguage.googleapis.com — TEMPORARY: the Style Assistant
-//    still calls Gemini from the browser; removed when the server-side
-//    /api/style-assistant proxy lands (audit point 13).
+//    *.firebaseio.com — realtime listeners) + EmailJS fallback.
+//    (The Style Assistant calls Gemini through the server-side
+//    /api/style-assistant proxy, so the browser never contacts Google's
+//    Generative Language API directly — no host for it here.)
 //  - no frames, no plugins, forms post to self only.
 const CSP = [
   "default-src 'self'",
@@ -22,7 +22,7 @@ const CSP = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com",
   "font-src 'self' data:",
-  "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://api.emailjs.com https://generativelanguage.googleapis.com",
+  "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://api.emailjs.com",
   "frame-src 'none'",
   "object-src 'none'",
   "base-uri 'self'",
